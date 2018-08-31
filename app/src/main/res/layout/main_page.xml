@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <com.example.ecare_client.mainpageview.SexangleViewGroup
+        android:id="@+id/sexangleView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.example.ecare_client.mainpageview.SexangleImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/center_video" />
+
+        <com.example.ecare_client.mainpageview.SexangleImageView
+            android:id="@+id/sexanglepic"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/center_pic"
+            android:contentDescription="1"/>
+
+        <com.example.ecare_client.mainpageview.SexangleImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/center_file"
+            android:contentDescription="4"/>
+
+        <com.example.ecare_client.mainpageview.SexangleImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/center_dark"
+            />
+
+        <com.example.ecare_client.mainpageview.SexangleImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/center_email"
+            android:contentDescription="2"/>
+
+        <com.example.ecare_client.mainpageview.SexangleImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/center_email"
+            android:contentDescription="2"/>
+
+
+    </com.example.ecare_client.mainpageview.SexangleViewGroup>
+
+
+</RelativeLayout>
