@@ -85,6 +85,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
         //lp.setMargins(0, screenHeight/2, 0, 0);
         //sexangleViewGroup.setLayoutParams(lp);
         */
+
         SexangleImageView sexangleImageView = (SexangleImageView) findViewById(R.id.sexanglepic);
         sexangleImageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -166,6 +167,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
     private void openChatActivity() {
         Intent chatActivity = new Intent(this, ChatActivity.class);
         startActivity(chatActivity);
+    }
+
+    private void openMapsActivity() {
+        Intent MapsActivity = new Intent(getApplicationContext(), MapsActivity.class);
+        startActivity(MapsActivity);
     }
 
     private void showSpinner() {
