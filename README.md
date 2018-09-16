@@ -6,10 +6,11 @@ Team Morganite Main Repo
 
 our change log overview:
 
+ - Week 5
 . Implemented Text Chatting Ui
  - Week 5
 . Implemented Text Chating functionality
- - Week 5
+ - Week 6
 . Implemented Video Chatting Ui
  - Week 6
 . Implmeneted Video Chat functionality
@@ -23,9 +24,8 @@ our change log overview:
 . Setted up FireBase Server
  - Week 6
 . Implemented User sign in and sign up (resolving conflicts to master)
- - Week 8
-. Implemented Location routing from one point to another
  - Week 7
+. Implemented Location routing from one point to another
  
 App WorkFlow 
 
