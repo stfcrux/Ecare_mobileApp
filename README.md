@@ -40,8 +40,18 @@ Video Call workflow
 
 Implementation version 2: add mock text chat page (haven't connect to server) add simple 
                           main page with only one chat button (no contact list)
+                          
+                          
 
+GPS Mapping workflow
 
+Our mapping makes use of Google Maps, Google Places and Google Directions Api Libaries
+
+    Give the Start and End Locations
+    App makes use of given locations and parses the relevent data
+    of the two locations back to the app for the user to see
+    
+  
 
 
 
