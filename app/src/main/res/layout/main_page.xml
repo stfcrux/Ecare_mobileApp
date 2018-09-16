@@ -40,6 +40,7 @@
             android:contentDescription="2"/>
 
         <com.example.ecare_client.mainpageview.SexangleImageView
+            android:id="@+id/btnOpenMaps"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/center_email"

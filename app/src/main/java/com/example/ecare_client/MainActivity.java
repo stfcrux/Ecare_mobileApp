@@ -98,6 +98,19 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
             }
         });
 
+
+        /*SexangleImageView MapsView = (SexangleImageView) findViewById(R.id.btnOpenMaps);
+        MapsView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_UP:
+                        openMapsActivity();
+                }
+                return false;
+            }
+        }); */
+
     }
     @Override
     public void onClick(View v) {
@@ -116,6 +129,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
                 break;
             case 4:
                 Log.d("TEST","跳往文件");
+                //openMapsActivity();
                 break;
             default:
                 break;
