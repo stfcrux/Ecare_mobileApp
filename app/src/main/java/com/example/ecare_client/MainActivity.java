@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
         });
 
 
-        /*SexangleImageView MapsView = (SexangleImageView) findViewById(R.id.btnOpenMaps);
+        SexangleImageView MapsView = (SexangleImageView) findViewById(R.id.btnOpenMaps);
         MapsView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
                 }
                 return false;
             }
-        }); */
+        }); 
 
     }
     @Override
