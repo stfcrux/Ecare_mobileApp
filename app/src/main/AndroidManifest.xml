@@ -38,7 +38,7 @@
             android:noHistory="true"/>
 
         <activity android:name=".registration.ResetPasswordActivity"/>
-        
+
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import com.example.ecare_client.R;
+import com.google.firebase.auth.FirebaseUser;
+
+import com.example.ecare_client.MainActivity;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -31,6 +35,7 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         //Get Firebase auth instance
+        // Remember that this is a singleton class.
         auth = FirebaseAuth.getInstance();
 
         btnSignIn = (Button) findViewById(R.id.sign_in_button);
@@ -43,14 +48,55 @@ public class SignupActivity extends AppCompatActivity {
         btnResetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SignupActivity.this, ResetPasswordActivity.class));
+                Intent intent = new Intent(SignupActivity.this, ResetPasswordActivity.class);
+
+
+                startActivity(intent);
             }
         });
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+
+                // PERHAPS REFACTOR THIS!!!!
+                String email = inputEmail.getText().toString().trim();
+                String password = inputPassword.getText().toString().trim();
+
+                if (TextUtils.isEmpty(email)) {
+                    Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(password)) {
+                    Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                progressBar.setVisibility(View.VISIBLE);
+
+                auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Log.d(...)
+                                    Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+
+                                    startActivity(intent);
+
+                                }
+
+                                else {
+                                    Toast.makeText(SignupActivity.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                        });
+
+
+
             }
         });
 
@@ -91,6 +137,10 @@ public class SignupActivity extends AppCompatActivity {
                                     Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
+
+                                    //Log.d(TAG, "createUserWithEmail:success");
+                                    FirebaseUser user = auth.getCurrentUser();
+
                                     startActivity(new Intent(SignupActivity.this, MainActivity.class));
                                     finish();
                                 }
