@@ -32,7 +32,7 @@
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
 
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".registration.SignupActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,6 +62,15 @@
             android:label="@string/title_activity_maps" />
 
 
+        <activity android:name=".MainActivity"/>
+
+
+        <activity android:name=".videochat.CallScreenActivity"/>
+
+        <activity android:name=".videochat.IncomingCallScreenActivity" android:screenOrientation="portrait"
+            android:noHistory="true"/>
+
+        <activity android:name=".registration.ResetPasswordActivity"/>
 
     </application>
 
