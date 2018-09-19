@@ -1,4 +1,5 @@
 package com.example.ecare_client.videochat;
+import com.example.ecare_client.BaseActivity;
 import com.example.ecare_client.R;
 import com.example.ecare_client.SinchService;
 import com.sinch.android.rtc.AudioController;
@@ -11,7 +12,6 @@ import com.sinch.android.rtc.video.VideoController;
 
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;

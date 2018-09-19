@@ -1,8 +1,8 @@
 package com.example.ecare_client.videochat;
 
+import com.example.ecare_client.BaseActivity;
 import com.example.ecare_client.R;
 import com.example.ecare_client.SinchService;
-import com.sinch.android.rtc.PushPair;
 import com.sinch.android.rtc.calling.Call;
 import com.sinch.android.rtc.calling.CallEndCause;
 import com.sinch.android.rtc.video.VideoCallListener;

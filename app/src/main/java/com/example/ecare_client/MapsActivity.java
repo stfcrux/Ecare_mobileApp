@@ -292,7 +292,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        Toast.makeText(this,"connection failed", Toast.LENGTH_SHORT).show();
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;

@@ -1,20 +1,27 @@
 package com.example.ecare_client.textchat;
 
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.util.Pair;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import com.sinch.android.rtc.messaging.Message;
 import com.example.ecare_client.R;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
 
-    private List<Msg> mMsgList;
+    private List<Pair<Message, Integer>> mMessages;
+    public static final int DIRECTION_INCOMING = 0;
+    public static final int DIRECTION_OUTGOING = 1;
+
 
     static class ViewHolder extends RecyclerView.ViewHolder{
         LinearLayout lefrLayout;
@@ -32,8 +39,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
         }
     }
 
-    public MsgAdapter(List<Msg> msgList){
-        mMsgList = msgList;
+    public MsgAdapter(){
+        mMessages = new ArrayList<Pair<Message, Integer>>();
     }
 
     @Override
@@ -42,23 +49,34 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
+    public void addMessage(Message message, int direction) {
+        mMessages.add(new Pair(message, direction));
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Msg msg = mMsgList.get(position);
-        if (msg.getType() == Msg.TYPR_RECEIVED){
+        Pair msg = mMessages.get(position);
+        int type = getMsgType(position);
+        String content = mMessages.get(position).first.getTextBody();
+        if (type == DIRECTION_INCOMING){
             //如果是收到消息，显示左边布局，隐藏右边布局
             holder.lefrLayout.setVisibility(View.VISIBLE);
             holder.rightLayout.setVisibility(View.GONE);
-            holder.leftMsg.setText(msg.getContent());
-        } else if (msg.getType() == Msg.TYPE_SEND){
+            holder.leftMsg.setText(content);
+        } else if (type == DIRECTION_OUTGOING){
             holder.rightLayout.setVisibility(View.VISIBLE);
             holder.lefrLayout.setVisibility(View.GONE);
-            holder.rightMsg.setText(msg.getContent());
+            holder.rightMsg.setText(content);
         }
+    }
+
+    private int getMsgType(int i){
+        return mMessages.get(i).second;
     }
 
     @Override
     public int getItemCount() {
-        return mMsgList.size();
+        return mMessages.size();
     }
 }

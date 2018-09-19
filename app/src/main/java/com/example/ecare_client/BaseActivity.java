@@ -1,4 +1,4 @@
-package com.example.ecare_client.videochat;
+package com.example.ecare_client;
 
 import com.example.ecare_client.SinchService;
 import android.app.Activity;
