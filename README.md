@@ -23,7 +23,7 @@ our change log overview:
  - Week 7
 . Setted up FireBase Server
  - Week 6
-. Implemented User sign in and sign up (resolving conflicts to master)
+. Implemented User sign in and sign up
  - Week 7
 . Implemented Location routing from one point to another
  
