@@ -19,6 +19,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Build;
+import android.location.Address;
+import android.location.Geocoder;
+
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -45,6 +48,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
 
 import com.example.ecare_client.Googlemaps.DirectionFinder;
 import com.example.ecare_client.Googlemaps.DirectionFinderListener;
@@ -67,6 +71,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Location mLastLocation;
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
+    private static final int PLACE_PICKER_REQUEST = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +106,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         etDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findPlace2();
+                //findPlace2();
+                loadPlacePicker();
             }
         });
     }
@@ -128,10 +134,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng hcmus = new LatLng(40.762963, -73.682394);
+        LatLng hcmus = new LatLng(-37.7964, 144.9612);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmus, 11));
         originMarkers.add(mMap.addMarker(new MarkerOptions()
-                .title("New York")
+                .title("Melbourne University")
                 .position(hcmus)));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -206,7 +212,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    private void loadPlacePicker() {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
+        try {
+            startActivityForResult(builder.build(MapsActivity.this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getAddress( LatLng latLng ) {
+        Geocoder geocoder = new Geocoder( this );
+        String addressText = "";
+        List<Address> addresses = null;
+        Address address = null;
+        try {
+            addresses = geocoder.getFromLocation( latLng.latitude, latLng.longitude, 1 );
+            if (null != addresses && !addresses.isEmpty()) {
+                address = addresses.get(0);
+                for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                    addressText += (i == 0)?address.getAddressLine(i):("\n" + address.getAddressLine(i));
+                }
+            }
+        } catch (IOException e ) {
+        }
+        return addressText;
+    }
+
+    protected void placeMarkerOnMap(LatLng location) {
+        MarkerOptions markerOptions = new MarkerOptions().position(location);
+        String titleStr = getAddress(location);
+        markerOptions.title(titleStr);
+
+        mMap.addMarker(markerOptions);
+    }
 
     private void findPlace2() {
         try {
@@ -250,7 +290,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
             }
-        } else if (requestCode == 2) {
+        }
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(this, data);
+                String addressText = place.getName().toString();
+                //addressText += "\n" + place.getAddress().toString();
+                ((EditText) findViewById(R.id.etDestination))
+                        .setText(place.getName());
+
+                //placeMarkerOnMap(place.getLatLng());
+            }
+        }
+
+        else if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
                 // retrive the data by using getPlace() method.
                 Place place = PlaceAutocomplete.getPlace(this, data);
