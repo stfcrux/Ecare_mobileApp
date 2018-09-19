@@ -66,6 +66,17 @@
 
         <activity android:name=".registration.ResetPasswordActivity"/>
 
+        <activity android:name=".checklist.MainActivity"/>
+        <activity android:name=".checklist.AddTaskActivity"/>
+
+        <!-- Register the TaskContentProvider -->
+        <!-- Set name, authorities, and exported attributes -->
+        <!-- exported = false limits access to this ContentProvider to only this app -->
+        <provider
+            android:name="com.example.ecare_client.checklist.data.TaskContentProvider"
+            android:authorities="com.example.android.checklist"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

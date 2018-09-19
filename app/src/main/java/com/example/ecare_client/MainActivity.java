@@ -73,7 +73,19 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
                 }
                 return false;
             }
-        }); 
+        });
+
+        SexangleImageView ChecklistView = (SexangleImageView) findViewById(R.id.btnOpenChecklist);
+        ChecklistView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_UP:
+                        openChecklistActivity();
+                }
+                return false;
+            }
+        });
 
     }
     @Override
@@ -150,6 +162,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
     private void openMapsActivity() {
         Intent MapsActivity = new Intent(getApplicationContext(), MapsActivity.class);
         startActivity(MapsActivity);
+    }
+
+    private void openChecklistActivity() {
+        Intent ChecklistActivity = new Intent(getApplicationContext(), com.example.ecare_client.checklist.MainActivity.class);
+        startActivity(ChecklistActivity);
     }
 
     private void showSpinner() {
