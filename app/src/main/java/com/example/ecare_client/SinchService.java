@@ -11,6 +11,8 @@ import com.sinch.android.rtc.video.VideoController;
 import com.sinch.android.rtc.calling.Call;
 import com.sinch.android.rtc.calling.CallClient;
 import com.sinch.android.rtc.calling.CallClientListener;
+import com.sinch.android.rtc.messaging.MessageClientListener;
+import com.sinch.android.rtc.messaging.WritableMessage;
 
 import android.app.Service;
 import android.content.Intent;
@@ -122,6 +124,18 @@ public class SinchService extends Service {
             }
             return mSinchClient.getAudioController();
         }
+
+        public void sendMessage(String recipientUserId, String textBody) {
+            SinchService.this.sendMessage(recipientUserId, textBody);
+        }
+
+        public void addMessageClientListener(MessageClientListener listener) {
+            SinchService.this.addMessageClientListener(listener);
+        }
+
+        public void removeMessageClientListener(MessageClientListener listener) {
+            SinchService.this.removeMessageClientListener(listener);
+        }
     }
 
     public interface StartFailedListener {
@@ -193,5 +207,22 @@ public class SinchService extends Service {
             SinchService.this.startActivity(intent);
         }
     }
+    public void sendMessage(String recipientUserId, String textBody) {
+        if (isStarted()) {
+            WritableMessage message = new WritableMessage(recipientUserId, textBody);
+            mSinchClient.getMessageClient().send(message);
+        }
+    }
 
+    public void addMessageClientListener(MessageClientListener listener) {
+        if (mSinchClient != null) {
+            mSinchClient.getMessageClient().addMessageClientListener(listener);
+        }
+    }
+
+    public void removeMessageClientListener(MessageClientListener listener) {
+        if (mSinchClient != null) {
+            mSinchClient.getMessageClient().removeMessageClientListener(listener);
+        }
+    }
 }

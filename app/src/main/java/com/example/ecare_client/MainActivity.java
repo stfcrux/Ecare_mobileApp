@@ -4,58 +4,31 @@ import com.example.ecare_client.mainpageview.*;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.app.Activity;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.example.ecare_client.videochat.BaseActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.sinch.android.rtc.SinchError;
 
 public class MainActivity extends BaseActivity implements OnClickListener, SinchService.StartFailedListener {
 
     private ProgressDialog mSpinner;
+    private String email = "null";
     private static final int JUMP_FLAG1 = 1;
     private static final int JUMP_FLAG2 = 2;
     private static final int JUMP_FLAG3 = 3;
     private static final int JUMP_FLAG4 = 4;
     private static int requestid;
+    private static final String TAG = "MainActivity";
 
-    public static Handler myHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case JUMP_FLAG1:
-                    Jump_page(1);
-                    break;
-                case JUMP_FLAG2:
-                    Jump_page(2);
-                    break;
-                case JUMP_FLAG3:
-                    Jump_page(3);
-                    break;
-                case JUMP_FLAG4:
-                    Jump_page(4);
-                    break;
-                default:
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,26 +38,16 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.READ_PHONE_STATE},100);
         }
-
-        /*
-        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics dm = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(dm);
-        int width = dm.widthPixels;         // 屏幕宽度（像素）
-        int height = dm.heightPixels;       // 屏幕高度（像素）
-        float density = dm.density;         // 屏幕密度（0.75 / 1.0 / 1.5）
-        int densityDpi = dm.densityDpi;     // 屏幕密度dpi（120 / 160 / 240）
-        // 屏幕宽度算法:屏幕宽度（像素）/屏幕密度
-        int screenWidth = (int) (width / density);  // 屏幕宽度(dp)
-        int screenHeight = (int) (height / density);// 屏幕高度(dp)
-
-
-        //SexangleViewGroup sexangleViewGroup = (SexangleViewGroup) findViewById(R.id.sexangleView1);
-        //RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(sexangleViewGroup.getLayoutParams());
-
-        //lp.setMargins(0, screenHeight/2, 0, 0);
-        //sexangleViewGroup.setLayoutParams(lp);
-        */
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            email = user.getEmail();
+            // Check if user's email is verified
+            boolean emailVerified = user.isEmailVerified();
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getIdToken() instead.
+        }
 
         SexangleImageView sexangleImageView = (SexangleImageView) findViewById(R.id.sexanglepic);
         sexangleImageView.setOnTouchListener(new View.OnTouchListener() {
@@ -93,6 +56,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_UP:
                         loginClicked();
+                        Log.d(TAG, email);
                 }
                 return false;
             }
@@ -163,7 +127,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
     }
 
     private void loginClicked() {
-        String userName = "Jerry";
+        String userName = email;
 
         if (userName.isEmpty()) {
             Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();

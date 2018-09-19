@@ -64,12 +64,6 @@
 
         <activity android:name=".MainActivity"/>
 
-
-        <activity android:name=".videochat.CallScreenActivity"/>
-
-        <activity android:name=".videochat.IncomingCallScreenActivity" android:screenOrientation="portrait"
-            android:noHistory="true"/>
-
         <activity android:name=".registration.ResetPasswordActivity"/>
 
     </application>
