@@ -49,6 +49,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
+import java.util.Locale;
 
 import com.example.ecare_client.Googlemaps.DirectionFinder;
 import com.example.ecare_client.Googlemaps.DirectionFinderListener;
@@ -63,6 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button btnFindPath;
     private EditText etOrigin;
     private EditText etDestination;
+    private Button useCurrent;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
@@ -89,6 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnFindPath = (Button) findViewById(R.id.btnFindPath);
         etOrigin = (EditText) findViewById(R.id.etOrigin);
         etDestination = (EditText) findViewById(R.id.etDestination);
+        useCurrent = (Button) findViewById(R.id.useCurrent);
 
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +111,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 //findPlace2();
                 loadPlacePicker();
+            }
+        });
+        useCurrent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                useCurrentLocation();
             }
         });
     }
@@ -259,6 +268,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    public void useCurrentLocation(){
+        try {
+            Geocoder geo = new Geocoder(MapsActivity.this.getApplicationContext(), Locale.getDefault());
+            List<Address> addresses = geo.getFromLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 1);
+            if (addresses.isEmpty()) {
+                ((EditText) findViewById(R.id.etOrigin)).setText("Waiting for Location");
+            }
+            else {
+                if (addresses.size() > 0) {
+                    ((EditText) findViewById(R.id.etOrigin)).setText(addresses.get(0).getFeatureName() + ", " + addresses.get(0).getLocality());
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace(); // getFromLocation() may sometimes fail
+        }
+    }
+
     private void findPlace() {
         try {
             Intent intent = new PlaceAutocomplete
@@ -291,6 +318,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // The user canceled the operation.
             }
         }
+
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
