@@ -26,6 +26,10 @@ our change log overview:
 . Implemented User sign in and sign up (resolving conflicts to master)
  - Week 7
 . Implemented Location routing from one point to another
+
+Can send message and video chat with user testexample@example.com but can't exchange message wait for contact list
+
+
  
 App WorkFlow 
 
@@ -50,6 +54,8 @@ Our mapping makes use of Google Maps, Google Places and Google Directions Api Li
     Give the Start and End Locations
     App makes use of given locations and parses the relevent data
     of the two locations back to the app for the user to see
+    
+    
     
   
 

@@ -39,7 +39,7 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_page);
 
-        makeCallTo = "John";
+        makeCallTo = "testexample@example.com";
 
         initMsg();
         inputText = (EditText) findViewById(R.id.input_text);
@@ -62,8 +62,8 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
             //Msg msg = new Msg(content, Msg.TYPE_SEND);
             //msgList.add(msg);
             getSinchServiceInterface().sendMessage(makeCallTo, content);
-            adapter.notifyItemInserted(adapter.getItemCount() - 1);//当有新消息时涮新RecyclerView 中的显示
-            msgRecyclerView.scrollToPosition(adapter.getItemCount() - 1);//定位到最后一行;
+            //adapter.notifyItemInserted(adapter.getItemCount() - 1);//当有新消息时涮新RecyclerView 中的显示
+           //msgRecyclerView.scrollToPosition(adapter.getItemCount() - 1);//定位到最后一行;
             inputText.setText("");//清空输入栏；
         }
 
