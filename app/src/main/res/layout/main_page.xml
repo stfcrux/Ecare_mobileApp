@@ -15,36 +15,36 @@
             android:background="@drawable/center_video" />
 
         <com.example.ecare_client.mainpageview.SexangleImageView
-            android:id="@+id/sexanglepic"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@drawable/center_pic"
+            android:background="@drawable/help_icon"
             android:contentDescription="1"/>
 
         <com.example.ecare_client.mainpageview.SexangleImageView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@drawable/center_file"
+            android:background="@drawable/profile_icon"
             android:contentDescription="4"/>
 
         <com.example.ecare_client.mainpageview.SexangleImageView
+            android:id="@+id/chat_activity"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@drawable/center_dark"
+            android:background="@drawable/message_icon"
             />
-
-        <com.example.ecare_client.mainpageview.SexangleImageView
-            android:id="@+id/btnOpenChecklist"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@drawable/center_email"
-            android:contentDescription="2"/>
 
         <com.example.ecare_client.mainpageview.SexangleImageView
             android:id="@+id/btnOpenMaps"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@drawable/center_email"
+            android:background="@drawable/map_icon"
+            android:contentDescription="2"/>
+
+        <com.example.ecare_client.mainpageview.SexangleImageView
+            android:id="@+id/btnOpenChecklist"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/toolbox_icon"
             android:contentDescription="2"/>
 
 
