@@ -50,4 +50,12 @@
 
     <string name="add_button">Add</string>
 
+
+    <string name="title_activity_contact_list">ContactListActivity</string>
+    <string name="contact_list_title">Contact List</string>
+    <string name="contact_hint">Enter contact\'s email</string>
+    <string name="add_contact_btn">ADD CONTACT</string>
+
+
+
 </resources>

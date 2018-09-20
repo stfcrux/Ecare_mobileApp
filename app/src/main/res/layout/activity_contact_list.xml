@@ -35,7 +35,7 @@
 
     <Button
         android:id="@+id/add_contact_button"
-        android:layout_width="121dp"
+        android:layout_width="123dp"
         android:layout_height="51dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
@@ -47,12 +47,14 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textInputLayout"
-        android:layout_width="235dp"
+        android:layout_width="216dp"
         android:layout_height="49dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintEnd_toStartOf="@+id/add_contact_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.936">
