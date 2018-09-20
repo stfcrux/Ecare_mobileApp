@@ -12,10 +12,14 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.ecare_client.settings.ContactListActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import com.example.ecare_client.R;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,6 +32,7 @@ public class SignupActivity extends AppCompatActivity {
     private Button btnSignIn, btnSignUp, btnResetPassword;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
+    private FirebaseDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,7 @@ public class SignupActivity extends AppCompatActivity {
         //Get Firebase auth instance
         // Remember that this is a singleton class.
         auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
 
         btnSignIn = (Button) findViewById(R.id.sign_in_button);
         btnSignUp = (Button) findViewById(R.id.sign_up_button);
@@ -81,7 +87,10 @@ public class SignupActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Log.d(...)
-                                    Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                                    Intent intent = new Intent(SignupActivity.this,
+                                            //-------------------------------
+                                            MainActivity.class);
+                                    //-------------------------------
 
                                     startActivity(intent);
 
@@ -138,10 +147,27 @@ public class SignupActivity extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                 } else {
 
+                                    // Create database reference.
                                     //Log.d(TAG, "createUserWithEmail:success");
                                     FirebaseUser user = auth.getCurrentUser();
 
-                                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
+
+
+                                    DatabaseReference userRef =
+                                            database.
+                                                    getReference().
+                                                    child("Users").
+                                                    child(user.getUid());
+
+                                    userRef.child("Contacts").child("Null").setValue("Null");
+                                    userRef.child("Email").setValue(user.getEmail());
+
+
+
+                                    startActivity(new Intent(SignupActivity.this,
+                                            //-------------------------------
+                                            MainActivity.class));
+                                    //-------------------------------
                                     finish();
                                 }
                             }
