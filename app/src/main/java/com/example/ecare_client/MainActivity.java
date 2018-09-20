@@ -84,6 +84,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
                         openChecklistActivity();
                 }
                 return false;
+
             }
         });
 
@@ -178,7 +179,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
     }
 
     private void openChecklistActivity() {
-        Intent ChecklistActivity = new Intent(getApplicationContext(), com.example.ecare_client.checklist.MainActivity.class);
+        Intent ChecklistActivity = new Intent(getApplicationContext(), ToolboxActivity.class);
         startActivity(ChecklistActivity);
     }
 

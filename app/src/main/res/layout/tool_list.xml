@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:padding="2dp">
+
+
+    <ImageView
+        android:id="@+id/btnPersonalInfo"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_marginTop="18dp"
+        android:background="@color/btn_login_bg"
+        app:srcCompat="@drawable/personal_info" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="184dp"
+        android:layout_height="41dp"
+        android:layout_alignParentStart="false"
+        android:layout_alignTop="@+id/textView3"
+        android:layout_marginStart="17dp"
+        android:fontFamily="@font/baloo"
+        android:text="   Personal Information"
+        android:textColor="@color/btn_login" />
+
+    <ImageView
+        android:id="@+id/btnSettings"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_alignTop="@+id/btnPersonalInfo"
+        android:layout_toEndOf="@+id/textView2"
+        android:background="@color/btn_login_bg"
+        app:srcCompat="@drawable/settings" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="64dp"
+        android:layout_marginTop="157dp"
+        android:fontFamily="@font/baloo"
+        android:text="Settings"
+        android:textColor="@color/btn_login" />
+
+    <ImageView
+        android:id="@+id/btnOpenChecklist"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/btnPersonalInfo"
+        android:layout_marginBottom="178dp"
+        android:background="@color/btn_login_bg"
+        app:srcCompat="@drawable/todo_list" />
+
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="187dp"
+        android:layout_marginStart="73dp"
+        android:fontFamily="@font/baloo"
+        android:text="To-Do List"
+        android:textColor="@color/btn_login" />
+
+
+</RelativeLayout>
