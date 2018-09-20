@@ -57,6 +57,7 @@ public class SinchService extends Service {
                     .environmentHost(ENVIRONMENT).build();
 
             mSinchClient.setSupportCalling(true);
+            mSinchClient.setSupportMessaging(true);
             mSinchClient.startListeningOnActiveConnection();
 
             mSinchClient.addSinchClientListener(new MySinchClientListener());
