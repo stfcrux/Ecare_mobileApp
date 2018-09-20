@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
             // FirebaseUser.getIdToken() instead.
         }
 
-        SexangleImageView sexangleImageView = (SexangleImageView) findViewById(R.id.sexanglepic);
+        SexangleImageView sexangleImageView = (SexangleImageView) findViewById(R.id.chat_activity);
         sexangleImageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
