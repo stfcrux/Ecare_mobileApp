@@ -277,7 +277,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             else {
                 if (addresses.size() > 0) {
-                    ((EditText) findViewById(R.id.etOrigin)).setText(addresses.get(0).getFeatureName() + ", " + addresses.get(0).getLocality());
+                    ((EditText) findViewById(R.id.etOrigin)).setText(addresses.get(0).getFeatureName() + ", " + addresses.get(0).getLocality() +", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
                 }
             }
         }
