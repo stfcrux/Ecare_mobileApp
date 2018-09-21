@@ -58,6 +58,8 @@ public class ContactListActivity extends AppCompatActivity {
         inputContact = (EditText) findViewById(R.id.contact_email);
         contactListView = (ListView) findViewById(R.id.contact_list_view);
 
+        // NEED A DELETE BUTTON IN THE LIST!!!!!!
+
 
         //-----------------------------------------------------------------------------
         final ArrayList<String> TEST_ARRAY = new ArrayList<>();
@@ -104,6 +106,9 @@ public class ContactListActivity extends AppCompatActivity {
             }
         });
 
+        // Refresh list after doing the query, even before pressing AddContact.
+        listAdapter.notifyDataSetChanged();
+
 
         btnAddContact.setOnClickListener(
             new View.OnClickListener() {
@@ -134,6 +139,8 @@ public class ContactListActivity extends AppCompatActivity {
 
 
                                 }
+                                // NEED TO REFRESH THE LIST VIEW!!!!
+                                listAdapter.notifyDataSetChanged();
                             }
                         }
 
@@ -143,8 +150,7 @@ public class ContactListActivity extends AppCompatActivity {
                         }
                     });
 
-                    // NEED TO REFRESH THE LIST VIEW!!!!
-                    listAdapter.notifyDataSetChanged();
+
 
 
 
@@ -152,6 +158,9 @@ public class ContactListActivity extends AppCompatActivity {
             }
 
         );
+
+
+
 
     }
 
