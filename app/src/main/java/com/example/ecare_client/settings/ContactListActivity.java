@@ -6,9 +6,12 @@ import android.os.Bundle;
 import com.example.ecare_client.R;
 
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.support.v7.recyclerview.extensions.ListAdapter;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.LayoutManager;
+import android.support.v7.widget.RecyclerView.ItemAnimator;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +20,7 @@ import android.widget.ProgressBar;
 
 import com.example.ecare_client.registration.ResetPasswordActivity;
 import com.example.ecare_client.registration.SignupActivity;
+import com.example.ecare_client.settings.widgets.ContactAdapter;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,10 +41,10 @@ public class ContactListActivity extends AppCompatActivity {
     private Button btnAddContact;
     private ProgressBar progressBar;
 
-    private ListView contactListView;
     private FirebaseAuth auth;
 
-    private ArrayAdapter<String> listAdapter;
+    private RecyclerView contactListView;
+    private ArrayList<Contact> contactArrayList;
 
     private FirebaseDatabase database;
 
@@ -56,21 +60,27 @@ public class ContactListActivity extends AppCompatActivity {
 
         btnAddContact = (Button) findViewById(R.id.add_contact_button);
         inputContact = (EditText) findViewById(R.id.contact_email);
-        contactListView = (ListView) findViewById(R.id.contact_list_view);
+
+        contactListView = (RecyclerView) findViewById(R.id.contact_list_view);
 
         // NEED A DELETE BUTTON IN THE LIST!!!!!!
 
-
+        final ArrayList<Contact> contacts;
         //-----------------------------------------------------------------------------
-        final ArrayList<String> TEST_ARRAY = new ArrayList<>();
 
-        listAdapter =
-                new ArrayAdapter<String>(
-                        this,
-                        R.layout.contact_list_text_view,
-                        TEST_ARRAY);
+        // Initialize contacts
+        // YOU NEED TO ADJUST THE LAYOUT FILE FOR EACH ITEM_CONTACT!!!!!!
+        contacts = Contact.createContactsList(20);
+        // Create adapter passing in the sample user data
+        final ContactAdapter adapter = new ContactAdapter(contacts);
+        // Attach the adapter to the recyclerview to populate items
+        contactListView.setAdapter(adapter);
 
-        contactListView.setAdapter(listAdapter);
+        adapter.notifyDataSetChanged();
+        // Set layout manager to position the items
+        contactListView.setLayoutManager(new LinearLayoutManager(this));
+
+
         //-----------------------------------------------------------------------------
         FirebaseUser currentUser = auth.getCurrentUser();
 
@@ -83,14 +93,14 @@ public class ContactListActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    TEST_ARRAY.clear();
+
                     // dataSnapshot is the "Users" node with all children with contactEmail.
                     for (DataSnapshot matchingContact : dataSnapshot.getChildren()) {
 
                         // Very bad way of doing this perhaps.
                         if ( !(matchingContact.getKey().equals("Null")) ) {
 
-                            TEST_ARRAY.add(matchingContact.getKey());
+                            //contacts.add(matchingContact.getKey());
 
                         }
                         // UPDATE TEST_ARRAY HERE!!!
@@ -107,7 +117,7 @@ public class ContactListActivity extends AppCompatActivity {
         });
 
         // Refresh list after doing the query, even before pressing AddContact.
-        listAdapter.notifyDataSetChanged();
+
 
 
         btnAddContact.setOnClickListener(
@@ -140,7 +150,7 @@ public class ContactListActivity extends AppCompatActivity {
 
                                 }
                                 // NEED TO REFRESH THE LIST VIEW!!!!
-                                listAdapter.notifyDataSetChanged();
+
                             }
                         }
 
