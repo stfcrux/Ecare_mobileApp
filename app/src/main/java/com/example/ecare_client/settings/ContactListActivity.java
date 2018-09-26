@@ -214,6 +214,10 @@ public class ContactListActivity extends AppCompatActivity {
 
     }
 
+    // Call this method only once for each contact when
+    // you enter the activity.
+    // (Of course, you can call it multiple times if entering
+    // the activity multiple times).
     protected void setContactListener(String contactID,
                                        final ArrayList<Contact> contacts,
                                        final ContactAdapter adapter) {
@@ -225,19 +229,28 @@ public class ContactListActivity extends AppCompatActivity {
 
         DatabaseReference contactIDRef = userRef.child(contactID);
 
+        // Also need to initialise the contact list.
 
 
-        contactIDRef.addChildEventListener(new ChildEventListener() {
+        contactIDRef.addValueEventListener(new ValueEventListener() {
             @Override
             // THE DATA SNAPSHOT IS AT THE CHILD!! NOT THE ROOT NODE!!!!
-            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                String contactEmail = dataSnapshot.getValue(String.class);
-                Log.d("contactEmail", contactEmail);
+                String contactEmail = "Null";
+                Boolean contactOnline = false;
 
-                Boolean contactOnline =
-                        Boolean.parseBoolean(
-                                dataSnapshot.child("Online").getValue(String.class));
+                for(DataSnapshot child : dataSnapshot.getChildren()) {
+                    if (child.getKey().equals("Email")) {
+                        contactEmail = child.getValue(String.class);
+                    }
+
+                    if (child.getKey().equals("Online")) {
+                        contactOnline = Boolean.parseBoolean(
+                                child.getValue(String.class));
+                    }
+                }
+
 
                 Contact contactObject = new Contact(contactEmail, contactOnline);
 
@@ -281,27 +294,10 @@ public class ContactListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot snapshot) {
-
-
-            }
-
-            @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChildName) {
-
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot snapshot, String previousChildName) {
-
-
-            }
-
-            @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Do nothing.
             }
+
         });
 
 
