@@ -19,6 +19,23 @@ public class Contact {
         return mOnline;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Contact) {
+            Contact otherContact = (Contact) obj;
+
+            return (otherContact.getName().
+                    equals(
+                            getName())
+            );
+
+        }
+
+        else {
+            return false;
+        }
+    }
+
     private static int lastContactId = 0;
 
     public static ArrayList<Contact> createContactsList(int numContacts) {
