@@ -229,9 +229,10 @@ public class ContactListActivity extends AppCompatActivity {
 
         contactIDRef.addChildEventListener(new ChildEventListener() {
             @Override
+            // THE DATA SNAPSHOT IS AT THE CHILD!! NOT THE ROOT NODE!!!!
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-                // Need the email and the online status.
-                String contactEmail = dataSnapshot.child("Email").getValue(String.class);
+
+                String contactEmail = dataSnapshot.getValue(String.class);
                 Log.d("contactEmail", contactEmail);
 
                 Boolean contactOnline =
