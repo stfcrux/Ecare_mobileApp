@@ -86,16 +86,13 @@ public class SignupActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-
-                                    setOnline(true);
-
+                                    // Log.d(...)
                                     Intent intent = new Intent(SignupActivity.this,
                                             //-------------------------------
                                             MainActivity.class);
                                     //-------------------------------
 
                                     startActivity(intent);
-
 
                                 }
 
@@ -150,16 +147,27 @@ public class SignupActivity extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                 } else {
 
-                                    createNewUser();
+                                    // Create database reference.
+                                    //Log.d(TAG, "createUserWithEmail:success");
+                                    FirebaseUser user = auth.getCurrentUser();
 
-                                    setOnline(true);
+
+
+                                    DatabaseReference userRef =
+                                            database.
+                                                    getReference().
+                                                    child("Users").
+                                                    child(user.getUid());
+
+                                    userRef.child("Contacts").child("Null").setValue("Null");
+                                    userRef.child("Email").setValue(user.getEmail());
+
+
 
                                     startActivity(new Intent(SignupActivity.this,
                                             //-------------------------------
                                             MainActivity.class));
                                     //-------------------------------
-
-
                                     finish();
                                 }
                             }
@@ -171,49 +179,7 @@ public class SignupActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        setOnline(false);
-
         super.onResume();
         progressBar.setVisibility(View.GONE);
-    }
-
-    protected void createNewUser() {
-
-        FirebaseUser user = auth.getCurrentUser();
-
-
-
-        DatabaseReference userRef =
-                database.
-                        getReference().
-                        child("Users").
-                        child(user.getUid());
-
-        userRef.child("Contacts").child("Null").setValue("Null");
-        userRef.child("Email").setValue(user.getEmail());
-
-        userRef.child("Online").setValue("false");
-
-    }
-
-    protected void setOnline(boolean value) {
-        FirebaseUser user = auth.getCurrentUser();
-
-        DatabaseReference userRef =
-                database.
-                        getReference().
-                        child("Users").
-                        child(user.getUid());
-
-        if (value) {
-
-            userRef.child("Online").setValue("true");
-        }
-
-        else {
-
-            userRef.child("Online").setValue("false");
-
-        }
     }
 }

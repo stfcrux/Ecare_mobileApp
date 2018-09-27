@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
+import com.example.ecare_client.settings.PersonalInfoActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.sinch.android.rtc.SinchError;
@@ -89,13 +90,13 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
         });
 
 
-        SexangleImageView ContactListView = (SexangleImageView) findViewById(R.id.btnOpenContactList);
-        ContactListView.setOnTouchListener(new View.OnTouchListener() {
+        SexangleImageView PersonalInfoView = (SexangleImageView) findViewById(R.id.btnOpenPersonalInfo);
+        PersonalInfoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_UP:
-                        openContactListActivity();
+                        openPersonalInfoActivity();
                 }
                 return false;
             }
@@ -149,7 +150,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
 
     @Override
     public void onStarted() {
-        openChatActivity();
+        openContactListActivity();
     }
 
     private void loginClicked() {
@@ -164,7 +165,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
             getSinchServiceInterface().startClient(userName);
             showSpinner();
         } else {
-            openChatActivity();
+            openContactListActivity();
         }
     }
 
@@ -187,6 +188,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
         Intent ContactListActivity = new Intent(getApplicationContext(), com.example.ecare_client.settings.ContactListActivity.class);
         startActivity(ContactListActivity);
 
+    }
+
+    private void openPersonalInfoActivity() {
+        Intent personalInfoActivity = new Intent(this, PersonalInfoActivity.class);
+        startActivity(personalInfoActivity);
     }
 
     private void showSpinner() {

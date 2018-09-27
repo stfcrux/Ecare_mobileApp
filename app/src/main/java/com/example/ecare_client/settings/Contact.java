@@ -1,5 +1,7 @@
 package com.example.ecare_client.settings;
 
+import android.support.v7.app.AppCompatActivity;
+
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ public class Contact {
     private boolean mOnline;
     private boolean mChecked;
     private String mKey;
+    private ContactListActivity mContext;
 
     private ValueEventListener contactEventListener;
 
@@ -59,6 +62,19 @@ public class Contact {
     public void setContactEventListener(ValueEventListener listener) {
         contactEventListener = listener;
     }
+
+    public ContactListActivity getContext() {
+        return mContext;
+
+    }
+
+    public void setContext(ContactListActivity context) {
+        mContext = context;
+
+    }
+
+
+
 
 
     @Override

@@ -25,6 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.functions.FirebaseFunctions;
+
 
 import java.util.ArrayList;
 
@@ -42,6 +44,10 @@ public class ContactListActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
 
+    private FirebaseFunctions functions;
+
+
+
 
 
     @Override
@@ -51,6 +57,7 @@ public class ContactListActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+
 
         btnAddContact = (Button) findViewById(R.id.add_contact_button);
         inputContact = (EditText) findViewById(R.id.contact_email);
@@ -112,6 +119,9 @@ public class ContactListActivity extends AppCompatActivity {
                 // Do nothing.
             }
         });
+
+
+
 
 
 
@@ -256,8 +266,7 @@ public class ContactListActivity extends AppCompatActivity {
         // If the contact is already present at this point in the method,
         // then DON'T reset the ValueEventListener!!!!
 
-
-
+        final ContactListActivity context = this;
 
         database = FirebaseDatabase.getInstance();
 
@@ -334,6 +343,7 @@ public class ContactListActivity extends AppCompatActivity {
 
                 else {
                     searchObject.setContactEventListener(this);
+                    searchObject.setContext(context);
 
                     if (contactOnline) {
                         contacts.add(0, searchObject);
