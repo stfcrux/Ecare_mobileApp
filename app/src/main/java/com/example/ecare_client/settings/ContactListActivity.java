@@ -25,7 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.functions.FirebaseFunctions;
+
 
 
 import java.util.ArrayList;
@@ -44,7 +44,6 @@ public class ContactListActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
 
-    private FirebaseFunctions functions;
 
 
 

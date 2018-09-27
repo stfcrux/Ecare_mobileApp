@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
             }
         });
 
-        SexangleImageView ChecklistView = (SexangleImageView) findViewById(R.id.btnOpenChecklist);
+        SexangleImageView ChecklistView = (SexangleImageView) findViewById(R.id.btnOpenSettings);
         ChecklistView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
