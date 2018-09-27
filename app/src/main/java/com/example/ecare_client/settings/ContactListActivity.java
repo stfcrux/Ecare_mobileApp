@@ -407,14 +407,6 @@ public class ContactListActivity extends AppCompatActivity {
         adapter.notifyItemRemoved(currentIndex);
 
 
-        userRef.child("Contacts").child(contactID).removeValue(new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-
-            }
-        });
-
-
         contactRef.child("Contacts").
                 child(currentUser.getUid()).removeValue();
 
