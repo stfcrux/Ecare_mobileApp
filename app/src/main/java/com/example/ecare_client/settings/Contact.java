@@ -22,6 +22,11 @@ public class Contact {
         return mOnline;
     }
 
+    public void setOnline(boolean value) {
+        mOnline = value;
+
+    }
+
     public boolean isChecked() {
         return mChecked;
     }

@@ -5,6 +5,7 @@ import com.example.ecare_client.settings.Contact;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,11 +55,14 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
 
         CheckBox checkbox = viewHolder.deleteCheckbox;
+        checkbox.setChecked(contact.isChecked());
 
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 contact.setChecked(b);
+
+
             }
         });
 

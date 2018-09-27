@@ -273,26 +273,33 @@ public class ContactListActivity extends AppCompatActivity {
                     // Edit the EXISTING contact.
                     contactObject = contacts.get(currentIndex);
 
-                    ContactAdapter.ViewHolder contactView =
-                            (ContactAdapter.ViewHolder)
-                                    listView.findViewHolderForAdapterPosition(currentIndex);
+                    boolean wasChecked = contactObject.isChecked();
 
-                    contactView.messageButton.setText(contactOnline ? "Message" : "Offline");
-                    contactView.messageButton.setEnabled(contactOnline);
+                    Log.d("WasChecked", ((Boolean) wasChecked).toString());
 
-                    contactView.nameTextView.setText(contactEmail);
+                    contactObject.setOnline(contactOnline);
+                    contactObject.setChecked(wasChecked);
+
 
                     if (contactOnline) {
                         // Then move the contact to the top.
+                        adapter.notifyItemChanged(currentIndex);
                         contacts.remove(currentIndex);
                         contacts.add(0, contactObject);
                         adapter.notifyItemMoved(currentIndex, 0);
+
                     }
 
                     else {
                         adapter.notifyItemChanged(currentIndex);
-                    }
+                        contacts.remove(currentIndex);
+                        contacts.add(contactObject);
 
+                        int lastIndex = contacts.size() - 1;
+                        adapter.notifyItemMoved(currentIndex, lastIndex);
+
+
+                    }
 
                 }
 
