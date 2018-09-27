@@ -1,21 +1,37 @@
 package com.example.ecare_client.settings;
 
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class Contact {
     private String mName;
     private boolean mOnline;
     private boolean mChecked;
+    private String mKey;
 
-    public Contact(String name, boolean online) {
+    private ValueEventListener contactEventListener;
+
+    public Contact(String name, String key, boolean online) {
         mName = name;
         mOnline = online;
+        mKey = key;
 
         mChecked = false;
     }
 
     public String getName() {
         return mName;
+    }
+
+    public void setName(String newName) {
+        mName = newName;
+
+    }
+
+    public String getKey() {
+        return mKey;
+
     }
 
     public boolean isOnline() {
@@ -36,6 +52,13 @@ public class Contact {
 
     }
 
+    public ValueEventListener getContactEventListener() {
+        return contactEventListener;
+    }
+
+    public void setContactEventListener(ValueEventListener listener) {
+        contactEventListener = listener;
+    }
 
 
     @Override
@@ -43,9 +66,9 @@ public class Contact {
         if (obj instanceof Contact) {
             Contact otherContact = (Contact) obj;
 
-            return (otherContact.getName().
+            return (otherContact.getKey().
                     equals(
-                            getName())
+                            getKey())
             );
 
         }
@@ -57,6 +80,7 @@ public class Contact {
 
     private static int lastContactId = 0;
 
+    /*
     public static ArrayList<Contact> createContactsList(int numContacts) {
         ArrayList<Contact> contacts = new ArrayList<Contact>();
 
@@ -64,9 +88,11 @@ public class Contact {
             contacts.add(
                     new Contact(
                             "Person " + ++lastContactId,
+                            ,
                             i <= numContacts / 2));
         }
 
         return contacts;
     }
+     */
 }

@@ -1,18 +1,14 @@
 package com.example.ecare_client.settings;
 
-import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 
 import com.example.ecare_client.R;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.LayoutManager;
-import android.support.v7.widget.RecyclerView.ItemAnimator;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,13 +16,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 
-import com.example.ecare_client.registration.ResetPasswordActivity;
-import com.example.ecare_client.registration.SignupActivity;
 import com.example.ecare_client.settings.widgets.ContactAdapter;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,13 +28,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import static java.util.Arrays.asList;
-
 public class ContactListActivity extends AppCompatActivity {
 
     private EditText inputContact;
     private Button btnAddContact;
     private ProgressBar progressBar;
+    private Button btnDeleteContacts;
 
     private FirebaseAuth auth;
 
@@ -63,6 +54,7 @@ public class ContactListActivity extends AppCompatActivity {
 
         btnAddContact = (Button) findViewById(R.id.add_contact_button);
         inputContact = (EditText) findViewById(R.id.contact_email);
+        btnDeleteContacts = (Button) findViewById(R.id.delete_contact_button);
 
         contactListView = (RecyclerView) findViewById(R.id.contact_list_view);
 
@@ -80,7 +72,7 @@ public class ContactListActivity extends AppCompatActivity {
 
 
         //-----------------------------------------------------------------------------
-        FirebaseUser currentUser = auth.getCurrentUser();
+        final FirebaseUser currentUser = auth.getCurrentUser();
 
         final DatabaseReference userRef =
                 database.getReference().child("Users").child(currentUser.getUid());
@@ -168,6 +160,15 @@ public class ContactListActivity extends AppCompatActivity {
 
                                     userRef.child("Contacts").child(contactUid).setValue("Null");
 
+                                    // Need to update the other user's contact list.
+                                    DatabaseReference contactRef =
+                                            database.getReference().
+                                                    child("Users").child(contactUid);
+
+                                    // May need to worry about refreshing the other user's page!!
+                                    contactRef.child("Contacts").
+                                            child(currentUser.getUid()).setValue("Null");
+
 
                                     setContactListener(contactUid,
                                             contacts,
@@ -190,6 +191,20 @@ public class ContactListActivity extends AppCompatActivity {
 
                 }
             }
+
+        );
+
+
+        // Perhaps make this button disabled if no checkboxes are pressed.
+        btnDeleteContacts.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteContacts(contacts, adapter, contactListView);
+
+
+                    }
+                }
 
         );
 
@@ -225,23 +240,19 @@ public class ContactListActivity extends AppCompatActivity {
     // you enter the activity.
     // (Of course, you can call it multiple times if entering
     // the activity multiple times).
-    protected void setContactListener(String contactID,
+    protected void setContactListener(final String contactID,
                                       final ArrayList<Contact> contacts,
                                       final ContactAdapter adapter,
                                       final RecyclerView listView) {
 
         database = FirebaseDatabase.getInstance();
 
-        DatabaseReference userRef =
-                database.getReference().child("Users");
 
-        DatabaseReference contactIDRef = userRef.child(contactID);
+        DatabaseReference contactIDRef = database.getReference().child("Users").child(contactID);
 
         // Also need to initialise the contact list.
 
-
-
-        contactIDRef.addValueEventListener(new ValueEventListener() {
+        ValueEventListener contactEventListener = new ValueEventListener() {
             @Override
             // THE DATA SNAPSHOT IS AT THE CHILD!! NOT THE ROOT NODE!!!!
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -263,15 +274,16 @@ public class ContactListActivity extends AppCompatActivity {
 
                 // Use this only to search for the required contact in "contacts" list,
                 // unless the contact does NOT already exist.
-                Contact contactObject = new Contact(contactEmail, contactOnline);
+                Contact searchObject = new Contact(contactEmail, contactID, contactOnline);
 
-                int currentIndex = contacts.indexOf(contactObject);
+
+                int currentIndex = contacts.indexOf(searchObject);
 
 
 
                 if (currentIndex != -1) {
                     // Edit the EXISTING contact.
-                    contactObject = contacts.get(currentIndex);
+                    Contact contactObject = contacts.get(currentIndex);
 
                     boolean wasChecked = contactObject.isChecked();
 
@@ -279,6 +291,8 @@ public class ContactListActivity extends AppCompatActivity {
 
                     contactObject.setOnline(contactOnline);
                     contactObject.setChecked(wasChecked);
+
+                    contactObject.setName(contactEmail);
 
 
                     if (contactOnline) {
@@ -306,13 +320,15 @@ public class ContactListActivity extends AppCompatActivity {
                 // In case the contact wasn't previously in the list.
 
                 else {
+                    searchObject.setContactEventListener(this);
+
                     if (contactOnline) {
-                        contacts.add(0, contactObject);
+                        contacts.add(0, searchObject);
                         adapter.notifyItemInserted(0);
                     }
 
                     else {
-                        contacts.add(contactObject);
+                        contacts.add(searchObject);
                         int lastPosition = contacts.size() - 1;
                         adapter.notifyItemInserted(lastPosition);
 
@@ -327,7 +343,85 @@ public class ContactListActivity extends AppCompatActivity {
                 // Do nothing.
             }
 
+        };
+
+        contactIDRef.addValueEventListener(contactEventListener);
+
+
+
+    }
+
+    protected void deleteContacts(final ArrayList<Contact> contacts,
+                                  final ContactAdapter adapter,
+                                  final RecyclerView listView) {
+
+        int i = 0;
+
+        while (i < contacts.size()) {
+            Contact contactObject = contacts.get(i);
+
+            if (contactObject.isChecked()) {
+
+                deleteContact(contactObject,
+                        contacts,
+                        adapter,
+                        listView);
+
+            }
+
+            else {
+                i += 1;
+            }
+
+        }
+    }
+
+    protected void deleteContact(final Contact contactObject,
+                                 final ArrayList<Contact> contacts,
+                                 final ContactAdapter adapter,
+                                 final RecyclerView listView) {
+
+
+        final String contactID = contactObject.getKey();
+
+        final FirebaseUser currentUser = auth.getCurrentUser();
+
+        final DatabaseReference userRef =
+                database.getReference().child("Users").child(currentUser.getUid());
+
+        // Need to remove the previous event listener so that the contact does not reappear
+        // in the list.
+        DatabaseReference contactRef =
+                database.getReference().
+                        child("Users").child(contactID);
+
+        contactRef.removeEventListener(contactObject.getContactEventListener());
+
+        // Need to remove the previous event listener!!!!!
+
+        // May need to worry about refreshing the other user's page!!
+        Contact searchObject = new Contact("Null", contactID, false);
+        int currentIndex = contacts.indexOf(searchObject);
+
+        contacts.remove(currentIndex);
+        adapter.notifyItemRemoved(currentIndex);
+
+
+        userRef.child("Contacts").child(contactID).removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+
+            }
         });
+
+
+        contactRef.child("Contacts").
+                child(currentUser.getUid()).removeValue();
+
+
+
+
+        // Need to update the other user's contact list.
 
 
 
