@@ -78,6 +78,7 @@ public class ContactListActivity extends AppCompatActivity {
         // Set layout manager to position the items
         contactListView.setLayoutManager(new LinearLayoutManager(this));
 
+
         //-----------------------------------------------------------------------------
         FirebaseUser currentUser = auth.getCurrentUser();
 
@@ -105,7 +106,10 @@ public class ContactListActivity extends AppCompatActivity {
 
                     }
 
-                    setContactListeners(contactIDs, contacts, adapter);
+                    setContactListeners(contactIDs,
+                            contacts,
+                            adapter,
+                            contactListView);
 
 
                 }
@@ -165,7 +169,10 @@ public class ContactListActivity extends AppCompatActivity {
                                     userRef.child("Contacts").child(contactUid).setValue("Null");
 
 
-                                    setContactListener(contactUid, contacts, adapter);
+                                    setContactListener(contactUid,
+                                            contacts,
+                                            adapter,
+                                            contactListView);
 
 
                                 }
@@ -201,13 +208,13 @@ public class ContactListActivity extends AppCompatActivity {
 
 
     protected void setContactListeners(ArrayList<String> contactIDs,
-                               final ArrayList<Contact> contacts,
-                               final ContactAdapter adapter) {
+                                       final ArrayList<Contact> contacts,
+                                       final ContactAdapter adapter,
+                                       final RecyclerView listView) {
 
 
         for (String contactID : contactIDs) {
-            setContactListener(contactID, contacts, adapter);
-
+            setContactListener(contactID, contacts, adapter, listView);
 
         }
 
@@ -219,8 +226,9 @@ public class ContactListActivity extends AppCompatActivity {
     // (Of course, you can call it multiple times if entering
     // the activity multiple times).
     protected void setContactListener(String contactID,
-                                       final ArrayList<Contact> contacts,
-                                       final ContactAdapter adapter) {
+                                      final ArrayList<Contact> contacts,
+                                      final ContactAdapter adapter,
+                                      final RecyclerView listView) {
 
         database = FirebaseDatabase.getInstance();
 
@@ -230,6 +238,7 @@ public class ContactListActivity extends AppCompatActivity {
         DatabaseReference contactIDRef = userRef.child(contactID);
 
         // Also need to initialise the contact list.
+
 
 
         contactIDRef.addValueEventListener(new ValueEventListener() {
@@ -252,29 +261,42 @@ public class ContactListActivity extends AppCompatActivity {
                 }
 
 
+                // Use this only to search for the required contact in "contacts" list,
+                // unless the contact does NOT already exist.
                 Contact contactObject = new Contact(contactEmail, contactOnline);
 
                 int currentIndex = contacts.indexOf(contactObject);
 
-                // In case the contact wasn't previously in the list.
 
 
                 if (currentIndex != -1) {
-                    if (contactOnline) {
-                        contacts.remove(currentIndex);
-                        adapter.notifyItemRemoved(currentIndex);
+                    // Edit the EXISTING contact.
+                    contactObject = contacts.get(currentIndex);
 
+                    ContactAdapter.ViewHolder contactView =
+                            (ContactAdapter.ViewHolder)
+                                    listView.findViewHolderForAdapterPosition(currentIndex);
+
+                    contactView.messageButton.setText(contactOnline ? "Message" : "Offline");
+                    contactView.messageButton.setEnabled(contactOnline);
+
+                    contactView.nameTextView.setText(contactEmail);
+
+                    if (contactOnline) {
+                        // Then move the contact to the top.
+                        contacts.remove(currentIndex);
                         contacts.add(0, contactObject);
-                        adapter.notifyItemInserted(0);
+                        adapter.notifyItemMoved(currentIndex, 0);
                     }
 
                     else {
-                        contacts.remove(currentIndex);
-                        contacts.add(currentIndex, contactObject);
                         adapter.notifyItemChanged(currentIndex);
-
                     }
+
+
                 }
+
+                // In case the contact wasn't previously in the list.
 
                 else {
                     if (contactOnline) {

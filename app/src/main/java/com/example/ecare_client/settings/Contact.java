@@ -5,10 +5,13 @@ import java.util.ArrayList;
 public class Contact {
     private String mName;
     private boolean mOnline;
+    private boolean mChecked;
 
     public Contact(String name, boolean online) {
         mName = name;
         mOnline = online;
+
+        mChecked = false;
     }
 
     public String getName() {
@@ -18,6 +21,17 @@ public class Contact {
     public boolean isOnline() {
         return mOnline;
     }
+
+    public boolean isChecked() {
+        return mChecked;
+    }
+
+    public void setChecked(boolean value) {
+        mChecked = value;
+
+    }
+
+
 
     @Override
     public boolean equals(Object obj) {
@@ -42,7 +56,10 @@ public class Contact {
         ArrayList<Contact> contacts = new ArrayList<Contact>();
 
         for (int i = 1; i <= numContacts; i++) {
-            contacts.add(new Contact("Person " + ++lastContactId, i <= numContacts / 2));
+            contacts.add(
+                    new Contact(
+                            "Person " + ++lastContactId,
+                            i <= numContacts / 2));
         }
 
         return contacts;

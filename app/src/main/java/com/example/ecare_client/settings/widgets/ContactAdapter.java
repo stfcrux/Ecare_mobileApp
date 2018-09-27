@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -40,14 +42,29 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     @Override
     public void onBindViewHolder(ContactAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
-        Contact contact = mContacts.get(position);
+        final Contact contact = mContacts.get(position);
 
         // Set item views based on your views and data model
         TextView textView = viewHolder.nameTextView;
         textView.setText(contact.getName());
+
         Button button = viewHolder.messageButton;
         button.setText(contact.isOnline() ? "Message" : "Offline");
         button.setEnabled(contact.isOnline());
+
+
+        CheckBox checkbox = viewHolder.deleteCheckbox;
+
+        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                contact.setChecked(b);
+            }
+        });
+
+
+
+
     }
 
     // Returns the total count of items in the list
@@ -64,6 +81,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         // for any view that will be set as you render a row
         public TextView nameTextView;
         public Button messageButton;
+        public CheckBox deleteCheckbox;
 
 
 
@@ -76,6 +94,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
             nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
             messageButton = (Button) itemView.findViewById(R.id.message_button);
+            deleteCheckbox = (CheckBox) itemView.findViewById(R.id.delete_checkbox);
         }
     }
 
