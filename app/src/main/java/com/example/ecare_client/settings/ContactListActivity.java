@@ -156,7 +156,15 @@ public class ContactListActivity extends AppCompatActivity {
                                     // since we're in this loop, we know the contact email exists.
 
 
+                                    // NEED TO CHECK IF THE CONTACT IS ALREADY RECORDED.
                                     String contactUid = matchingContact.getKey();
+
+                                    Contact searchObject = new Contact("Null", contactUid, false);
+                                    boolean isAlreadyContact = contacts.contains(searchObject);
+
+                                    if (isAlreadyContact) {
+                                        return;
+                                    }
 
                                     userRef.child("Contacts").child(contactUid).setValue("Null");
 
@@ -245,6 +253,12 @@ public class ContactListActivity extends AppCompatActivity {
                                       final ContactAdapter adapter,
                                       final RecyclerView listView) {
 
+        // If the contact is already present at this point in the method,
+        // then DON'T reset the ValueEventListener!!!!
+
+
+
+
         database = FirebaseDatabase.getInstance();
 
 
@@ -287,7 +301,6 @@ public class ContactListActivity extends AppCompatActivity {
 
                     boolean wasChecked = contactObject.isChecked();
 
-                    Log.d("WasChecked", ((Boolean) wasChecked).toString());
 
                     contactObject.setOnline(contactOnline);
                     contactObject.setChecked(wasChecked);
@@ -388,6 +401,8 @@ public class ContactListActivity extends AppCompatActivity {
 
         final DatabaseReference userRef =
                 database.getReference().child("Users").child(currentUser.getUid());
+
+        userRef.child("Contacts").child(contactID).removeValue();
 
         // Need to remove the previous event listener so that the contact does not reappear
         // in the list.
