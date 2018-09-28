@@ -1,7 +1,11 @@
 package com.example.ecare_client.settings;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.ecare_client.BaseActivity;
+import com.example.ecare_client.ChatActivity;
 import com.example.ecare_client.R;
 
 import android.support.annotation.NonNull;
@@ -14,8 +18,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 
+import com.example.ecare_client.SinchService;
 import com.example.ecare_client.settings.widgets.ContactAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,26 +31,32 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
+import com.sinch.android.rtc.SinchError;
 
 
 import java.util.ArrayList;
 
-public class ContactListActivity extends AppCompatActivity {
+public class ContactListActivity extends BaseActivity implements SinchService.StartFailedListener {
 
     private EditText inputContact;
     private Button btnAddContact;
     private ProgressBar progressBar;
     private Button btnDeleteContacts;
+    private ProgressDialog mSpinner;
 
     private FirebaseAuth auth;
-
-    private RecyclerView contactListView;
-    private ArrayList<Contact> contactArrayList;
-
     private FirebaseDatabase database;
 
+    final private ArrayList<Contact> contacts = new ArrayList<>();
+    final private ContactAdapter adapter = new ContactAdapter(contacts);
+    private RecyclerView contactListView;
 
+    private String selectedContactName;
+
+
+
+
+    // Set layout manager to position the items
 
 
 
@@ -57,25 +69,17 @@ public class ContactListActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
 
-
         btnAddContact = (Button) findViewById(R.id.add_contact_button);
         inputContact = (EditText) findViewById(R.id.contact_email);
         btnDeleteContacts = (Button) findViewById(R.id.delete_contact_button);
 
-        contactListView = (RecyclerView) findViewById(R.id.contact_list_view);
 
-        // NEED A DELETE BUTTON IN THE LIST!!!!!!
-        final ArrayList<Contact> contacts = new ArrayList<>();
+        contactListView = (RecyclerView) findViewById(R.id.contact_list_view);
+        contactListView.setAdapter(adapter);
+        contactListView.setLayoutManager(new LinearLayoutManager(this));
 
         // contactIDs is just used to pass the contacts onto another method.
         final ArrayList<String> contactIDs = new ArrayList<>();
-
-        final ContactAdapter adapter = new ContactAdapter(contacts);
-
-        contactListView.setAdapter(adapter);
-        // Set layout manager to position the items
-        contactListView.setLayoutManager(new LinearLayoutManager(this));
-
 
         //-----------------------------------------------------------------------------
         final FirebaseUser currentUser = auth.getCurrentUser();
@@ -217,7 +221,7 @@ public class ContactListActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deleteContacts(contacts, adapter, contactListView);
+                        deleteContacts(contacts, adapter, contactListView, false);
 
 
                     }
@@ -236,6 +240,83 @@ public class ContactListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+
+        deleteContacts(contacts, adapter, contactListView, true);
+
+    }
+
+
+    public void beginChat(String contactName) {
+
+        selectedContactName = contactName;
+
+        auth = FirebaseAuth.getInstance();
+        String email = auth.getCurrentUser().getEmail();
+
+        if (!getSinchServiceInterface().isStarted()) {
+            getSinchServiceInterface().startClient(email);
+            showSpinner();
+
+        } else {
+
+            Intent chatActivity = new Intent(this, ChatActivity.class);
+
+            Bundle options = new Bundle();
+            options.putString("ContactName", contactName);
+
+            chatActivity.putExtras(options);
+
+            startActivity(chatActivity);
+        }
+
+    }
+
+    @Override
+    public void onStartFailed(SinchError error) {
+        Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show();
+        if (mSpinner != null) {
+            mSpinner.dismiss();
+        }
+    }
+
+    @Override
+    public void onStarted() {
+
+        Intent chatActivity = new Intent(this, ChatActivity.class);
+
+        Bundle options = new Bundle();
+        options.putString("ContactName", selectedContactName);
+
+        chatActivity.putExtras(options);
+
+        startActivity(chatActivity);
+    }
+
+    @Override
+    protected void onServiceConnected() {
+        getSinchServiceInterface().setStartListener(this);
+    }
+
+
+    private void showSpinner() {
+        mSpinner = new ProgressDialog(this);
+        mSpinner.setTitle("Connecting");
+        mSpinner.setMessage("Please wait...");
+        mSpinner.show();
+    }
+
+    @Override
+    protected void onPause() {
+        if (mSpinner != null) {
+            mSpinner.dismiss();
+        }
+        super.onPause();
     }
 
 
@@ -369,20 +450,19 @@ public class ContactListActivity extends AppCompatActivity {
 
         contactIDRef.addValueEventListener(contactEventListener);
 
-
-
     }
 
     protected void deleteContacts(final ArrayList<Contact> contacts,
                                   final ContactAdapter adapter,
-                                  final RecyclerView listView) {
+                                  final RecyclerView listView,
+                                  boolean deleteAllContacts) {
 
         int i = 0;
 
         while (i < contacts.size()) {
             Contact contactObject = contacts.get(i);
 
-            if (contactObject.isChecked()) {
+            if (contactObject.isChecked() || deleteAllContacts) {
 
                 deleteContact(contactObject,
                         contacts,

@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.sinch.android.rtc.SinchError;
 
-public class MainActivity extends BaseActivity implements OnClickListener, SinchService.StartFailedListener {
+public class MainActivity extends BaseActivity implements OnClickListener {
 
     private ProgressDialog mSpinner;
     private String email = "null";
@@ -127,31 +127,32 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
 
         }
     }
-    @Override
-    protected void onServiceConnected() {
-        getSinchServiceInterface().setStartListener(this);
-    }
 
-    @Override
-    protected void onPause() {
-        if (mSpinner != null) {
-            mSpinner.dismiss();
-        }
-        super.onPause();
-    }
+//    @Override
+//    protected void onServiceConnected() {
+//        getSinchServiceInterface().setStartListener(this);
+//    }
 
-    @Override
-    public void onStartFailed(SinchError error) {
-        Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show();
-        if (mSpinner != null) {
-            mSpinner.dismiss();
-        }
-    }
+//    @Override
+//    protected void onPause() {
+//        if (mSpinner != null) {
+//            mSpinner.dismiss();
+//        }
+//        super.onPause();
+//    }
 
-    @Override
-    public void onStarted() {
-        openContactListActivity();
-    }
+//    @Override
+//    public void onStartFailed(SinchError error) {
+//        Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show();
+//        if (mSpinner != null) {
+//            mSpinner.dismiss();
+//        }
+//    }
+
+//    @Override
+//    public void onStarted() {
+//        openContactListActivity();
+//    }
 
     private void loginClicked() {
         String userName = email;
@@ -161,12 +162,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Sinch
             return;
         }
 
-        if (!getSinchServiceInterface().isStarted()) {
-            getSinchServiceInterface().startClient(userName);
-            showSpinner();
-        } else {
-            openContactListActivity();
-        }
+        openContactListActivity();
     }
 
     private void openChatActivity() {

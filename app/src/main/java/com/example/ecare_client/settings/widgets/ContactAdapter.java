@@ -1,5 +1,8 @@
 package com.example.ecare_client.settings.widgets;
 
+import com.example.ecare_client.SinchService;
+import com.example.ecare_client.BaseActivity;
+
 import com.example.ecare_client.ChatActivity;
 import com.example.ecare_client.R;
 import com.example.ecare_client.settings.Contact;
@@ -11,6 +14,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,14 +67,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             @Override
             public void onClick(View view) {
 
-                Intent chatActivity = new Intent(contact.getContext(), ChatActivity.class);
-
-                Bundle options = new Bundle();
-                options.putString("ContactName", contact.getName());
-
-                chatActivity.putExtras(options);
-
-                contact.getContext().startActivity(chatActivity);
+                Log.d("ContactName", contact.getName());
+                contact.getContext().beginChat(contact.getName());
 
 
             }
