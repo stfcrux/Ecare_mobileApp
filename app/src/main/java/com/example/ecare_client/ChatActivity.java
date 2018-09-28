@@ -39,7 +39,9 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_page);
 
-        makeCallTo = "testexample@example.com";
+        makeCallTo = getIntent().getExtras().getString("ContactName");
+
+        //makeCallTo = "testexample@example.com";
 
         initMsg();
         inputText = (EditText) findViewById(R.id.input_text);

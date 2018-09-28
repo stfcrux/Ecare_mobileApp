@@ -7,7 +7,9 @@
     <com.example.ecare_client.mainpageview.SexangleViewGroup
         android:id="@+id/sexangleView1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <com.example.ecare_client.mainpageview.SexangleImageView
             android:layout_width="fill_parent"
@@ -18,10 +20,10 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/help_icon"
-            android:contentDescription="1"/>
+            android:contentDescription="1" />
 
         <com.example.ecare_client.mainpageview.SexangleImageView
-            android:id="@+id/btnOpenContactList"
+            android:id="@+id/btnOpenPersonalInfo"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/profile_icon"
@@ -31,22 +33,21 @@
             android:id="@+id/chat_activity"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@drawable/message_icon"
-            />
+            android:background="@drawable/message_icon" />
 
         <com.example.ecare_client.mainpageview.SexangleImageView
             android:id="@+id/btnOpenMaps"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/map_icon"
-            android:contentDescription="2"/>
+            android:contentDescription="2" />
 
         <com.example.ecare_client.mainpageview.SexangleImageView
-            android:id="@+id/btnOpenChecklist"
+            android:id="@+id/btnOpenSettings"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/toolbox_icon"
-            android:contentDescription="2"/>
+            android:contentDescription="2" />
 
 
     </com.example.ecare_client.mainpageview.SexangleViewGroup>

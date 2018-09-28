@@ -177,6 +177,13 @@ public class SignupActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
     }
 
+    @Override
+    protected void onDestroy() {
+        setOnline(false);
+
+        super.onDestroy();
+    }
+
     protected void createNewUser() {
 
         FirebaseUser user = auth.getCurrentUser();

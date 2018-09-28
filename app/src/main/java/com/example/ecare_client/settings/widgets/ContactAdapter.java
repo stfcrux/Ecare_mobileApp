@@ -1,10 +1,19 @@
 package com.example.ecare_client.settings.widgets;
 
+import com.example.ecare_client.SinchService;
+import com.example.ecare_client.BaseActivity;
+
+import com.example.ecare_client.ChatActivity;
 import com.example.ecare_client.R;
 import com.example.ecare_client.settings.Contact;
 
+
+
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +24,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.List;
+
 
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
@@ -53,6 +63,17 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         button.setText(contact.isOnline() ? "Message" : "Offline");
         button.setEnabled(contact.isOnline());
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Log.d("ContactName", contact.getName());
+                contact.getContext().beginChat(contact.getName());
+
+
+            }
+        });
+
 
         CheckBox checkbox = viewHolder.deleteCheckbox;
         checkbox.setChecked(contact.isChecked());
@@ -61,7 +82,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 contact.setChecked(b);
-
 
             }
         });
