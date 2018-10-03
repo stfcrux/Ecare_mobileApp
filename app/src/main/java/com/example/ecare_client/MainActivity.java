@@ -11,29 +11,38 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.ecare_client.settings.PersonalInfoActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.sinch.android.rtc.SinchError;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 public class MainActivity extends BaseActivity implements OnClickListener {
 
     private ProgressDialog mSpinner;
     private String email = "null";
-    private static final int JUMP_FLAG1 = 1;
-    private static final int JUMP_FLAG2 = 2;
-    private static final int JUMP_FLAG3 = 3;
-    private static final int JUMP_FLAG4 = 4;
-    private static int requestid;
     private static final String TAG = "MainActivity";
+    private TextView t1_temp,t2_city,t3_description,t4_date;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_page);
+        setContentView(R.layout.main_page_layout);
 
         //asking for permissions here
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -102,30 +111,17 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             }
         });
 
+        t1_temp = (TextView)findViewById(R.id.textView);
+        t2_city = (TextView)findViewById(R.id.textView3);
+        t3_description = (TextView)findViewById(R.id.textView4);
+        t4_date = (TextView)findViewById(R.id.textView2);
+
+        find_weather();
+
     }
+
     @Override
     public void onClick(View v) {
-    }
-    private static void Jump_page(int t){
-        switch(t){
-            case 1:
-                Log.d("TEST","跳往图片");
-                //openChatActivity();
-                break;
-            case 2:
-                Log.d("TEST","跳往邮件");
-                break;
-            case 3:
-                Log.d("TEST","跳往视频");
-                break;
-            case 4:
-                Log.d("TEST","跳往文件");
-                //openMapsActivity();
-                break;
-            default:
-                break;
-
-        }
     }
 
 //    @Override
@@ -133,13 +129,13 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 //        getSinchServiceInterface().setStartListener(this);
 //    }
 
-//    @Override
-//    protected void onPause() {
-//        if (mSpinner != null) {
-//            mSpinner.dismiss();
-//        }
-//        super.onPause();
-//    }
+    @Override
+   protected void onPause() {
+        if (mSpinner != null) {
+           mSpinner.dismiss();
+        }
+        super.onPause();
+    }
 
 //    @Override
 //    public void onStartFailed(SinchError error) {
@@ -156,19 +152,18 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
     private void loginClicked() {
         String userName = email;
-
-        if (userName.isEmpty()) {
-            Toast.makeText(this, "Please enter a name", Toast.LENGTH_LONG).show();
-            return;
+        if (!getSinchServiceInterface().isStarted()) {
+            getSinchServiceInterface().startClient(userName);
+            showSpinner();
         }
-
         openContactListActivity();
     }
-
+    /*
     private void openChatActivity() {
         Intent chatActivity = new Intent(this, ChatActivity.class);
         startActivity(chatActivity);
     }
+    */
 
     private void openMapsActivity() {
         Intent MapsActivity = new Intent(getApplicationContext(), MapsActivity.class);
@@ -198,8 +193,59 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         mSpinner.show();
     }
 
-    public static void setRequestid(int request) {
-        Jump_page(request);
+
+    private void find_weather() {
+        String url ="http://api.openweathermap.org/data/2.5/weather?q=melbourne&appid=f4d6dace6e140800a81c7003610b7de2&units=Imperial";
+
+        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try
+                {
+                    JSONObject main_object = response.getJSONObject("main");
+                    JSONArray array = response.getJSONArray("weather");
+                    JSONObject object = array.getJSONObject(0);
+                    String temp = String.valueOf(main_object.getDouble("temp"));
+                    String description = object.getString("description");
+                    String city = response.getString("name");
+
+                    //  t1_temp.setText(temp);
+                    t2_city.setText(city);
+                    t3_description.setText(description);
+                    ImageView image = (ImageView) findViewById(R.id.imageView);
+                    image.setImageResource(R.drawable.icon_fewclouds);
+
+                    Calendar calendar = Calendar.getInstance();
+                    SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
+                    String formatted_date = sdf.format(calendar.getTime());
+
+                    t4_date.setText(formatted_date);
+
+                    double temp_int = Double.parseDouble(temp);
+                    double centi = (temp_int - 32) /1.8000;
+                    centi = Math.round(centi);
+                    int i = (int)centi;
+                    t1_temp.setText(String.valueOf(i));
+
+
+
+                }catch(JSONException e)
+                {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }
+        );
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(jor);
+
+
     }
 }
 

@@ -171,7 +171,7 @@ public class SignupActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        setOnline(false);
+        //setOnline(false);
 
         super.onResume();
         progressBar.setVisibility(View.GONE);
@@ -187,7 +187,6 @@ public class SignupActivity extends AppCompatActivity {
     protected void createNewUser() {
 
         FirebaseUser user = auth.getCurrentUser();
-
 
 
         DatabaseReference userRef =
