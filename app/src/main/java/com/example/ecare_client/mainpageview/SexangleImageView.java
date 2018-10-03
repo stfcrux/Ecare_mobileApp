@@ -102,7 +102,7 @@ public class SexangleImageView extends View {
                 }else{
                     Message msg1=new Message();
                     msg1.what = Integer.parseInt(flagIcons.toString());
-                    MainActivity.setRequestid(msg1.what);
+                    //MainActivity.setRequestid(msg1.what);
                 }
                 break;
         }

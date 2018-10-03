@@ -247,7 +247,7 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
 
         super.onDestroy();
 
-        deleteContacts(contacts, adapter, contactListView, true);
+        //deleteContacts(contacts, adapter, contactListView, true);
 
     }
 

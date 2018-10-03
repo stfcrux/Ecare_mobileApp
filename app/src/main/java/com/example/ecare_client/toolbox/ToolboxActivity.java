@@ -32,7 +32,7 @@ public class ToolboxActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_page);
+        //setContentView(R.layout.main_page);
         Intent intent = getIntent();
 
 
