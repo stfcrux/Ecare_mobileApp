@@ -27,11 +27,26 @@
             android:text="Use current location" />
     </LinearLayout>
 
-    <EditText
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter destination address"
-        android:id="@+id/etDestination" />
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etDestination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Enter destination address" />
+
+        <Button
+            android:id="@+id/usePlacePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Use Place Picker" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

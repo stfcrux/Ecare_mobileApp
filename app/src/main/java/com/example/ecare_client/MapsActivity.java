@@ -60,11 +60,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
+    protected LatLng start;
+    protected LatLng end;
     private GoogleMap mMap;
     private Button btnFindPath;
     private EditText etOrigin;
     private EditText etDestination;
     private Button useCurrent;
+    private Button usePlacePicker;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
@@ -92,6 +95,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         etOrigin = (EditText) findViewById(R.id.etOrigin);
         etDestination = (EditText) findViewById(R.id.etDestination);
         useCurrent = (Button) findViewById(R.id.useCurrent);
+        usePlacePicker = (Button) findViewById(R.id.usePlacePicker);
+
 
         // once clicked find route from start location to end location
         btnFindPath.setOnClickListener(new View.OnClickListener() {
@@ -107,13 +112,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 findPlace();
             }
         });
+
         etDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //findPlace2();
+                findPlace2();
+            }
+        });
+
+        usePlacePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 loadPlacePicker();
             }
         });
+
+
+
         useCurrent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,7 +152,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // given that the two fields are valid, find the route details
         try {
-            new DirectionFinder(this, origin, destination).execute();
+            new DirectionFinder(this, start, end).execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -253,13 +268,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return addressText;
     }
 
-    protected void placeMarkerOnMap(LatLng location) {
+    /*protected void placeMarkerOnMap(LatLng location) {
         MarkerOptions markerOptions = new MarkerOptions().position(location);
         String titleStr = getAddress(location);
         markerOptions.title(titleStr);
 
         mMap.addMarker(markerOptions);
-    }
+    }*/
 
     private void findPlace2() {
         try {
@@ -284,6 +299,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     ((EditText) findViewById(R.id.etOrigin)).setText(addresses.get(0).getFeatureName()
                             + ", " + addresses.get(0).getLocality() +", " +
                             addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
+
+                    start = new LatLng(addresses.get(0).getLatitude(),addresses.get(0).getLongitude());
                 }
             }
         }
@@ -315,6 +332,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 ((EditText) findViewById(R.id.etOrigin))
                         .setText(place.getName());
 
+                start = place.getLatLng();
+
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 // TODO: Handle the error.
@@ -328,10 +347,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
-                String addressText = place.getName().toString();
+                //String addressText = place.getName().toString();
                 //addressText += "\n" + place.getAddress().toString();
                 ((EditText) findViewById(R.id.etDestination))
                         .setText(place.getName()+ "," +place.getAddress());
+
+                end = place.getLatLng();
+
+
 
                 //placeMarkerOnMap(place.getLatLng());
             }
@@ -345,6 +368,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 ((EditText) findViewById(R.id.etDestination))
                         .setText(place.getName());
+
+                end = place.getLatLng();
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
@@ -484,6 +509,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // You can add here other case statements according to your requirement.
         }
     }
+
+
 
 
 }
