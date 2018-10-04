@@ -10,6 +10,7 @@ import com.example.ecare_client.R;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 
 import com.example.ecare_client.SinchService;
+import com.example.ecare_client.TitleLayout;
 import com.example.ecare_client.settings.widgets.ContactAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -65,6 +67,12 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_list);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.hide();
+        }
+        TitleLayout titleLayout = (TitleLayout) findViewById(R.id.contact_list_title);
+        titleLayout.setTitleText("Contact List");
 
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();

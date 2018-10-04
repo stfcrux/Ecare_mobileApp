@@ -12,6 +12,7 @@ import com.sinch.android.rtc.messaging.MessageFailureInfo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -38,6 +39,12 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_page);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.hide();
+        }
+        TitleLayout titleLayout = (TitleLayout) findViewById(R.id.chat_title);
+        titleLayout.setTitleText("Chat");
 
         makeCallTo = getIntent().getExtras().getString("ContactName");
 
