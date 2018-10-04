@@ -73,5 +73,15 @@
         android:text="To-Do List"
         android:textColor="@color/btn_login" />
 
+    <ImageView
+        android:id="@+id/btnOpenAlarmClock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btnOpenChecklist"
+        android:layout_alignEnd="@+id/btnSettings"
+        android:layout_alignTop="@+id/btnOpenChecklist"
+        android:layout_toEndOf="@+id/textView2"
+        app:srcCompat="@drawable/alarm" />
+
 
 </RelativeLayout>

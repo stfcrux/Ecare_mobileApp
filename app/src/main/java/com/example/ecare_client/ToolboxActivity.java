@@ -43,6 +43,19 @@ public class ToolboxActivity extends BaseActivity {
 
             }
         });
+
+        ImageView alarmClock = (ImageView) findViewById(R.id.btnOpenAlarmClock);
+        alarmClock.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        openAlarmClock();
+                }
+                return false;
+
+            }
+        });
     }
     private void openPersonalInfo() {
             Intent personalInfo = new Intent(getApplicationContext(), MapsActivity.class);
@@ -51,6 +64,10 @@ public class ToolboxActivity extends BaseActivity {
     private void openToDOActivity() {
         Intent ChecklistActivity = new Intent(getApplicationContext(), com.example.ecare_client.checklist.MainActivity.class);
         startActivity(ChecklistActivity);
+    }
+    private void openAlarmClock() {
+        Intent AlarmClockActivity = new Intent(getApplicationContext(), com.example.ecare_client.alarmclock.MainActivity.class);
+        startActivity(AlarmClockActivity);
     }
 
 
