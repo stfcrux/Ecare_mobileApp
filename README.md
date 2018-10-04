@@ -41,10 +41,39 @@ Explain what these tests test and why
 Explain what these tests test and why
 ```sh
 
+```
+
+# Instructions on how to run the app and features
+
+```sh
+- 1st Time users have to register an account in order to use the app
+  (mandatory to be logged in to use the app)
+  
+  
 
 
 ```
+
+# The list of Implemented Features
+```sh
+. Implemented Text Chating Functionality
+. Implmeneted Video Chat functionality
+. Implemented getting user's location
+. Implemented tracking of user's location
+. Setted up FireBase Server
+. Implemented User sign in and sign up
+. Implemented contact List and ability to add contacts
+. Implemented Location routing from one point to another
+. Implemented Basic Checklist Feature
+. Implemented Weather Feature
+. Implemented Setting a alarmclock Feature
+```
+
+
+
 # Built With
+```sh
 - Firebase - A comprehensive mobile development platform
 - Sinch - Provide a cloud based communications service
+```
 
