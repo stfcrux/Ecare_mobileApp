@@ -45,7 +45,7 @@ public class DirectionFinder {
     }
     */
 
-    private String getUrl(LatLng origin, LatLng dest) {
+    public String getUrl(LatLng origin, LatLng dest) {
 
         // Origin of route
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
