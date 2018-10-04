@@ -1,67 +1,50 @@
-# Ecare_Client
 
-Migrated to Ecare_client From Morganite Repo due to naming isssues
+# Ecare - APP Designed For Elder People
+With an ever-evolving transport system, people require the means to plan and carry out their journeys more safely and efficiently than before. This is especially true of elderly people, who have the disadvantage of being unfamiliar with current mobile devices, and of having special needs in some cases.
 
-Team Morganite Main Repo
-
-our change log overview:
-
- - Week 5
-. Implemented Text Chatting Ui
- - Week 5
-. Implemented Text Chating functionality
- - Week 6
-. Implemented Video Chatting Ui
- - Week 6
-. Implmeneted Video Chat functionality
- - Week 6
-. Implemented Main Page Ui
- - Week 6
-. Implemented getting user's location
- - Week 7
-. Implemented tracking of user's location
- - Week 7
-. Setted up FireBase Server
- - Week 6
-. Implemented User sign in and sign up
- - Week 7
-. Implemented Location routing from one point to another
-
-Can send message and video chat with user testexample@example.com but can't exchange message wait for contact list
+The application is mainly for assisted people to get to their destinations with ease of access, special features to simplify their journey and everyday life. It is also an extremely useful tool for the assisted people and their carers to communicate with each other.
 
 
- 
-App WorkFlow 
+# Getting Started
 
-Video Call draft implementation use Sinch
+  - Clone this repository
+  - Use Android Studio to sync the project and run on the emulator or Android phone
 
-Video Call workflow
+### Prerequisites
+```sh
+Android version above 4.2
+Latest version of Google Play
+```
+### Installing
+on emulator
+```sh
+Use Android Studio to make the project (Ctrl+F9)
+Run app and choose the emulator (Shift+F10)
+```
+on Android phone
+```sh
+Go to Settings > About phone, Click Build number seven-times
+Then go to Settings > Developer options，enable USB test
+Use Android Studio to run app and choose your phone (Shift+F10)
+```
 
-    install the app on two different devices
-    each device login with unique username
-    enter the recipient name
-    press call to establish connection
-
-Implementation version 2: add mock text chat page (haven't connect to server) add simple 
-                          main page with only one chat button (no contact list)
-                          
-                          
-
-GPS Mapping workflow
-
-Our mapping makes use of Google Maps, Google Places and Google Directions Api Libaries
-
-    Give the Start and End Locations
-    App makes use of given locations and parses the relevent data
-    of the two locations back to the app for the user to see
-    
-    
-    
-  
+# Running the tests
+Explain how to run the automated tests for this system
+### Break down into end to end tests
+Explain what these tests test and why
+```sh
 
 
 
+```
+### And coding style tests
+Explain what these tests test and why
+```sh
 
 
 
+```
+# Built With
+- Firebase - A comprehensive mobile development platform
+- Sinch - Provide a cloud based communications service
 
