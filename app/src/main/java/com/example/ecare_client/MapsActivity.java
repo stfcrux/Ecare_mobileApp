@@ -93,6 +93,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         etDestination = (EditText) findViewById(R.id.etDestination);
         useCurrent = (Button) findViewById(R.id.useCurrent);
 
+        // once clicked find route from start location to end location
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,6 +122,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    // sending request to get routing directions
     private void sendRequest() {
         String origin = etOrigin.getText().toString();
         String destination = etDestination.getText().toString();
@@ -133,6 +135,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
+        // given that the two fields are valid, find the route details
         try {
             new DirectionFinder(this, origin, destination).execute();
         } catch (UnsupportedEncodingException e) {
@@ -145,9 +148,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         LatLng hcmus = new LatLng(-37.7964, 144.9612);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmus, 11));
-        originMarkers.add(mMap.addMarker(new MarkerOptions()
+        /*originMarkers.add(mMap.addMarker(new MarkerOptions()
                 .title("Melbourne University")
                 .position(hcmus)));
+        */
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
@@ -277,7 +281,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             else {
                 if (addresses.size() > 0) {
-                    ((EditText) findViewById(R.id.etOrigin)).setText(addresses.get(0).getFeatureName() + ", " + addresses.get(0).getLocality() +", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
+                    ((EditText) findViewById(R.id.etOrigin)).setText(addresses.get(0).getFeatureName()
+                            + ", " + addresses.get(0).getLocality() +", " +
+                            addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
                 }
             }
         }
@@ -325,7 +331,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String addressText = place.getName().toString();
                 //addressText += "\n" + place.getAddress().toString();
                 ((EditText) findViewById(R.id.etDestination))
-                        .setText(place.getName());
+                        .setText(place.getName()+ "," +place.getAddress());
 
                 //placeMarkerOnMap(place.getLatLng());
             }
