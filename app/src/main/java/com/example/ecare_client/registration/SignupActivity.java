@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.ecare_client.BaseActivity;
 import com.example.ecare_client.settings.ContactListActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,7 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import com.example.ecare_client.MainActivity;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends BaseActivity {
 
     private EditText inputEmail, inputPassword;
     private Button btnSignIn, btnSignUp, btnResetPassword;
@@ -66,7 +67,7 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 // PERHAPS REFACTOR THIS!!!!
-                String email = inputEmail.getText().toString().trim();
+                final String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
 
                 if (TextUtils.isEmpty(email)) {
@@ -88,6 +89,7 @@ public class SignupActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
 
                                     setOnline(true);
+                                    loginClicked(email);
 
                                     Intent intent = new Intent(SignupActivity.this,
                                             //-------------------------------
@@ -116,7 +118,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String email = inputEmail.getText().toString().trim();
+                final String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
 
                 if (TextUtils.isEmpty(email)) {
@@ -153,6 +155,7 @@ public class SignupActivity extends AppCompatActivity {
                                     createNewUser();
 
                                     setOnline(true);
+                                    loginClicked(email);
 
                                     startActivity(new Intent(SignupActivity.this,
                                             //-------------------------------
@@ -221,5 +224,13 @@ public class SignupActivity extends AppCompatActivity {
             userRef.child("Online").setValue("false");
 
         }
+    }
+
+    private void loginClicked(String userName) {
+        if (!getSinchServiceInterface().isStarted()) {
+            getSinchServiceInterface().startClient(userName);
+            //showSpinner();
+        }
+        //openContactListActivity();
     }
 }

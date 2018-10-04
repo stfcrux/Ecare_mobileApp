@@ -3,6 +3,7 @@ package com.example.ecare_client;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,7 +15,13 @@ public class ToolboxActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tool_list);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.hide();
+        }
         Intent intent = getIntent();
+        TitleLayout titleLayout = (TitleLayout) findViewById(R.id.tool_box_title);
+        titleLayout.setTitleText("ToolBox");
 
 
         ImageView personalInfo = (ImageView) findViewById(R.id.btnPersonalInfo);

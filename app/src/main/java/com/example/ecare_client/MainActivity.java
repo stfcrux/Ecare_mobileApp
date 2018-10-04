@@ -65,7 +65,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_UP:
-                        loginClicked();
+                        openContactListActivity();
                         Log.d(TAG, email);
                 }
                 return false;
@@ -209,11 +209,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     String description = object.getString("description");
                     String city = response.getString("name");
 
-                    //  t1_temp.setText(temp);
                     t2_city.setText(city);
                     t3_description.setText(description);
                     ImageView image = (ImageView) findViewById(R.id.imageView);
-                    image.setImageResource(R.drawable.icon_fewclouds);
+                    changeImage(description,image);
 
                     Calendar calendar = Calendar.getInstance();
                     SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
@@ -246,6 +245,40 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         queue.add(jor);
 
 
+    }
+
+    private void changeImage(String s, ImageView image){
+        switch (s){
+            case "broken clouds":
+            case "overcast clouds":
+                image.setImageResource(R.drawable.icon_brokenclouds);
+                break;
+            case "sky is clear":
+                image.setImageResource(R.drawable.icon_clearsky);
+                break;
+            case "light rain":
+            case "moderate rain":
+            case "heavy intensity rain":
+                image.setImageResource(R.drawable.icon_rain);
+                break;
+            case "snow":
+            case "light snow":
+            case "moderate snow":
+                image.setImageResource(R.drawable.icon_snow);
+                break;
+            case "mist":
+                image.setImageResource(R.drawable.icon_mist);
+                break;
+            case "few clouds":
+                image.setImageResource(R.drawable.icon_fewclouds);
+                break;
+            case "thunder storm":
+                image.setImageResource(R.drawable.icon_thunderstorm);
+                break;
+            default:
+                image.setImageResource(R.drawable.icon_clearsky);
+                break;
+        }
     }
 }
 

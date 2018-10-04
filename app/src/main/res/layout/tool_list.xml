@@ -7,6 +7,11 @@
     android:background="@color/colorPrimaryDark"
     android:padding="2dp">
 
+    <com.example.ecare_client.TitleLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tool_box_title" />
+
 
     <ImageView
         android:id="@+id/btnPersonalInfo"
@@ -14,7 +19,7 @@
         android:layout_height="170dp"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/textView2"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="75dp"
         android:background="@color/btn_login_bg"
         app:srcCompat="@drawable/personal_info" />
 
@@ -56,7 +61,7 @@
         android:layout_height="170dp"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/btnPersonalInfo"
-        android:layout_marginBottom="178dp"
+        android:layout_marginBottom="95dp"
         android:background="@color/btn_login_bg"
         app:srcCompat="@drawable/todo_list" />
 
