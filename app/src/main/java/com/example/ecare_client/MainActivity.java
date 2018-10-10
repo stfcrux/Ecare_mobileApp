@@ -2,17 +2,27 @@ package com.example.ecare_client;
 
 import com.example.ecare_client.mainpageview.*;
 
+
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ecare_client.settings.PersonalInfoActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,10 +43,16 @@ import com.android.volley.toolbox.Volley;
 
 public class MainActivity extends BaseActivity implements OnClickListener {
 
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0;
     private ProgressDialog mSpinner;
     private String email = "null";
     private static final String TAG = "MainActivity";
     private TextView t1_temp,t2_city,t3_description,t4_date;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private Location currentLocation;
+    private double Lat;
+    private double Lon;
 
 
     @Override
@@ -59,14 +75,25 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             // FirebaseUser.getIdToken() instead.
         }
 
-        SexangleImageView sexangleImageView = (SexangleImageView) findViewById(R.id.chat_activity);
-        sexangleImageView.setOnTouchListener(new View.OnTouchListener() {
+        SexangleImageView chatActivity = (SexangleImageView) findViewById(R.id.chat_activity);
+        chatActivity.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_UP:
                         openContactListActivity();
-                        Log.d(TAG, email);
+                }
+                return false;
+            }
+        });
+
+        SexangleImageView helpActivity = (SexangleImageView) findViewById(R.id.help);
+        helpActivity.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_UP:
+                        sendHelpSMS();
                 }
                 return false;
             }
@@ -111,12 +138,42 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             }
         });
 
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+         locationListener = new LocationListener() {
+             @Override
+             public void onLocationChanged(Location location) {
+                 currentLocation = location;
+                 Lat = location.getLatitude();
+                 Lon = location.getLongitude();
+                 find_weather(Lat, Lon);
+             }
+
+             @Override
+             public void onStatusChanged(String provider, int status, Bundle extras) {
+
+             }
+
+             @Override
+             public void onProviderEnabled(String provider) {
+
+             }
+
+             @Override
+             public void onProviderDisabled(String provider) {
+
+             }
+         };
+
         t1_temp = (TextView)findViewById(R.id.textView);
         t2_city = (TextView)findViewById(R.id.textView3);
         t3_description = (TextView)findViewById(R.id.textView4);
         t4_date = (TextView)findViewById(R.id.textView2);
 
-        find_weather();
+        //find_weather();
+
+        locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+
+
 
     }
 
@@ -194,8 +251,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     }
 
 
-    private void find_weather() {
-        String url ="http://api.openweathermap.org/data/2.5/weather?q=melbourne&appid=f4d6dace6e140800a81c7003610b7de2&units=Imperial";
+    private void find_weather(double lat, double lon) {
+        String url ="http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&appid=f4d6dace6e140800a81c7003610b7de2&units=Imperial";
 
         JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -279,6 +336,47 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                 image.setImageResource(R.drawable.icon_clearsky);
                 break;
         }
+    }
+
+    private void sendHelpSMS(){
+
+        locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.SEND_SMS)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.SEND_SMS},
+                        MY_PERMISSIONS_REQUEST_SEND_SMS);
+            }
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+        String phoneNo = "+610426443229";
+        String myCurrentlocation = "https://www.google.com.au/maps/place/"+Lat+"+"+Lon;
+        String message = "I need Help, I am at this location:"+myCurrentlocation;
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_SEND_SMS: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(phoneNo, null, message, null, null);
+                    Toast.makeText(getApplicationContext(), "SMS sent.",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "SMS faild, please try again.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+        }
+
     }
 }
 
