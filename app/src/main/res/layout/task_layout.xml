@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context="com.example.ecare_client.checklist.MainActivity">
+    tools:context="com.example.ecare_client.checklist.CheckListActivity">
 
     <!--
         This horizontal linear layout displays the description and priority of a task

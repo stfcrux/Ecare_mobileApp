@@ -72,9 +72,9 @@
         <activity android:name=".ToolboxActivity" />
         <activity android:name=".settings.ContactListActivity" />
         <activity android:name=".registration.ResetPasswordActivity" />
-        <activity android:name=".checklist.MainActivity" />
+        <activity android:name=".checklist.CheckListActivity" />
         <activity android:name=".checklist.AddTaskActivity" />
-        <activity android:name=".alarmclock.MainActivity" />
+        <activity android:name=".alarmclock.AlarmClockActivity" />
         <receiver android:name=".alarmclock.clock.LoongggAlarmReceiver">
             <intent-filter>
                 <action android:name="com.example.ecare_client.alarmclock.clock"/>
