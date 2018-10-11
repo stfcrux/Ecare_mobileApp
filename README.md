@@ -48,8 +48,6 @@ Explain what these tests test and why
 # Instructions on how to run the app and features
 
 ```sh
-- To run the app, simply Clone this repository and open folder using a Java based IDE (preferably Android Studio)
-
 - 1st Time users have to register an account in order to use the app
   (mandatory to be logged in to use the app)
   
