@@ -38,6 +38,19 @@ public class ToolboxActivity extends BaseActivity {
             }
         });
 
+        ImageView magnifier = (ImageView) findViewById(R.id.btnOpenMagnifier);
+        magnifier.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        openMagnifier();
+                }
+                return false;
+
+            }
+        });
+
 
         ImageView checkList = (ImageView) findViewById(R.id.btnOpenChecklist);
         checkList.setOnTouchListener(new View.OnTouchListener() {
@@ -76,6 +89,10 @@ public class ToolboxActivity extends BaseActivity {
     private void openAlarmClock() {
         Intent AlarmClockActivity = new Intent(getApplicationContext(), com.example.ecare_client.alarmclock.AlarmClockActivity.class);
         startActivity(AlarmClockActivity);
+    }
+    private void openMagnifier() {
+        Intent MagActivity = new Intent(getApplicationContext(), com.example.ecare_client.visor.VisorActivity.class);
+        startActivity(MagActivity);
     }
 
 
