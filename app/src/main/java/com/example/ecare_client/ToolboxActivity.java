@@ -1,13 +1,14 @@
 package com.example.ecare_client;
 
-import android.annotation.SuppressLint;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.example.ecare_client.checklist.CheckListActivity;
 
 public class ToolboxActivity extends BaseActivity {
 
@@ -69,11 +70,11 @@ public class ToolboxActivity extends BaseActivity {
             startActivity(personalInfo);
         }
     private void openToDOActivity() {
-        Intent ChecklistActivity = new Intent(getApplicationContext(), com.example.ecare_client.checklist.MainActivity.class);
+        Intent ChecklistActivity = new Intent(getApplicationContext(), CheckListActivity.class);
         startActivity(ChecklistActivity);
     }
     private void openAlarmClock() {
-        Intent AlarmClockActivity = new Intent(getApplicationContext(), com.example.ecare_client.alarmclock.MainActivity.class);
+        Intent AlarmClockActivity = new Intent(getApplicationContext(), com.example.ecare_client.alarmclock.AlarmClockActivity.class);
         startActivity(AlarmClockActivity);
     }
 

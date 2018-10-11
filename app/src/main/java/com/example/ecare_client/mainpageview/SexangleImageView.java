@@ -93,7 +93,6 @@ public class SexangleImageView extends View {
                 paint.setColor(Color.parseColor("#A2A2A2"));
                 paint.setStyle(Style.STROKE);
                 paint.setAlpha(200);
-                //String dd = this.getTag().toString();
 
                 invalidate();
                 CharSequence flagIcons = this.getContentDescription();//Flag_image

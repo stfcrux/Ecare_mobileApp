@@ -2,7 +2,6 @@ package com.example.ecare_client;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.app.ActionBar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;

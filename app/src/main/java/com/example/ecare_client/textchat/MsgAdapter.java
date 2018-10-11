@@ -1,7 +1,7 @@
 package com.example.ecare_client.textchat;
 
 
-import android.app.Activity;
+
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.sinch.android.rtc.messaging.Message;
 import com.example.ecare_client.R;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 

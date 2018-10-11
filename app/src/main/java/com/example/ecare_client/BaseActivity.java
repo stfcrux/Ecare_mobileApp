@@ -1,7 +1,6 @@
 package com.example.ecare_client;
 
-import com.example.ecare_client.SinchService;
-import android.app.Activity;
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;

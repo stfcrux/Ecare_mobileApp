@@ -26,7 +26,6 @@ import java.util.List;
 
 public class ChatActivity extends BaseActivity implements MessageClientListener{
 
-    private List<Msg> msgList = new ArrayList<>();
     private EditText inputText;
     private Button send;
     private Button videochat;
@@ -50,7 +49,6 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
 
         //makeCallTo = "testexample@example.com";
 
-        initMsg();
         inputText = (EditText) findViewById(R.id.input_text);
         send = (Button) findViewById(R.id.send);
         videochat = (Button) findViewById(R.id.video_call);
@@ -68,26 +66,16 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
     private void sendMsg(){
         String content = inputText.getText().toString();
         if (!"".equals(content)) {
-            //Msg msg = new Msg(content, Msg.TYPE_SEND);
-            //msgList.add(msg);
+
             getSinchServiceInterface().sendMessage(makeCallTo, content);
-            //adapter.notifyItemInserted(adapter.getItemCount() - 1);//当有新消息时涮新RecyclerView 中的显示
-           //msgRecyclerView.scrollToPosition(adapter.getItemCount() - 1);//定位到最后一行;
+            //adapter.notifyItemInserted(adapter.getItemCount() - 1); 当有新消息时涮新RecyclerView 中的显示
+            msgRecyclerView.scrollToPosition(adapter.getItemCount() - 1);//定位到最后一行;
             inputText.setText("");//清空输入栏；
         }
 
     }
 
-    private void initMsg() {
-        Msg msg1 = new Msg("Hello guy", Msg.TYPR_RECEIVED);
-        Msg msg2 = new Msg("Who is That?", Msg.TYPE_SEND);
-        Msg msg3 = new Msg("This is Jerry. Nice talking to you", Msg.TYPR_RECEIVED);
 
-        msgList.add(msg1);
-        msgList.add(msg2);
-        msgList.add(msg3);
-
-    }
 
     //to place the call to the entered name
     private void callButtonClicked() {

@@ -21,7 +21,7 @@ import com.example.ecare_client.alarmclock.clock.AlarmManagerUtil;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class AlarmClockActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView date_tv;
     private TimePickerView pvTime;
     private RelativeLayout repeat_rl, ring_rl;
