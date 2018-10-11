@@ -8,18 +8,19 @@
     android:padding="2dp">
 
     <com.example.ecare_client.TitleLayout
+        android:id="@+id/tool_box_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tool_box_title" />
+        android:text="Tool Box" />
 
 
     <ImageView
         android:id="@+id/btnPersonalInfo"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/textView2"
-        android:layout_marginTop="75dp"
+        android:layout_width="145dp"
+        android:layout_height="145dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/btnSettings"
+        android:layout_marginStart="35dp"
         android:background="@color/btn_login_bg"
         app:srcCompat="@drawable/personal_info" />
 
@@ -27,18 +28,20 @@
         android:id="@+id/textView2"
         android:layout_width="184dp"
         android:layout_height="41dp"
-        android:layout_alignParentStart="false"
-        android:layout_alignTop="@+id/textView3"
-        android:layout_marginStart="17dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="192dp"
         android:fontFamily="@font/baloo"
         android:text="   Personal Information"
         android:textColor="@color/btn_login" />
 
     <ImageView
         android:id="@+id/btnSettings"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:layout_alignTop="@+id/btnPersonalInfo"
+        android:layout_width="145dp"
+        android:layout_height="145dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="96dp"
         android:layout_toEndOf="@+id/textView2"
         android:background="@color/btn_login_bg"
         app:srcCompat="@drawable/settings" />
@@ -48,20 +51,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="64dp"
-        android:layout_marginTop="157dp"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_marginEnd="66dp"
         android:fontFamily="@font/baloo"
         android:text="Settings"
         android:textColor="@color/btn_login" />
 
     <ImageView
         android:id="@+id/btnOpenChecklist"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
+        android:layout_width="145dp"
+        android:layout_height="145dp"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/btnPersonalInfo"
-        android:layout_marginBottom="95dp"
+        android:layout_marginBottom="159dp"
         android:background="@color/btn_login_bg"
         app:srcCompat="@drawable/todo_list" />
 
@@ -80,13 +82,33 @@
 
     <ImageView
         android:id="@+id/btnOpenAlarmClock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="145dp"
+        android:layout_height="145dp"
         android:layout_alignBottom="@+id/btnOpenChecklist"
         android:layout_alignEnd="@+id/btnSettings"
         android:layout_alignTop="@+id/btnOpenChecklist"
         android:layout_toEndOf="@+id/textView2"
         app:srcCompat="@drawable/alarm" />
+
+    <ImageView
+        android:id="@+id/btnOpenMagnifier"
+        android:layout_width="145dp"
+        android:layout_height="145dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/btnOpenChecklist"
+        android:background="@color/btn_login_bg"
+        app:srcCompat="@drawable/magnifier" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/textView4"
+        android:layout_marginBottom="39dp"
+        android:fontFamily="@font/baloo"
+        android:text="Magnifier"
+        android:textColor="@color/btn_login" />
 
 
 </RelativeLayout>
