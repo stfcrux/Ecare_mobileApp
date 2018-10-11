@@ -12,13 +12,13 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality. 
     -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
@@ -77,9 +77,9 @@
         <activity android:name=".ToolboxActivity" />
         <activity android:name=".settings.ContactListActivity" />
         <activity android:name=".registration.ResetPasswordActivity" />
-        <activity android:name=".checklist.MainActivity" />
+        <activity android:name=".checklist.CheckListActivity" />
         <activity android:name=".checklist.AddTaskActivity" />
-        <activity android:name=".alarmclock.MainActivity" />
+        <activity android:name=".alarmclock.AlarmClockActivity" />
         <receiver android:name=".alarmclock.clock.LoongggAlarmReceiver">
             <intent-filter>
                 <action android:name="com.example.ecare_client.alarmclock.clock"/>
