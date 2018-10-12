@@ -1,13 +1,14 @@
 package com.example.ecare_client;
 
-import android.annotation.SuppressLint;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.example.ecare_client.checklist.CheckListActivity;
 
 public class ToolboxActivity extends BaseActivity {
 
@@ -31,6 +32,19 @@ public class ToolboxActivity extends BaseActivity {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         openPersonalInfo();
+                }
+                return false;
+
+            }
+        });
+
+        ImageView magnifier = (ImageView) findViewById(R.id.btnOpenMagnifier);
+        magnifier.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        openMagnifier();
                 }
                 return false;
 
@@ -69,12 +83,16 @@ public class ToolboxActivity extends BaseActivity {
             startActivity(personalInfo);
         }
     private void openToDOActivity() {
-        Intent ChecklistActivity = new Intent(getApplicationContext(), com.example.ecare_client.checklist.MainActivity.class);
+        Intent ChecklistActivity = new Intent(getApplicationContext(), CheckListActivity.class);
         startActivity(ChecklistActivity);
     }
     private void openAlarmClock() {
-        Intent AlarmClockActivity = new Intent(getApplicationContext(), com.example.ecare_client.alarmclock.MainActivity.class);
+        Intent AlarmClockActivity = new Intent(getApplicationContext(), com.example.ecare_client.alarmclock.AlarmClockActivity.class);
         startActivity(AlarmClockActivity);
+    }
+    private void openMagnifier() {
+        Intent MagActivity = new Intent(getApplicationContext(), com.example.ecare_client.visor.VisorActivity.class);
+        startActivity(MagActivity);
     }
 
 

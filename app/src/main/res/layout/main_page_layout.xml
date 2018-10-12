@@ -82,6 +82,7 @@
                 android:background="@drawable/center_video" />
 
             <com.example.ecare_client.mainpageview.SexangleImageView
+                android:id="@+id/help"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:background="@drawable/help_icon"

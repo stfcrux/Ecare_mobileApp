@@ -19,12 +19,12 @@ import com.example.ecare_client.R;
 import com.example.ecare_client.checklist.data.TaskContract;
 
 
-public class MainActivity extends AppCompatActivity implements
+public class CheckListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
 
     // Constants for logging and referring to a unique loader
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = CheckListActivity.class.getSimpleName();
     private static final int TASK_LOADER_ID = 0;
 
     // Member variables for the adapter and RecyclerView
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements
                 getContentResolver().delete(uri, null, null);
 
                 // COMPLETED (3) Restart the loader to re-query for all tasks after a deletion
-                getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, MainActivity.this);
+                getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, CheckListActivity.this);
 
             }
         }).attachToRecyclerView(mRecyclerView);
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 // Create a new intent to start an AddTaskActivity
-                Intent addTaskIntent = new Intent(MainActivity.this, AddTaskActivity.class);
+                Intent addTaskIntent = new Intent(CheckListActivity.this, AddTaskActivity.class);
                 startActivity(addTaskIntent);
             }
         });

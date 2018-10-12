@@ -28,11 +28,13 @@ Then go to Settings > Developer options，enable USB test
 Use Android Studio to run app and choose your phone (Shift+F10)
 ```
 
-# Running the tests
+# Running the uit test cases
 Explain how to run the automated tests for this system
 ### Break down into end to end tests
-Explain what these tests test and why
 ```sh
+
+- MapFragment unit test, simply run the test to check if the destination url the app provides for
+  parsing the routing details is accurate
 
 
 
@@ -49,8 +51,27 @@ Explain what these tests test and why
 - 1st Time users have to register an account in order to use the app
   (mandatory to be logged in to use the app)
   
+- User can press the help button (middle button) and it will send an SMS containing 
+  the user's current coordinates to a carer
   
-
+- To access the contacts list, click the top right button, User can add a contact if they provide 
+  the email of another user. User can engage with video chat/Text chat with an user they added
+  by clicking the user of choice from the contact list
+  
+- To access the mapping functionalies, click the bottom left button. The user has to provide the start 
+  and end location to view the route between them, User can either click use current location and
+  the app will automatically input the user's location to the start location field, or they can manually
+  type in where they want to go with text autocompelte.
+  Likewise, to select thier destination location, they can use place picker where it will
+  list all notable points of interest to the user and they can simply slect where they want to go.
+  
+- To access our other tools, user can click the bottom right button, where it has a 
+  checklist feature and a alarm clock feature.
+  The checklist feature, the user can add a note of what they want and set a initial priority of it,
+  the user can delete the note once it has been done by simply swiping the note to the right/left.
+  The alarm clock feature, the user can set a date and time and the user's phone will vibrate and notify
+  the user when the set time is reached.
+  
 
 ```
 
@@ -67,6 +88,7 @@ Explain what these tests test and why
 . Implemented Basic Checklist Feature
 . Implemented Weather Feature
 . Implemented Setting a alarmclock Feature
+. Implemented Help button Feature
 ```
 
 
