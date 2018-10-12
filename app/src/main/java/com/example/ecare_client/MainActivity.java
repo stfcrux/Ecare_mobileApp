@@ -29,6 +29,8 @@ import com.google.firebase.auth.FirebaseUser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -79,6 +81,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_UP:
+
                         openContactListActivity();
                 }
                 return false;
@@ -92,6 +95,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_UP:
                         sendHelpSMS();
+
                 }
                 return false;
             }
@@ -185,9 +189,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 //    }
 
     @Override
-   protected void onPause() {
+    protected void onPause() {
         if (mSpinner != null) {
-           mSpinner.dismiss();
+            mSpinner.dismiss();
         }
         super.onPause();
     }
@@ -264,13 +268,14 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     String description = object.getString("description");
                     String city = response.getString("name");
 
+                    //  t1_temp.setText(temp);
                     t2_city.setText(city);
                     t3_description.setText(description);
                     ImageView image = (ImageView) findViewById(R.id.imageView);
-                    changeImage(description,image);
+                    image.setImageResource(R.drawable.icon_fewclouds);
 
                     Calendar calendar = Calendar.getInstance();
-                    SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
+                    DateFormat sdf = SimpleDateFormat.getDateInstance();
                     String formatted_date = sdf.format(calendar.getTime());
 
                     t4_date.setText(formatted_date);
@@ -301,6 +306,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 
     }
+
+
 
     private void changeImage(String s, ImageView image){
         switch (s){
@@ -376,5 +383,5 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         }
 
     }
-}
 
+}

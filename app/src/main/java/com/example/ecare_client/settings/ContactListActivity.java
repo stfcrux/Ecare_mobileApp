@@ -181,6 +181,9 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
                                     boolean isAlreadyContact = contacts.contains(searchObject);
 
                                     if (isAlreadyContact) {
+                                        Toast.makeText(getApplicationContext(),
+                                                contactEmail+" is already a contact.",
+                                                Toast.LENGTH_SHORT).show();
                                         return;
                                     }
 
@@ -204,6 +207,14 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
 
                                 }
                                 // NEED TO REFRESH THE LIST VIEW!!!!
+
+                            }
+
+                            else {
+                                Toast.makeText(getApplicationContext(),
+                                        "User " + contactEmail+ " does not exist.",
+                                        Toast.LENGTH_SHORT).show();
+                                return;
 
                             }
                         }
