@@ -10,7 +10,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    buildToolsVersion '23.0.1'
+    buildToolsVersion '28.0.2'
     buildTypes {
         release {
             minifyEnabled false

@@ -52,6 +52,9 @@ import java.util.Locale;
 import com.example.ecare_client.Googlemaps.DirectionFinder;
 import com.example.ecare_client.Googlemaps.DirectionFinderListener;
 import com.example.ecare_client.Googlemaps.Route;
+import com.example.ecare_client.Googlemaps.GetNearbyPlacesData;
+import com.example.ecare_client.Googlemaps.GooglePlacesDataParser;
+import com.example.ecare_client.Googlemaps.DownloadPlacesURL;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, DirectionFinderListener,
         GoogleApiClient.ConnectionCallbacks,
@@ -441,6 +444,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
 
         mLastLocation = location;
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
@@ -507,6 +512,71 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // You can add here other case statements according to your requirement.
         }
     }
+
+
+    int PROXIMITY_RADIUS = 10000;
+    private String getNearbyPlacesUrl(double latitude , double longitude , String nearbyPlace)
+    {
+
+        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlaceUrl.append("location="+latitude+","+longitude);
+        googlePlaceUrl.append("&radius="+PROXIMITY_RADIUS);
+        googlePlaceUrl.append("&type="+nearbyPlace);
+        googlePlaceUrl.append("&sensor=true");
+        googlePlaceUrl.append("&key="+"AIzaSyBLEPBRfw7sMb73Mr88L91Jqh3tuE4mKsE");
+
+        Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
+
+        return googlePlaceUrl.toString();
+    }
+
+    double latitude,longitude;
+    public void onClick(View v)
+    {
+        Object dataTransfer[] = new Object[2];
+        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+
+        switch(v.getId())
+        {
+
+            case R.id.B_hopistals:
+                mMap.clear();
+                String hospital = "hospital";
+                String url = getNearbyPlacesUrl(latitude, longitude, hospital);
+                dataTransfer[0] = mMap;
+                dataTransfer[1] = url;
+
+                getNearbyPlacesData.execute(dataTransfer);
+                Toast.makeText(MapsActivity.this, "Showing Nearby Hospitals", Toast.LENGTH_SHORT).show();
+                break;
+
+
+            case R.id.B_schools:
+                mMap.clear();
+                String school = "school";
+                url = getNearbyPlacesUrl(latitude, longitude, school);
+                dataTransfer[0] = mMap;
+                dataTransfer[1] = url;
+
+                getNearbyPlacesData.execute(dataTransfer);
+                Toast.makeText(MapsActivity.this, "Showing Nearby Schools", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.B_restaurants:
+                mMap.clear();
+                String resturant = "restuarant";
+                url = getNearbyPlacesUrl(latitude, longitude, resturant);
+                dataTransfer[0] = mMap;
+                dataTransfer[1] = url;
+
+                getNearbyPlacesData.execute(dataTransfer);
+                Toast.makeText(MapsActivity.this, "Showing Nearby Restaurants", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+    }
+
+
+
 
 
 
