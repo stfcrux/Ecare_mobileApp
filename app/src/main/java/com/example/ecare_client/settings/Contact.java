@@ -1,19 +1,28 @@
 package com.example.ecare_client.settings;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
 
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Contact {
+public class Contact implements Serializable {
     private String mName;
     private boolean mOnline;
     private boolean mChecked;
     private String mKey;
+
     private ContactListActivity mContext;
 
+    private Button messageButton = null;
+
     private ValueEventListener contactEventListener;
+
+
 
     public Contact(String name, String key, boolean online) {
         mName = name;
@@ -22,6 +31,8 @@ public class Contact {
 
         mChecked = false;
     }
+
+
 
     public String getName() {
         return mName;
@@ -43,6 +54,10 @@ public class Contact {
 
     public void setOnline(boolean value) {
         mOnline = value;
+
+        if (messageButton != null) {
+            messageButton.setEnabled(value);
+        }
 
     }
 
@@ -74,7 +89,10 @@ public class Contact {
     }
 
 
+    public void setMessageButton(Button newButton) {
+        messageButton = newButton;
 
+    }
 
 
     @Override
@@ -94,21 +112,9 @@ public class Contact {
         }
     }
 
-    private static int lastContactId = 0;
 
-    /*
-    public static ArrayList<Contact> createContactsList(int numContacts) {
-        ArrayList<Contact> contacts = new ArrayList<Contact>();
 
-        for (int i = 1; i <= numContacts; i++) {
-            contacts.add(
-                    new Contact(
-                            "Person " + ++lastContactId,
-                            ,
-                            i <= numContacts / 2));
-        }
+    //private static int lastContactId = 0;
 
-        return contacts;
-    }
-     */
+
 }

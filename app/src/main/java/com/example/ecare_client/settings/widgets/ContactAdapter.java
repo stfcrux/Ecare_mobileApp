@@ -6,7 +6,7 @@ import com.example.ecare_client.BaseActivity;
 import com.example.ecare_client.ChatActivity;
 import com.example.ecare_client.R;
 import com.example.ecare_client.settings.Contact;
-
+import com.example.ecare_client.settings.ContactProfileActivity;
 
 
 import android.content.Context;
@@ -31,6 +31,8 @@ import java.util.List;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
     private List<Contact> mContacts;
+
+
 
     // Pass in the contact array into the constructor
     public ContactAdapter(List<Contact> contacts) {
@@ -72,8 +74,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
                 if (action == MotionEvent.ACTION_DOWN) {
 
-                    Log.d("ContactName", contact.getName());
-                    contact.getContext().beginChat(contact.getName());
+                    // Start activity using the context of ContactListActivity.
+                    (contact.getContext()).beginProfile(contact);
                 }
 
                 return true;

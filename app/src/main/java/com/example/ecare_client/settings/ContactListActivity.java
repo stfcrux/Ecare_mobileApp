@@ -33,9 +33,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.sinch.android.rtc.SinchError;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ContactListActivity extends BaseActivity implements SinchService.StartFailedListener {
+public class ContactListActivity extends BaseActivity implements Serializable {
 
     private EditText inputContact;
     private Button btnAddContact;
@@ -50,7 +51,7 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
     final private ContactAdapter adapter = new ContactAdapter(contacts);
     private RecyclerView contactListView;
 
-    private String selectedContactName;
+
 
 
 
@@ -63,6 +64,7 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_contact_list);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null){
@@ -268,72 +270,20 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
     }
 
 
-    public void beginChat(String contactName) {
+    public void beginProfile(Contact contact) {
+        Intent contactProfileActivity = new Intent(this, ContactProfileActivity.class);
 
-        selectedContactName = contactName;
+        contactProfileActivity.putExtra("ContactName", contact.getName());
+        contactProfileActivity.putExtra("ContactKey", contact.getKey());
 
-        auth = FirebaseAuth.getInstance();
-        String email = auth.getCurrentUser().getEmail();
-
-        if (!getSinchServiceInterface().isStarted()) {
-            getSinchServiceInterface().startClient(email);
-            showSpinner();
-
-        } else {
-
-            Intent chatActivity = new Intent(this, ChatActivity.class);
-
-            Bundle options = new Bundle();
-            options.putString("ContactName", contactName);
-
-            chatActivity.putExtras(options);
-
-            startActivity(chatActivity);
-        }
+        startActivity(contactProfileActivity);
 
     }
 
-    @Override
-    public void onStartFailed(SinchError error) {
-        Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show();
-        if (mSpinner != null) {
-            mSpinner.dismiss();
-        }
-    }
-
-    @Override
-    public void onStarted() {
-
-        Intent chatActivity = new Intent(this, ChatActivity.class);
-
-        Bundle options = new Bundle();
-        options.putString("ContactName", selectedContactName);
-
-        chatActivity.putExtras(options);
-
-        startActivity(chatActivity);
-    }
-
-    @Override
-    protected void onServiceConnected() {
-        getSinchServiceInterface().setStartListener(this);
-    }
 
 
-    private void showSpinner() {
-        mSpinner = new ProgressDialog(this);
-        mSpinner.setTitle("Connecting");
-        mSpinner.setMessage("Please wait...");
-        mSpinner.show();
-    }
 
-    @Override
-    protected void onPause() {
-        if (mSpinner != null) {
-            mSpinner.dismiss();
-        }
-        super.onPause();
-    }
+
 
 
     protected void setContactListeners(ArrayList<String> contactIDs,
