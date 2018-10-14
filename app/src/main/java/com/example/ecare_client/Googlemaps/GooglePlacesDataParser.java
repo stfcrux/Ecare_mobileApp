@@ -54,8 +54,12 @@ public class GooglePlacesDataParser {
     }
     private List<HashMap<String, String>>getPlaces(JSONArray jsonArray)
     {
-        //int count = jsonArray.length();
-        int count = 4; // show 4
+        int count = jsonArray.length();
+        int count2 = 4; // show 4
+        if (count > count2){
+            count = count2;
+        }
+
         List<HashMap<String, String>> placelist = new ArrayList<>();
         HashMap<String, String> placeMap = null;
 
