@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -59,18 +60,23 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         TextView textView = viewHolder.nameTextView;
         textView.setText(contact.getName());
 
-        Button button = viewHolder.messageButton;
-        button.setText(contact.isOnline() ? "Message" : "Offline");
-        button.setEnabled(contact.isOnline());
+        TextView status = viewHolder.statusTextView;
+        status.setText(contact.isOnline() ? "Online" : "Offline");
 
-        button.setOnClickListener(new View.OnClickListener() {
+
+        viewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
 
-                Log.d("ContactName", contact.getName());
-                contact.getContext().beginChat(contact.getName());
+                int action = motionEvent.getAction();
 
+                if (action == MotionEvent.ACTION_DOWN) {
 
+                    Log.d("ContactName", contact.getName());
+                    contact.getContext().beginChat(contact.getName());
+                }
+
+                return true;
             }
         });
 
@@ -104,7 +110,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView nameTextView;
-        public Button messageButton;
+        public TextView statusTextView;
         public CheckBox deleteCheckbox;
 
 
@@ -117,7 +123,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             super(itemView);
 
             nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
-            messageButton = (Button) itemView.findViewById(R.id.message_button);
+            statusTextView = (TextView) itemView.findViewById(R.id.online_status);
             deleteCheckbox = (CheckBox) itemView.findViewById(R.id.delete_checkbox);
         }
     }
