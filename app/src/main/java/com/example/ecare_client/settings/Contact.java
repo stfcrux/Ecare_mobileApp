@@ -16,6 +16,8 @@ public class Contact implements Serializable {
     private boolean mChecked;
     private String mKey;
 
+    private String mNickname;
+
     private ContactListActivity mContext;
 
     private Button messageButton = null;
@@ -40,6 +42,15 @@ public class Contact implements Serializable {
 
     public void setName(String newName) {
         mName = newName;
+
+    }
+
+    public String getNickname() {
+        return mNickname;
+    }
+
+    public void setNickname(String newName) {
+        mNickname = newName;
 
     }
 
@@ -89,10 +100,7 @@ public class Contact implements Serializable {
     }
 
 
-    public void setMessageButton(Button newButton) {
-        messageButton = newButton;
 
-    }
 
 
     @Override

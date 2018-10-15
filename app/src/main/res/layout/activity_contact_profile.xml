@@ -11,14 +11,15 @@
         android:layout_height="240dp"
         app:srcCompat="@drawable/center_pic" />
 
-    <TextView
+    <EditText
         android:id="@+id/contact_nickname"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:text="Test"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
         android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textSize="32sp" />
+        android:textSize="36sp" />
 
     <TextView
         android:id="@+id/contact_email"

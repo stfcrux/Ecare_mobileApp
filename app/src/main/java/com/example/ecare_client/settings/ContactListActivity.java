@@ -47,6 +47,8 @@ public class ContactListActivity extends BaseActivity implements Serializable {
     private FirebaseAuth auth;
     private FirebaseDatabase database;
 
+    private DatabaseReference userRef;
+
     final private ArrayList<Contact> contacts = new ArrayList<>();
     final private ContactAdapter adapter = new ContactAdapter(contacts);
     private RecyclerView contactListView;
@@ -87,12 +89,12 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
         // contactIDs is just used to pass the contacts onto another method.
         final ArrayList<String> contactIDs = new ArrayList<>();
+        final ArrayList<String> contactNicknames = new ArrayList<>();
 
         //-----------------------------------------------------------------------------
         final FirebaseUser currentUser = auth.getCurrentUser();
 
-        final DatabaseReference userRef =
-                database.getReference().child("Users").child(currentUser.getUid());
+        userRef = database.getReference().child("Users").child(currentUser.getUid());
 
         Query queryContacts = userRef.child("Contacts").orderByKey();
 
@@ -109,6 +111,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
                         if ( !(matchingContact.getKey().equals("Null")) ) {
 
                             contactIDs.add(matchingContact.getKey());
+                            contactNicknames.add(matchingContact.getValue(String.class));
 
 
                         }
@@ -116,6 +119,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
                     }
 
                     setContactListeners(contactIDs,
+                            contactNicknames,
                             contacts,
                             adapter,
                             contactListView);
@@ -189,7 +193,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
                                         return;
                                     }
 
-                                    userRef.child("Contacts").child(contactUid).setValue("Null");
+                                    userRef.child("Contacts").child(contactUid).setValue(contactEmail);
 
                                     // Need to update the other user's contact list.
                                     DatabaseReference contactRef =
@@ -198,10 +202,11 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
                                     // May need to worry about refreshing the other user's page!!
                                     contactRef.child("Contacts").
-                                            child(currentUser.getUid()).setValue("Null");
+                                            child(currentUser.getUid()).setValue(currentUser.getEmail());
 
 
                                     setContactListener(contactUid,
+                                            contactNickname,
                                             contacts,
                                             adapter,
                                             contactListView);
@@ -287,13 +292,22 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
 
     protected void setContactListeners(ArrayList<String> contactIDs,
+                                       ArrayList<String> contactNicknames,
                                        final ArrayList<Contact> contacts,
                                        final ContactAdapter adapter,
                                        final RecyclerView listView) {
 
 
+        int nicknameIndex = 0;
+        String contactNickname;
+
         for (String contactID : contactIDs) {
-            setContactListener(contactID, contacts, adapter, listView);
+            contactNickname = contactNicknames.get(nicknameIndex);
+
+            setContactListener(contactID, contactNickname,
+                    contacts, adapter, listView);
+
+            nicknameIndex += 1;
 
         }
 
@@ -305,6 +319,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
     // (Of course, you can call it multiple times if entering
     // the activity multiple times).
     protected void setContactListener(final String contactID,
+                                      final String contactNickname,
                                       final ArrayList<Contact> contacts,
                                       final ContactAdapter adapter,
                                       final RecyclerView listView) {

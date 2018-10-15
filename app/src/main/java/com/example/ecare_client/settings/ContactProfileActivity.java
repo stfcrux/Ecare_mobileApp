@@ -62,6 +62,8 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
         contactNickname = (TextView) findViewById(R.id.contact_nickname);
         messageButton = (Button) findViewById(R.id.message_button);
 
+        contactEmail.setText(selectedContactName);
+
         messageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
