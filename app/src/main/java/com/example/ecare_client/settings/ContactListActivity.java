@@ -193,7 +193,8 @@ public class ContactListActivity extends BaseActivity implements Serializable {
                                         return;
                                     }
 
-                                    userRef.child("Contacts").child(contactUid).setValue(contactEmail);
+                                    String contactNickname = contactEmail;
+                                    userRef.child("Contacts").child(contactUid).setValue(contactNickname);
 
                                     // Need to update the other user's contact list.
                                     DatabaseReference contactRef =
@@ -201,6 +202,8 @@ public class ContactListActivity extends BaseActivity implements Serializable {
                                                     child("Users").child(contactUid);
 
                                     // May need to worry about refreshing the other user's page!!
+
+
                                     contactRef.child("Contacts").
                                             child(currentUser.getUid()).setValue(currentUser.getEmail());
 
@@ -280,6 +283,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
         contactProfileActivity.putExtra("ContactName", contact.getName());
         contactProfileActivity.putExtra("ContactKey", contact.getKey());
+        contactProfileActivity.putExtra("ContactNickname", contact.getNickname());
 
         startActivity(contactProfileActivity);
 
@@ -359,6 +363,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
                 // Use this only to search for the required contact in "contacts" list,
                 // unless the contact does NOT already exist.
                 Contact searchObject = new Contact(contactEmail, contactID, contactOnline);
+                searchObject.setNickname(contactNickname);
 
 
                 int currentIndex = contacts.indexOf(searchObject);
@@ -376,6 +381,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
                     contactObject.setChecked(wasChecked);
 
                     contactObject.setName(contactEmail);
+                    contactObject.setNickname(contactNickname);
 
 
                     if (contactOnline) {

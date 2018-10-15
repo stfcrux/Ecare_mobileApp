@@ -60,7 +60,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
         // Set item views based on your views and data model
         TextView textView = viewHolder.nameTextView;
-        textView.setText(contact.getName());
+        textView.setText(contact.getNickname());
 
         TextView status = viewHolder.statusTextView;
         status.setText(contact.isOnline() ? "Online" : "Offline");

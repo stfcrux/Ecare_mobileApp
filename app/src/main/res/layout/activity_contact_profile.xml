@@ -21,6 +21,12 @@
         android:textAlignment="center"
         android:textSize="36sp" />
 
+    <Button
+        android:id="@+id/update_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/update_nickname" />
+
     <TextView
         android:id="@+id/contact_email"
         android:layout_width="match_parent"
@@ -31,10 +37,11 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="151dp" />
+        android:layout_height="110dp" />
 
     <Button
         android:id="@+id/message_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="62dp"
+        android:textSize="24sp" />
 </LinearLayout>

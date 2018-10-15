@@ -28,6 +28,7 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
     private TextView contactEmail;
     private TextView contactNickname;
     private Button messageButton;
+    private Button updateNicknameButton;
 
     private FirebaseAuth auth;
     private FirebaseDatabase database;
@@ -38,6 +39,7 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
     private String selectedContactName;
     private String selectedContactKey;
+    private String selectedContactNickname;
 
     private ValueEventListener onlineListener;
 
@@ -46,11 +48,13 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
     protected void onCreate(Bundle savedInstanceState) {
 
         database = FirebaseDatabase.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         super.onCreate(savedInstanceState);
 
         selectedContactName = getIntent().getStringExtra("ContactName");
         selectedContactKey = getIntent().getStringExtra("ContactKey");
+        selectedContactNickname = getIntent().getStringExtra("ContactNickname");
 
         DatabaseReference contactIDRef =
                 database.getReference().child("Users").child(selectedContactKey);
@@ -61,8 +65,27 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
         contactEmail = (TextView) findViewById(R.id.contact_email);
         contactNickname = (TextView) findViewById(R.id.contact_nickname);
         messageButton = (Button) findViewById(R.id.message_button);
+        updateNicknameButton = (Button) findViewById(R.id.update_nickname);
 
         contactEmail.setText(selectedContactName);
+
+        contactNickname.setText(selectedContactNickname);
+
+        updateNicknameButton.setOnClickListener(new Button.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                String newText = contactNickname.getText().toString().trim();
+
+                auth.getCurrentUser().getUid();
+
+                // FINISH THIS
+                asdjsadskda
+
+            }
+
+        });
+
 
         messageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +128,8 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
         contactIDRef.addValueEventListener(onlineListener);
 
     }
+
+
 
 
     public void beginChat(String contactName) {
