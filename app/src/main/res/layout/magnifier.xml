@@ -1,10 +1,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:keepScreenOn="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusable="false">
+    android:focusable="false"
+    android:background="@color/colorPrimaryDark"
+    android:padding="2dp">
 
+    <com.example.ecare_client.TitleLayout
+        android:id="@+id/magnifier_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tool Box" />
     <FrameLayout
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"

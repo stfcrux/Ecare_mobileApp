@@ -82,6 +82,8 @@
     <string name="key_preference_color_mode">VisorAndroidKeyPreferenceColorMode</string>
     <string name="key_preference_autofocus_mode">VisorAndroidKeyPreferenceAutofocusMode</string>
     <string name="key_preference_activity_button_mode">VisorAndroidKeyPreferenceButtonMode</string>
+    <string name="full_name">Your Full Name</string>
+    <string name="phone">Your Mobile Phone No.</string>
 
 
 </resources>

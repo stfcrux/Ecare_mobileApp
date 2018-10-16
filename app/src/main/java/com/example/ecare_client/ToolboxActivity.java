@@ -12,6 +12,7 @@ import com.example.ecare_client.checklist.CheckListActivity;
 
 public class ToolboxActivity extends BaseActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +80,7 @@ public class ToolboxActivity extends BaseActivity {
         });
     }
     private void openPersonalInfo() {
-            Intent personalInfo = new Intent(getApplicationContext(), MapsActivity.class);
+            Intent personalInfo = new Intent(getApplicationContext(), com.example.ecare_client.settings.PersonalInfoActivity.class);
             startActivity(personalInfo);
         }
     private void openToDOActivity() {
