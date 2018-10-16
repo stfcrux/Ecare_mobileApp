@@ -83,6 +83,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        Bundle extra = getIntent().getExtras();
+        String lat = extra.getString("lat");
+        String lon = extra.getString("lon");
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -97,6 +100,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         etDestination = (EditText) findViewById(R.id.etDestination);
         useCurrent = (Button) findViewById(R.id.useCurrent);
         usePlacePicker = (Button) findViewById(R.id.usePlacePicker);
+
+        if (lat!=null && lon!=null){
+            etOrigin.setText(lat);
+            etDestination.setText(lon);
+        }
 
 
         // once clicked find route from start location to end location
