@@ -5,6 +5,8 @@ package com.example.ecare_client.textchat;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,13 +28,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
+public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> implements Parcelable {
 
     private List<Pair<Message, Integer>> mMessages;
     public static final int DIRECTION_INCOMING = 0;
     public static final int DIRECTION_OUTGOING = 1;
     private static final String TAG = "MsgAdapter";
     private Context context;
+    private int mData;
+
 
 
     static class ViewHolder extends RecyclerView.ViewHolder{
@@ -166,5 +170,30 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
         Log.d(TAG, "openMapActivity: ");
     }
 
+    public int describeContents() {
+        return 0;
+    }
 
+    /** save object in parcel */
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(mData);
+    }
+
+    public static final Parcelable.Creator<MsgAdapter> CREATOR
+            = new Parcelable.Creator<MsgAdapter>() {
+        public MsgAdapter createFromParcel(Parcel in) {
+            return new MsgAdapter(in);
+        }
+
+        public MsgAdapter[] newArray(int size) {
+            return new MsgAdapter[size];
+        }
+    };
+
+    /** recreate object from parcel */
+    private MsgAdapter(Parcel in) {
+        mData = in.readInt();
+    }
 }
+
+

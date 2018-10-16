@@ -280,7 +280,7 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
             showSpinner();
 
         } else {
-
+            getSinchServiceInterface().sendMessage(contactName, "I want to chat with you");
             Intent chatActivity = new Intent(this, ChatActivity.class);
 
             Bundle options = new Bundle();
@@ -303,7 +303,7 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
 
     @Override
     public void onStarted() {
-
+        /*
         Intent chatActivity = new Intent(this, ChatActivity.class);
 
         Bundle options = new Bundle();
@@ -312,6 +312,7 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
         chatActivity.putExtras(options);
 
         startActivity(chatActivity);
+        */
     }
 
     @Override
