@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         });
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-         locationListener = new LocationListener() {
+        locationListener = new LocationListener() {
              @Override
              public void onLocationChanged(Location location) {
                  currentLocation = location;
@@ -272,7 +272,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     t2_city.setText(city);
                     t3_description.setText(description);
                     ImageView image = (ImageView) findViewById(R.id.imageView);
-                    image.setImageResource(R.drawable.icon_fewclouds);
+                    changeImage(description,image);
 
                     Calendar calendar = Calendar.getInstance();
                     DateFormat sdf = SimpleDateFormat.getDateInstance();

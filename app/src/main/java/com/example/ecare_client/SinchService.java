@@ -7,6 +7,7 @@ import com.sinch.android.rtc.Sinch;
 import com.sinch.android.rtc.SinchClient;
 import com.sinch.android.rtc.SinchClientListener;
 import com.sinch.android.rtc.SinchError;
+import com.sinch.android.rtc.messaging.Message;
 import com.sinch.android.rtc.video.VideoController;
 import com.sinch.android.rtc.calling.Call;
 import com.sinch.android.rtc.calling.CallClient;
@@ -129,6 +130,9 @@ public class SinchService extends Service {
         public void sendMessage(String recipientUserId, String textBody) {
             SinchService.this.sendMessage(recipientUserId, textBody);
         }
+        public void sendLocation(String recipientUserId, String textBody, String lat, String lon){
+            SinchService.this.sendLocation(recipientUserId,textBody,lat,lon);
+        }
 
         public void addMessageClientListener(MessageClientListener listener) {
             SinchService.this.addMessageClientListener(listener);
@@ -211,6 +215,17 @@ public class SinchService extends Service {
     public void sendMessage(String recipientUserId, String textBody) {
         if (isStarted()) {
             WritableMessage message = new WritableMessage(recipientUserId, textBody);
+            mSinchClient.getMessageClient().send(message);
+        }
+    }
+
+    public void sendLocation(String recipientUserId, String textBody,String lat,String lon){
+        if (isStarted()){
+            WritableMessage message = new WritableMessage();
+            message.addRecipient(recipientUserId);
+            message.setTextBody(textBody);
+            message.addHeader("lat",lat);
+            message.addHeader("lon",lon);
             mSinchClient.getMessageClient().send(message);
         }
     }

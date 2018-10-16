@@ -41,6 +41,12 @@
             android:id="@+id/video_call"
             android:text="Video Call"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/send_location"
+            android:text="Send Location" />
+
 
     </LinearLayout>
 
