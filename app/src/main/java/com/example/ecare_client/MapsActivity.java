@@ -78,14 +78,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
     private static final int PLACE_PICKER_REQUEST = 3;
+    private String lat;
+    private String lon;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         Bundle extra = getIntent().getExtras();
-        String lat = extra.getString("lat");
-        String lon = extra.getString("lon");
+        if(extra!=null) {
+            lat = extra.getString("lat");
+            lon = extra.getString("lon");
+        }
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();

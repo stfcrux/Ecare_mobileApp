@@ -15,6 +15,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +36,7 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
     private Button send;
     private Button videochat;
     private Button sendCurrentLocation;
+    private Button more;
     private RecyclerView msgRecyclerView;
     private String makeCallTo;
     private MsgAdapter adapter;
@@ -52,6 +55,14 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null){
             actionBar.hide();
+        }
+
+        // Check whether we're recreating a previously destroyed instance
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            adapter = savedInstanceState.getParcelable("adapter");
+        }else {
+            adapter = new MsgAdapter(getApplicationContext());
         }
         TitleLayout titleLayout = (TitleLayout) findViewById(R.id.chat_title);
         titleLayout.setTitleText("Chat");
@@ -90,15 +101,16 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
         inputText = (EditText) findViewById(R.id.input_text);
         send = (Button) findViewById(R.id.send);
         videochat = (Button) findViewById(R.id.video_call);
+        more = (Button) findViewById(R.id.more);
         msgRecyclerView = (RecyclerView) findViewById(R.id.msg_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         msgRecyclerView.setLayoutManager(layoutManager);
-        adapter = new MsgAdapter(getApplicationContext());
         msgRecyclerView.setAdapter(adapter);
 
         videochat.setOnClickListener(buttonClickListener);
         send.setOnClickListener(buttonClickListener);
         sendCurrentLocation.setOnClickListener(buttonClickListener);
+        more.setOnClickListener(buttonClickListener);
         if(rightMsg != null && leftMsg !=null) {
             rightMsg.setOnClickListener(buttonClickListener);
             leftMsg.setOnClickListener(buttonClickListener);
@@ -145,12 +157,24 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
                 case R.id.send_location:
                     sendCurrentLocation();
                     break;
-                case R.id.left_msg:
-                case R.id.right_msg:
-                    if(v.getContentDescription()!= null && v.getContentDescription().equals("location")){
-                        openMapActivity();
+                case R.id.more:
+
+                        sendCurrentLocation.setVisibility(View.VISIBLE);
+                        sendCurrentLocation.setClickable(true);
+                        videochat.setVisibility(View.VISIBLE);
+                        videochat.setClickable(true);
+                        more.setContentDescription("back");
+
+                    /*
+                    if (more.getContentDescription().equals("back")){
+                        sendCurrentLocation.setVisibility(View.INVISIBLE);
+                        sendCurrentLocation.setClickable(false);
+                        videochat.setVisibility(View.INVISIBLE);
+                        videochat.setClickable(false);
+                        more.setContentDescription(null);
+
                     }
-                    break;
+                    */
                 default:
                     break;
             }
@@ -222,6 +246,12 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
     private void openMapActivity(){
         Intent MapsActivity = new Intent(getApplicationContext(), MapsActivity.class);
         startActivity(MapsActivity);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable("adapter",adapter);
+        super.onSaveInstanceState(outState);
     }
 
 }
