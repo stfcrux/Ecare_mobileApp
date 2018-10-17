@@ -17,7 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Enter origin address" />
+            android:hint="Enter origin address"
+            android:focusable="false"/>
 
         <Button
             android:id="@+id/useCurrent"
@@ -37,7 +38,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Enter destination address" />
+            android:hint="Enter destination address"
+            android:focusable="false"/>
 
         <Button
             android:id="@+id/usePlacePicker"
