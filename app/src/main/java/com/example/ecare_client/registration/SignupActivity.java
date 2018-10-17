@@ -215,6 +215,11 @@ public class SignupActivity extends BaseActivity {
     protected void setOnline(boolean value) {
         FirebaseUser user = auth.getCurrentUser();
 
+        if (user == null) {
+
+            return;
+        }
+
         DatabaseReference userRef =
                 database.
                         getReference().
