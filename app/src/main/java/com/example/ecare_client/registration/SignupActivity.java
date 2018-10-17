@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -57,6 +58,9 @@ public class SignupActivity extends BaseActivity {
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        btnGoogleSignIn = (LinearLayout) findViewById(R.id.google_sign_in_btn);
+        btnFacebookSignIn = (LinearLayout) findViewById(R.id.facebook_sign_in_btn);
 
         //btnResetPassword  = (Button) findViewById(R.id.btn_reset_password);
 
