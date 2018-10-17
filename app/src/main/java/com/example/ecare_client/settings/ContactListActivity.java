@@ -163,6 +163,14 @@ public class ContactListActivity extends BaseActivity implements Serializable {
                 public void onClick(View v) {
                     final String contactEmail = inputContact.getText().toString().trim();
 
+                    if (contactEmail.equals(auth.getCurrentUser().getEmail())) {
+                        Toast.makeText(getApplicationContext(),
+                                "You cannot add yourself as a contact.",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+
+                    }
+
 
                     DatabaseReference queryRef =
                             database.getReference().child("Users");
