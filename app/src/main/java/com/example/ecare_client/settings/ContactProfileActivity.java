@@ -79,8 +79,13 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
                 String userID = auth.getCurrentUser().getUid();
 
+                
                 database.getReference().child("Users").child(userID).
                         child("Contacts").child(selectedContactKey).setValue(newText);
+
+                Toast.makeText(getApplicationContext(),
+                        "Nickname updated.",
+                        Toast.LENGTH_SHORT).show();
 
                 // FINISH THIS
 

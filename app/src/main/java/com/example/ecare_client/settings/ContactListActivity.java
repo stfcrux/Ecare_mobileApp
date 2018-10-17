@@ -197,7 +197,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
                                     if (isAlreadyContact) {
                                         Toast.makeText(getApplicationContext(),
-                                                contactEmail+" is already a contact.",
+                                                contactEmail + " is already a contact.",
                                                 Toast.LENGTH_SHORT).show();
                                         return;
                                     }
