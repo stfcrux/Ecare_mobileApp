@@ -141,15 +141,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 loadPlacePicker();
             }
         });
-
-
-
         useCurrent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 useCurrentLocation();
             }
         });
+
     }
 
     // sending request to get routing directions
@@ -195,6 +193,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
+
+
+
     }
 
 
@@ -252,6 +253,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 polylineOptions.add(route.points.get(i));
 
             polylinePaths.add(mMap.addPolyline(polylineOptions));
+
+
         }
     }
 
@@ -409,6 +412,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
+
+
+        // make click event on marker
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                ((EditText) findViewById(R.id.etDestination))
+                        .setText(marker.getTitle());
+
+                end = marker.getPosition();
+
+                return false;
+
+            }
+        });
 
     }
 
