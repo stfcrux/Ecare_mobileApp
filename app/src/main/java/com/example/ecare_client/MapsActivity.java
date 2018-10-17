@@ -36,6 +36,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -52,11 +53,15 @@ import java.util.Locale;
 import com.example.ecare_client.Googlemaps.DirectionFinder;
 import com.example.ecare_client.Googlemaps.DirectionFinderListener;
 import com.example.ecare_client.Googlemaps.Route;
+import com.example.ecare_client.Googlemaps.GetNearbyPlacesData;
+import com.example.ecare_client.Googlemaps.GooglePlacesDataParser;
+import com.example.ecare_client.Googlemaps.DownloadPlacesURL;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, DirectionFinderListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        GoogleMap.OnMarkerClickListener{
 
     protected LatLng start;
     protected LatLng end;
@@ -75,11 +80,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
     private static final int PLACE_PICKER_REQUEST = 3;
+    private String lat;
+    private String lon;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        Bundle extra = getIntent().getExtras();
+        if(extra!=null) {
+            lat = extra.getString("lat");
+            lon = extra.getString("lon");
+        }
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -95,7 +109,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         useCurrent = (Button) findViewById(R.id.useCurrent);
         usePlacePicker = (Button) findViewById(R.id.usePlacePicker);
 
-
+        if (lat!=null && lon!=null){
+            useChatLocation(lat,lon);
+        }
         // once clicked find route from start location to end location
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,15 +140,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 loadPlacePicker();
             }
         });
-
-
-
         useCurrent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 useCurrentLocation();
             }
         });
+
     }
 
     // sending request to get routing directions
@@ -178,6 +192,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
+
+
+
     }
 
 
@@ -235,6 +252,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 polylineOptions.add(route.points.get(i));
 
             polylinePaths.add(mMap.addPolyline(polylineOptions));
+
+
         }
     }
 
@@ -299,6 +318,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
 
                     start = new LatLng(addresses.get(0).getLatitude(),addresses.get(0).getLongitude());
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace(); // getFromLocation() may sometimes fail
+        }
+    }
+
+    private void useChatLocation(String lat, String lon){
+        try {
+            Geocoder geo = new Geocoder(MapsActivity.this.getApplicationContext(), Locale.getDefault());
+            List<Address> addresses = geo.getFromLocation(Double.valueOf(lat), Double.valueOf(lon), 1);
+            if (addresses.isEmpty()) {
+                ((EditText) findViewById(R.id.etDestination)).setText("Waiting for Location");
+            }
+            else {
+                if (addresses.size() > 0) {
+                    ((EditText) findViewById(R.id.etDestination)).setText(addresses.get(0).getFeatureName()
+                            + ", " + addresses.get(0).getLocality() +", " +
+                            addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
+
+                    end = new LatLng(addresses.get(0).getLatitude(),addresses.get(0).getLongitude());
                 }
             }
         }
@@ -393,6 +434,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
 
+
+        // make click event on marker
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                ((EditText) findViewById(R.id.etDestination))
+                        .setText(marker.getTitle());
+
+                end = marker.getPosition();
+
+                return false;
+
+            }
+        });
+
     }
 
     @Override
@@ -441,6 +497,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
 
         mLastLocation = location;
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
@@ -507,6 +565,80 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // You can add here other case statements according to your requirement.
         }
     }
+
+
+    int PROXIMITY_RADIUS = 10000;
+    private String getNearbyPlacesUrl(double latitude , double longitude , String nearbyPlace)
+    {
+
+        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlaceUrl.append("location="+latitude+","+longitude);
+        googlePlaceUrl.append("&radius="+PROXIMITY_RADIUS);
+        googlePlaceUrl.append("&type="+nearbyPlace);
+        googlePlaceUrl.append("&sensor=true");
+        googlePlaceUrl.append("&key="+"AIzaSyCzIe_THjJzrwkBEhBnQlQFpq510_wTR88");
+
+        Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
+
+        return googlePlaceUrl.toString();
+    }
+
+    double latitude,longitude;
+    public void onClick(View v)
+    {
+        Object dataTransfer[] = new Object[2];
+        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+
+        switch(v.getId())
+        {
+
+            case R.id.B_hopistals:
+                mMap.clear();
+                String hospital = "hospital";
+                String url = getNearbyPlacesUrl(latitude, longitude, hospital);
+                dataTransfer[0] = mMap;
+                dataTransfer[1] = url;
+
+                getNearbyPlacesData.execute(dataTransfer);
+                Toast.makeText(MapsActivity.this, "Showing Nearby Hospitals", Toast.LENGTH_SHORT).show();
+                break;
+
+
+            case R.id.B_schools:
+                mMap.clear();
+                String school = "school";
+                url = getNearbyPlacesUrl(latitude, longitude, school);
+                dataTransfer[0] = mMap;
+                dataTransfer[1] = url;
+
+                getNearbyPlacesData.execute(dataTransfer);
+                Toast.makeText(MapsActivity.this, "Showing Nearby Schools", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.B_restaurants:
+                mMap.clear();
+                String resturant = "restuarant";
+                url = getNearbyPlacesUrl(latitude, longitude, resturant);
+                dataTransfer[0] = mMap;
+                dataTransfer[1] = url;
+
+                getNearbyPlacesData.execute(dataTransfer);
+                Toast.makeText(MapsActivity.this, "Showing Nearby Restaurants", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+    }
+
+
+
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
+    }
+
+
+
+
 
 
 

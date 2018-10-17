@@ -75,6 +75,7 @@
     <string name="text_autofocus_enabled">Autofocus enabled.</string>
     <string name="text_autofocus_disabled">Autofocus disabled. Tap to focus.</string>
     <string name="text_image_stored">Image stored in path </string>
+    <string name="update_nickname">Update nickname</string>
 
     <!-- Key names (equal in all languages) -->
     <string name="visor_shared_preference_name">VisorAndroidSharedPreference</string>
@@ -82,8 +83,12 @@
     <string name="key_preference_color_mode">VisorAndroidKeyPreferenceColorMode</string>
     <string name="key_preference_autofocus_mode">VisorAndroidKeyPreferenceAutofocusMode</string>
     <string name="key_preference_activity_button_mode">VisorAndroidKeyPreferenceButtonMode</string>
+
     <string name="full_name">Your Full Name</string>
     <string name="phone">Your Mobile Phone No.</string>
+
+    <string name="contact_profile_email">Email:</string>
+
 
 
 </resources>

@@ -1,19 +1,30 @@
 package com.example.ecare_client.settings;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
 
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Contact {
+public class Contact implements Serializable {
     private String mName;
     private boolean mOnline;
     private boolean mChecked;
     private String mKey;
+    private String mNickname;
+
     private ContactListActivity mContext;
 
+    private Button messageButton = null;
+
     private ValueEventListener contactEventListener;
+    private ValueEventListener contactNicknameListener;
+
+
 
     public Contact(String name, String key, boolean online) {
         mName = name;
@@ -23,12 +34,23 @@ public class Contact {
         mChecked = false;
     }
 
+
+
     public String getName() {
         return mName;
     }
 
     public void setName(String newName) {
         mName = newName;
+
+    }
+
+    public String getNickname() {
+        return mNickname;
+    }
+
+    public void setNickname(String newName) {
+        mNickname = newName;
 
     }
 
@@ -43,6 +65,10 @@ public class Contact {
 
     public void setOnline(boolean value) {
         mOnline = value;
+
+        if (messageButton != null) {
+            messageButton.setEnabled(value);
+        }
 
     }
 
@@ -61,6 +87,14 @@ public class Contact {
 
     public void setContactEventListener(ValueEventListener listener) {
         contactEventListener = listener;
+    }
+
+    public ValueEventListener getContactNicknameListener() {
+        return contactNicknameListener;
+    }
+
+    public void setContactNicknameListener(ValueEventListener listener) {
+        contactNicknameListener = listener;
     }
 
     public ContactListActivity getContext() {
@@ -94,21 +128,9 @@ public class Contact {
         }
     }
 
-    private static int lastContactId = 0;
 
-    /*
-    public static ArrayList<Contact> createContactsList(int numContacts) {
-        ArrayList<Contact> contacts = new ArrayList<Contact>();
 
-        for (int i = 1; i <= numContacts; i++) {
-            contacts.add(
-                    new Contact(
-                            "Person " + ++lastContactId,
-                            ,
-                            i <= numContacts / 2));
-        }
+    //private static int lastContactId = 0;
 
-        return contacts;
-    }
-     */
+
 }

@@ -76,7 +76,9 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".ToolboxActivity" />
         <activity android:name=".settings.ContactListActivity" />
+
         <activity android:name=".settings.PersonalInfoActivity" />
+        <activity android:name=".settings.ContactProfileActivity" />
 
         <activity android:name=".registration.ResetPasswordActivity" />
         <activity android:name=".checklist.CheckListActivity" />

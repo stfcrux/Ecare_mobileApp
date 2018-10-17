@@ -12,6 +12,7 @@ import com.example.ecare_client.R;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,9 +34,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.sinch.android.rtc.SinchError;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ContactListActivity extends BaseActivity implements SinchService.StartFailedListener {
+public class ContactListActivity extends BaseActivity implements Serializable {
 
     private EditText inputContact;
     private Button btnAddContact;
@@ -46,11 +48,13 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
     private FirebaseAuth auth;
     private FirebaseDatabase database;
 
+    private DatabaseReference userRef;
+
     final private ArrayList<Contact> contacts = new ArrayList<>();
     final private ContactAdapter adapter = new ContactAdapter(contacts);
     private RecyclerView contactListView;
 
-    private String selectedContactName;
+
 
 
 
@@ -63,6 +67,7 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_contact_list);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null){
@@ -85,12 +90,12 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
 
         // contactIDs is just used to pass the contacts onto another method.
         final ArrayList<String> contactIDs = new ArrayList<>();
+        final ArrayList<String> contactNicknames = new ArrayList<>();
 
         //-----------------------------------------------------------------------------
         final FirebaseUser currentUser = auth.getCurrentUser();
 
-        final DatabaseReference userRef =
-                database.getReference().child("Users").child(currentUser.getUid());
+        userRef = database.getReference().child("Users").child(currentUser.getUid());
 
         Query queryContacts = userRef.child("Contacts").orderByKey();
 
@@ -107,6 +112,7 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
                         if ( !(matchingContact.getKey().equals("Null")) ) {
 
                             contactIDs.add(matchingContact.getKey());
+                            contactNicknames.add(matchingContact.getValue(String.class));
 
 
                         }
@@ -114,6 +120,7 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
                     }
 
                     setContactListeners(contactIDs,
+                            contactNicknames,
                             contacts,
                             adapter,
                             contactListView);
@@ -156,6 +163,14 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
                 public void onClick(View v) {
                     final String contactEmail = inputContact.getText().toString().trim();
 
+                    if (contactEmail.equals(auth.getCurrentUser().getEmail())) {
+                        Toast.makeText(getApplicationContext(),
+                                "You cannot add yourself as a contact.",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+
+                    }
+
 
                     DatabaseReference queryRef =
                             database.getReference().child("Users");
@@ -181,10 +196,14 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
                                     boolean isAlreadyContact = contacts.contains(searchObject);
 
                                     if (isAlreadyContact) {
+                                        Toast.makeText(getApplicationContext(),
+                                                contactEmail + " is already a contact.",
+                                                Toast.LENGTH_SHORT).show();
                                         return;
                                     }
 
-                                    userRef.child("Contacts").child(contactUid).setValue("Null");
+                                    String contactNickname = contactEmail;
+                                    userRef.child("Contacts").child(contactUid).setValue(contactNickname);
 
                                     // Need to update the other user's contact list.
                                     DatabaseReference contactRef =
@@ -192,11 +211,14 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
                                                     child("Users").child(contactUid);
 
                                     // May need to worry about refreshing the other user's page!!
+
+
                                     contactRef.child("Contacts").
-                                            child(currentUser.getUid()).setValue("Null");
+                                            child(currentUser.getUid()).setValue(currentUser.getEmail());
 
 
                                     setContactListener(contactUid,
+                                            contactNickname,
                                             contacts,
                                             adapter,
                                             contactListView);
@@ -204,6 +226,14 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
 
                                 }
                                 // NEED TO REFRESH THE LIST VIEW!!!!
+
+                            }
+
+                            else {
+                                Toast.makeText(getApplicationContext(),
+                                        "User " + contactEmail+ " does not exist.",
+                                        Toast.LENGTH_SHORT).show();
+                                return;
 
                             }
                         }
@@ -257,82 +287,38 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
     }
 
 
-    public void beginChat(String contactName) {
 
-        selectedContactName = contactName;
+    public void beginProfile(Contact contact) {
+        Intent contactProfileActivity = new Intent(this, ContactProfileActivity.class);
 
-        auth = FirebaseAuth.getInstance();
-        String email = auth.getCurrentUser().getEmail();
+        contactProfileActivity.putExtra("ContactName", contact.getName());
+        contactProfileActivity.putExtra("ContactKey", contact.getKey());
+        contactProfileActivity.putExtra("ContactNickname", contact.getNickname());
 
-        if (!getSinchServiceInterface().isStarted()) {
-            getSinchServiceInterface().startClient(email);
-            showSpinner();
-
-        } else {
-
-            Intent chatActivity = new Intent(this, ChatActivity.class);
-
-            Bundle options = new Bundle();
-            options.putString("ContactName", contactName);
-
-            chatActivity.putExtras(options);
-
-            startActivity(chatActivity);
-        }
+        startActivity(contactProfileActivity);
 
     }
 
-    @Override
-    public void onStartFailed(SinchError error) {
-        Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show();
-        if (mSpinner != null) {
-            mSpinner.dismiss();
-        }
-    }
 
-    @Override
-    public void onStarted() {
-
-        Intent chatActivity = new Intent(this, ChatActivity.class);
-
-        Bundle options = new Bundle();
-        options.putString("ContactName", selectedContactName);
-
-        chatActivity.putExtras(options);
-
-        startActivity(chatActivity);
-    }
-
-    @Override
-    protected void onServiceConnected() {
-        getSinchServiceInterface().setStartListener(this);
-    }
-
-
-    private void showSpinner() {
-        mSpinner = new ProgressDialog(this);
-        mSpinner.setTitle("Connecting");
-        mSpinner.setMessage("Please wait...");
-        mSpinner.show();
-    }
-
-    @Override
-    protected void onPause() {
-        if (mSpinner != null) {
-            mSpinner.dismiss();
-        }
-        super.onPause();
-    }
 
 
     protected void setContactListeners(ArrayList<String> contactIDs,
+                                       ArrayList<String> contactNicknames,
                                        final ArrayList<Contact> contacts,
                                        final ContactAdapter adapter,
                                        final RecyclerView listView) {
 
 
+        int nicknameIndex = 0;
+        String contactNickname;
+
         for (String contactID : contactIDs) {
-            setContactListener(contactID, contacts, adapter, listView);
+            contactNickname = contactNicknames.get(nicknameIndex);
+
+            setContactListener(contactID, contactNickname,
+                    contacts, adapter, listView);
+
+            nicknameIndex += 1;
 
         }
 
@@ -344,6 +330,7 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
     // (Of course, you can call it multiple times if entering
     // the activity multiple times).
     protected void setContactListener(final String contactID,
+                                      final String contactNickname,
                                       final ArrayList<Contact> contacts,
                                       final ContactAdapter adapter,
                                       final RecyclerView listView) {
@@ -351,12 +338,38 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
         // If the contact is already present at this point in the method,
         // then DON'T reset the ValueEventListener!!!!
 
-        final ContactListActivity context = this;
+        String contactEmail = "Null";
+        Boolean contactOnline = false;
+
+
+        Contact searchObject = new Contact(contactEmail, contactID, contactOnline);
+
+        int currentIndex = contacts.indexOf(searchObject);
+
+        if (currentIndex == -1) {
+            // Then a new contact has to be created.
+            contacts.add(0, searchObject);
+            adapter.notifyItemInserted(0);
+
+            searchObject.setContext(this);
+
+            // All the other values for the contact are determined
+            // in the EventListeners.
+
+        }
+
+        else {
+            Log.d("ERROR", "Contact already stored somehow!!!!");
+        }
+
+
 
         database = FirebaseDatabase.getInstance();
 
 
         DatabaseReference contactIDRef = database.getReference().child("Users").child(contactID);
+
+        DatabaseReference userContactRef = userRef.child("Contacts").child(contactID);
 
         // Also need to initialise the contact list.
 
@@ -367,6 +380,14 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
 
                 String contactEmail = "Null";
                 Boolean contactOnline = false;
+
+                String testKeyForNull = dataSnapshot.getKey();
+
+                if (testKeyForNull == null) {
+                    Log.d("Contact", "User deleted!");
+                    return;
+
+                }
 
                 for(DataSnapshot child : dataSnapshot.getChildren()) {
                     if (child.getKey().equals("Email")) {
@@ -383,7 +404,6 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
                 // Use this only to search for the required contact in "contacts" list,
                 // unless the contact does NOT already exist.
                 Contact searchObject = new Contact(contactEmail, contactID, contactOnline);
-
 
                 int currentIndex = contacts.indexOf(searchObject);
 
@@ -424,24 +444,14 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
 
                 }
 
+                else {
+                    Log.d("ERROR", "Contact not stored locally!");
+
+                }
+
                 // In case the contact wasn't previously in the list.
 
-                else {
-                    searchObject.setContactEventListener(this);
-                    searchObject.setContext(context);
 
-                    if (contactOnline) {
-                        contacts.add(0, searchObject);
-                        adapter.notifyItemInserted(0);
-                    }
-
-                    else {
-                        contacts.add(searchObject);
-                        int lastPosition = contacts.size() - 1;
-                        adapter.notifyItemInserted(lastPosition);
-
-                    }
-                }
 
 
             }
@@ -453,7 +463,51 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
 
         };
 
+
+        ValueEventListener contactNicknameListener = new ValueEventListener() {
+
+            @Override
+            // THE DATA SNAPSHOT IS AT THE CHILD!! NOT THE ROOT NODE!!!!
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String newNickname = (String) dataSnapshot.getValue();
+
+                // THIS VALUE MIGHT GET DELETED!!!!
+                if (newNickname == null) {
+                    Log.d("Contact", "Contact deleted from list!");
+                    return;
+                }
+
+
+                String contactEmail = "Null";
+                Boolean contactOnline = false;
+
+                Contact searchObject = new Contact(contactEmail, contactID, contactOnline);
+
+                int currentIndex = contacts.indexOf(searchObject);
+                // I don't think currentIndex can ever be -1, since the contact must exist.
+                Contact contactObject = contacts.get(currentIndex);
+
+                contactObject.setNickname(newNickname);
+
+                adapter.notifyItemChanged(currentIndex);
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Do nothing.
+            }
+
+
+        };
+
+        searchObject.setContactEventListener(contactEventListener);
+        searchObject.setContactNicknameListener(contactNicknameListener);
+
         contactIDRef.addValueEventListener(contactEventListener);
+        userContactRef.addValueEventListener(contactNicknameListener);
 
     }
 
@@ -505,6 +559,7 @@ public class ContactListActivity extends BaseActivity implements SinchService.St
                         child("Users").child(contactID);
 
         contactRef.removeEventListener(contactObject.getContactEventListener());
+        contactRef.removeEventListener(contactObject.getContactNicknameListener());
 
         // Need to remove the previous event listener!!!!!
 

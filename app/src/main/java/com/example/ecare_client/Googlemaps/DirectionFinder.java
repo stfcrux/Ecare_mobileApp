@@ -21,7 +21,7 @@ import java.util.List;
 
 public class DirectionFinder {
     private static final String DIRECTION_URL_API = "https://maps.googleapis.com/maps/api/directions/json?";
-    private static final String GOOGLE_API_KEY = "AIzaSyBTzu5BxQRyZilhQyAflzpW-zyi7CY0Qrc";
+    private static final String GOOGLE_API_KEY = "AIzaSyCzIe_THjJzrwkBEhBnQlQFpq510_wTR88";
     private DirectionFinderListener listener;
     private LatLng origin;
     private LatLng destination;
@@ -58,7 +58,7 @@ public class DirectionFinder {
         String sensor = "sensor=false";
 
         // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest + "&" + sensor;
+        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + "mode=walking";
 
         // Output format
         String output = "json";

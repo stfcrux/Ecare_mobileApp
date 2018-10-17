@@ -66,11 +66,18 @@ Explain what these tests test and why
   list all notable points of interest to the user and they can simply slect where they want to go.
   
 - To access our other tools, user can click the bottom right button, where it has a 
-  checklist feature and a alarm clock feature.
+  checklist feature a alarm clock feature and the magnifier feature.
+  
   The checklist feature, the user can add a note of what they want and set a initial priority of it,
   the user can delete the note once it has been done by simply swiping the note to the right/left.
+  
   The alarm clock feature, the user can set a date and time and the user's phone will vibrate and notify
   the user when the set time is reached.
+  
+  The magnifier feature, user can click the plus button to zoom in, in the case if the zoom ratio is what
+  they want, they can click the euals button to have the image temporaily stored. The user can then click
+  settings button to change the colour, to further increase viewerbility of the image. Hold the screen to
+  enable auto focus, no auto focus vice versa.
   
 
 ```
@@ -89,6 +96,7 @@ Explain what these tests test and why
 . Implemented Weather Feature
 . Implemented Setting a alarmclock Feature
 . Implemented Help button Feature
+. Implemented Magnifier feature
 ```
 
 

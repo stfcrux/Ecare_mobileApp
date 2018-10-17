@@ -3,10 +3,15 @@ package com.example.ecare_client;
 import com.example.ecare_client.videochat.*;
 import com.sinch.android.rtc.AudioController;
 import com.sinch.android.rtc.ClientRegistration;
+import com.sinch.android.rtc.PushPair;
 import com.sinch.android.rtc.Sinch;
 import com.sinch.android.rtc.SinchClient;
 import com.sinch.android.rtc.SinchClientListener;
 import com.sinch.android.rtc.SinchError;
+import com.sinch.android.rtc.messaging.Message;
+import com.sinch.android.rtc.messaging.MessageClient;
+import com.sinch.android.rtc.messaging.MessageDeliveryInfo;
+import com.sinch.android.rtc.messaging.MessageFailureInfo;
 import com.sinch.android.rtc.video.VideoController;
 import com.sinch.android.rtc.calling.Call;
 import com.sinch.android.rtc.calling.CallClient;
@@ -14,11 +19,19 @@ import com.sinch.android.rtc.calling.CallClientListener;
 import com.sinch.android.rtc.messaging.MessageClientListener;
 import com.sinch.android.rtc.messaging.WritableMessage;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import java.util.List;
 
 public class SinchService extends Service {
 
@@ -62,6 +75,7 @@ public class SinchService extends Service {
 
             mSinchClient.addSinchClientListener(new MySinchClientListener());
             mSinchClient.getCallClient().addCallClientListener(new SinchCallClientListener());
+            mSinchClient.getMessageClient().addMessageClientListener(new SinchMessageClientListener());
             mSinchClient.start();
         }
     }
@@ -128,6 +142,9 @@ public class SinchService extends Service {
 
         public void sendMessage(String recipientUserId, String textBody) {
             SinchService.this.sendMessage(recipientUserId, textBody);
+        }
+        public void sendLocation(String recipientUserId, String textBody, String lat, String lon){
+            SinchService.this.sendLocation(recipientUserId,textBody,lat,lon);
         }
 
         public void addMessageClientListener(MessageClientListener listener) {
@@ -208,9 +225,63 @@ public class SinchService extends Service {
             SinchService.this.startActivity(intent);
         }
     }
+    private class SinchMessageClientListener implements MessageClientListener{
+        @Override
+        public void onIncomingMessage(MessageClient messageClient, Message message) {
+            String title = message.getSenderId();
+            String content = message.getTextBody();
+            Intent intent = new Intent(SinchService.this,ChatActivity.class);
+            Bundle options = new Bundle();
+            options.putString("ContactName", title);
+            intent.putExtras(options);
+            PendingIntent pi = PendingIntent.getActivity(SinchService.this,0,intent,0);
+            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            Notification notification = new NotificationCompat.Builder(getApplicationContext())
+                    .setContentTitle(title)
+                    .setContentText(content)
+                    .setWhen(System.currentTimeMillis())
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher))
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+                    .setContentIntent(pi)
+                    .build();
+            manager.notify(1, notification);
+        }
+
+        @Override
+        public void onMessageSent(MessageClient messageClient, Message message, String s) {
+
+        }
+
+        @Override
+        public void onMessageFailed(MessageClient messageClient, Message message, MessageFailureInfo messageFailureInfo) {
+
+        }
+
+        @Override
+        public void onMessageDelivered(MessageClient messageClient, MessageDeliveryInfo messageDeliveryInfo) {
+
+        }
+
+        @Override
+        public void onShouldSendPushData(MessageClient messageClient, Message message, List<PushPair> list) {
+
+        }
+    }
     public void sendMessage(String recipientUserId, String textBody) {
         if (isStarted()) {
             WritableMessage message = new WritableMessage(recipientUserId, textBody);
+            mSinchClient.getMessageClient().send(message);
+        }
+    }
+
+    public void sendLocation(String recipientUserId, String textBody,String lat,String lon){
+        if (isStarted()){
+            WritableMessage message = new WritableMessage();
+            message.addRecipient(recipientUserId);
+            message.setTextBody(textBody);
+            message.addHeader("lat",lat);
+            message.addHeader("lon",lon);
             mSinchClient.getMessageClient().send(message);
         }
     }
