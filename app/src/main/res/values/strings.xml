@@ -88,6 +88,9 @@
     <string name="phone">Your Mobile Phone No.</string>
 
     <string name="contact_profile_email">Email:</string>
+    <string name="google_sign_in">Google sign-in</string>
+    <string name="facebook_sign_in">Facebook sign-in</string>
+
 
 
 

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.example.ecare_client.BaseActivity;
 import com.example.ecare_client.settings.ContactListActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -37,10 +39,15 @@ public class SignupActivity extends BaseActivity {
     private FirebaseAuth auth;
     private FirebaseDatabase database;
 
+    private LinearLayout btnGoogleSignIn;
+    private LinearLayout btnFacebookSignIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        FirebaseApp.initializeApp(this);
 
         //asking for permissions here
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -57,8 +64,13 @@ public class SignupActivity extends BaseActivity {
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        btnResetPassword  = (Button) findViewById(R.id.btn_reset_password);
 
+        btnGoogleSignIn = (LinearLayout) findViewById(R.id.google_sign_in_btn);
+        btnFacebookSignIn = (LinearLayout) findViewById(R.id.facebook_sign_in_btn);
+
+        //btnResetPassword  = (Button) findViewById(R.id.btn_reset_password);
+
+        /*
         btnResetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +80,7 @@ public class SignupActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+        */
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,7 +194,7 @@ public class SignupActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
-        //setOnline(false);
+        setOnline(false);
 
         super.onResume();
         progressBar.setVisibility(View.GONE);

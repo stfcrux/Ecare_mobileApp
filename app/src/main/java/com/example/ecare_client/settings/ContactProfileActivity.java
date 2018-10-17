@@ -2,7 +2,10 @@ package com.example.ecare_client.settings;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -14,13 +17,22 @@ import com.example.ecare_client.BaseActivity;
 import com.example.ecare_client.ChatActivity;
 import com.example.ecare_client.R;
 import com.example.ecare_client.SinchService;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.sinch.android.rtc.SinchError;
+
+import java.io.File;
+import java.io.IOException;
 
 public class ContactProfileActivity extends BaseActivity implements SinchService.StartFailedListener {
 
@@ -32,6 +44,7 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
     private FirebaseAuth auth;
     private FirebaseDatabase database;
+    private StorageReference mStorageRef;
 
     private ProgressDialog mSpinner;
 
@@ -49,6 +62,9 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
 
         super.onCreate(savedInstanceState);
 
@@ -70,6 +86,10 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
         contactEmail.setText(selectedContactName);
 
         contactNickname.setText(selectedContactNickname);
+
+        getProfilePicture();
+
+
 
         updateNicknameButton.setOnClickListener(new Button.OnClickListener() {
 
@@ -138,7 +158,64 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
     }
 
 
+    private void getProfilePicture() {
 
+        DatabaseReference contactProfilePicture =
+                database.getReference().child("Users")
+                        .child(selectedContactKey).child("Info").child("picPath");
+
+
+        Query queryNew = contactProfilePicture;
+
+
+        queryNew.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists())  {
+
+                    String profilePicturePath = dataSnapshot.getValue(String.class);
+                    StorageReference imageRef = mStorageRef.child(profilePicturePath);
+
+                    try {
+                        final File imageFile = File.createTempFile("images", "jpg");
+
+                        imageRef.getFile(imageFile)
+                                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                        // Successfully downloaded data to local file
+                                        Bitmap myBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+
+                                        contactPicture.setImageBitmap(myBitmap);
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle failed download
+                                // Do nothing
+                            }
+                        });
+
+                    }
+
+                    catch (IOException e) {
+                        // Do nothing
+                    }
+
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 
     public void beginChat(String contactName) {
 
@@ -195,6 +272,7 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
     @Override
     public void onStarted() {
 
+        /*
         Intent chatActivity = new Intent(this, ChatActivity.class);
 
         Bundle options = new Bundle();
@@ -203,6 +281,7 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
         chatActivity.putExtras(options);
 
         startActivity(chatActivity);
+        */
     }
 
     @Override
