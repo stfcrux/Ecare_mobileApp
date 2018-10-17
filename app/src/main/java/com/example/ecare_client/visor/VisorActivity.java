@@ -1,5 +1,5 @@
 package com.example.ecare_client.visor;
-import com.example.ecare_client.R;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,23 +12,22 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.example.ecare_client.R;
+import com.example.ecare_client.TitleLayout;
+import com.example.ecare_client.visor.filters.ColorFilter;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.example.ecare_client.visor.filters.ColorFilter;
-import uk.co.senab.photoview.PhotoView;
 
 /**
  */
@@ -281,7 +280,8 @@ public class VisorActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.magnifier);
-
+        TitleLayout titleLayout = (TitleLayout) findViewById(R.id.magnifier_title);
+        titleLayout.setTitleText("Magnifier");
         animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
         animScaleLongPress = AnimationUtils.loadAnimation(this, R.anim.longpress);
 

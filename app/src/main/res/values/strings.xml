@@ -83,9 +83,14 @@
     <string name="key_preference_color_mode">VisorAndroidKeyPreferenceColorMode</string>
     <string name="key_preference_autofocus_mode">VisorAndroidKeyPreferenceAutofocusMode</string>
     <string name="key_preference_activity_button_mode">VisorAndroidKeyPreferenceButtonMode</string>
+
+    <string name="full_name">Your Full Name</string>
+    <string name="phone">Your Mobile Phone No.</string>
+
     <string name="contact_profile_email">Email:</string>
     <string name="google_sign_in">Google sign-in</string>
     <string name="facebook_sign_in">Facebook sign-in</string>
+
 
 
 

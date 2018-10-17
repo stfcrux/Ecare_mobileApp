@@ -1,5 +1,6 @@
 
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 
 android {
@@ -12,7 +13,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    buildToolsVersion '28.0.2'
+    buildToolsVersion '23.0.2'
     buildTypes {
         release {
             minifyEnabled false
@@ -67,3 +68,4 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
