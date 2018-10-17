@@ -191,7 +191,7 @@ public class SignupActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
-        //setOnline(false);
+        setOnline(false);
 
         super.onResume();
         progressBar.setVisibility(View.GONE);
