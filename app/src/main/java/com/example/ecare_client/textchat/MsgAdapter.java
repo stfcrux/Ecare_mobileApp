@@ -96,6 +96,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> impl
                     options.putString("lat", lat);
                     options.putString("lon",lon);
                     intent.putExtras(options);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }
             });

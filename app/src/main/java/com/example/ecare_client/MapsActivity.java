@@ -110,8 +110,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         usePlacePicker = (Button) findViewById(R.id.usePlacePicker);
 
         if (lat!=null && lon!=null){
-            etOrigin.setText(lat);
-            etDestination.setText(lon);
+            useChatLocation(lat,lon);
         }
         // once clicked find route from start location to end location
         btnFindPath.setOnClickListener(new View.OnClickListener() {
@@ -319,6 +318,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
 
                     start = new LatLng(addresses.get(0).getLatitude(),addresses.get(0).getLongitude());
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace(); // getFromLocation() may sometimes fail
+        }
+    }
+
+    private void useChatLocation(String lat, String lon){
+        try {
+            Geocoder geo = new Geocoder(MapsActivity.this.getApplicationContext(), Locale.getDefault());
+            List<Address> addresses = geo.getFromLocation(Double.valueOf(lat), Double.valueOf(lon), 1);
+            if (addresses.isEmpty()) {
+                ((EditText) findViewById(R.id.etDestination)).setText("Waiting for Location");
+            }
+            else {
+                if (addresses.size() > 0) {
+                    ((EditText) findViewById(R.id.etDestination)).setText(addresses.get(0).getFeatureName()
+                            + ", " + addresses.get(0).getLocality() +", " +
+                            addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
+
+                    end = new LatLng(addresses.get(0).getLatitude(),addresses.get(0).getLongitude());
                 }
             }
         }
