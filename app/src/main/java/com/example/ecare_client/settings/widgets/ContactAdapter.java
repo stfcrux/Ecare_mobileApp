@@ -11,6 +11,7 @@ import com.example.ecare_client.settings.ContactProfileActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
@@ -61,9 +62,14 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         // Set item views based on your views and data model
         TextView textView = viewHolder.nameTextView;
         textView.setText(contact.getNickname());
+        textView.setTextColor(contact.isOnline() ? Color.BLACK : Color.GRAY);
+
 
         TextView status = viewHolder.statusTextView;
         status.setText(contact.isOnline() ? "Online" : "Offline");
+        status.setTextColor(contact.isOnline() ? Color.BLACK : Color.GRAY);
+
+
 
 
         viewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {

@@ -38,7 +38,7 @@
         android:layout_weight="1"
         android:text="@string/contact_profile_email"
         android:textAlignment="center"
-        android:textSize="14sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/contact_email"
