@@ -1,6 +1,7 @@
 package com.example.ecare_client.settings;
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -26,11 +27,11 @@ public class PersonalInfoActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private RecyclerView infoList;
     private Button btnSaveInfo;
-    private EditText inputPhone;
-    private EditText inputEmail;
+    private TextInputEditText inputPhone;
+    private TextInputEditText inputName;
 
     private  UserInfo getUserForm(){
-        return new UserInfo(inputPhone.getText().toString().trim(),inputEmail.getText().toString().trim());
+        return new UserInfo(inputPhone.getText().toString().trim(),inputName.getText().toString().trim());
 
     }
     @Override
@@ -44,8 +45,8 @@ public class PersonalInfoActivity extends AppCompatActivity {
             actionBar.hide();
         }
 
-        inputPhone = (EditText) findViewById(R.id.phone_input_et);
-        inputEmail = (EditText) findViewById(R.id.full_name_et);
+        inputPhone = (TextInputEditText) findViewById(R.id.phone_input_et);
+        inputName = (TextInputEditText) findViewById(R.id.full_name_et);
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
 
@@ -53,27 +54,24 @@ public class PersonalInfoActivity extends AppCompatActivity {
 
         final DatabaseReference userRef = database.getReference().child("Users").child(currentUser.getUid());
 
-        DatabaseReference contactIDRef = database.getReference().child("Info");
-
-        ValueEventListener infoListener = new ValueEventListener() {
+        DatabaseReference infoRef = userRef.child("Info");
+        // Attach a listener to read the data at our posts reference
+        infoRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
 
-
                     String contactEmail = "Null";
-                    Boolean contactOnline = false;
+                    String phoneNo = "Null";
 
                     for(DataSnapshot child : dataSnapshot.getChildren()) {
-                        if (child.getKey().equals("Email")) {
+                        if (child.getKey().equals("email")) {
                             contactEmail = child.getValue(String.class);
-                            inputEmail.setText(contactEmail, TextView.BufferType.EDITABLE);
+                            inputName.setText(contactEmail);
 
-                        }
-
-                        if (child.getKey().equals("Online")) {
-                            contactOnline = Boolean.parseBoolean(
-                                    child.getValue(String.class));
+                        }else if (child.getKey().equals("phone")) {
+                            phoneNo = child.getValue(String.class);
+                            inputPhone.setText(phoneNo);
                         }
                     }
                 }
@@ -83,7 +81,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
                 // Do nothing.
             }
-        };
+        });
 
 
         btnSaveInfo = (Button) findViewById(R.id.btn_save);
