@@ -61,9 +61,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         setContentView(R.layout.main_page_layout);
 
         //asking for permissions here
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.READ_PHONE_STATE},100);
-        }
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        //    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.READ_PHONE_STATE},100);
+        //}
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // Name, email address, and profile photo Url
@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         });
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-         locationListener = new LocationListener() {
+        locationListener = new LocationListener() {
              @Override
              public void onLocationChanged(Location location) {
                  currentLocation = location;
@@ -272,7 +272,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     t2_city.setText(city);
                     t3_description.setText(description);
                     ImageView image = (ImageView) findViewById(R.id.imageView);
-                    image.setImageResource(R.drawable.icon_fewclouds);
+                    changeImage(description,image);
 
                     Calendar calendar = Calendar.getInstance();
                     DateFormat sdf = SimpleDateFormat.getDateInstance();
@@ -376,7 +376,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                             Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getApplicationContext(),
-                            "SMS faild, please try again.", Toast.LENGTH_LONG).show();
+                            "SMS failed, please try again.", Toast.LENGTH_LONG).show();
                     return;
                 }
             }

@@ -36,6 +36,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -59,7 +60,8 @@ import com.example.ecare_client.Googlemaps.DownloadPlacesURL;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, DirectionFinderListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        GoogleMap.OnMarkerClickListener{
 
     protected LatLng start;
     protected LatLng end;
@@ -78,11 +80,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
     private static final int PLACE_PICKER_REQUEST = 3;
+    private String lat;
+    private String lon;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        Bundle extra = getIntent().getExtras();
+        if(extra!=null) {
+            lat = extra.getString("lat");
+            lon = extra.getString("lon");
+        }
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -98,7 +109,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         useCurrent = (Button) findViewById(R.id.useCurrent);
         usePlacePicker = (Button) findViewById(R.id.usePlacePicker);
 
-
+        if (lat!=null && lon!=null){
+            useChatLocation(lat,lon);
+        }
         // once clicked find route from start location to end location
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,15 +140,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 loadPlacePicker();
             }
         });
-
-
-
         useCurrent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 useCurrentLocation();
             }
         });
+
     }
 
     // sending request to get routing directions
@@ -181,6 +192,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
+
+
+
     }
 
 
@@ -238,6 +252,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 polylineOptions.add(route.points.get(i));
 
             polylinePaths.add(mMap.addPolyline(polylineOptions));
+
+
         }
     }
 
@@ -302,6 +318,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
 
                     start = new LatLng(addresses.get(0).getLatitude(),addresses.get(0).getLongitude());
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace(); // getFromLocation() may sometimes fail
+        }
+    }
+
+    private void useChatLocation(String lat, String lon){
+        try {
+            Geocoder geo = new Geocoder(MapsActivity.this.getApplicationContext(), Locale.getDefault());
+            List<Address> addresses = geo.getFromLocation(Double.valueOf(lat), Double.valueOf(lon), 1);
+            if (addresses.isEmpty()) {
+                ((EditText) findViewById(R.id.etDestination)).setText("Waiting for Location");
+            }
+            else {
+                if (addresses.size() > 0) {
+                    ((EditText) findViewById(R.id.etDestination)).setText(addresses.get(0).getFeatureName()
+                            + ", " + addresses.get(0).getLocality() +", " +
+                            addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
+
+                    end = new LatLng(addresses.get(0).getLatitude(),addresses.get(0).getLongitude());
                 }
             }
         }
@@ -395,6 +433,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
+
+
+        // make click event on marker
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                ((EditText) findViewById(R.id.etDestination))
+                        .setText(marker.getTitle());
+
+                end = marker.getPosition();
+
+                return false;
+
+            }
+        });
 
     }
 
@@ -523,7 +576,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googlePlaceUrl.append("&radius="+PROXIMITY_RADIUS);
         googlePlaceUrl.append("&type="+nearbyPlace);
         googlePlaceUrl.append("&sensor=true");
-        googlePlaceUrl.append("&key="+"AIzaSyBLEPBRfw7sMb73Mr88L91Jqh3tuE4mKsE");
+        googlePlaceUrl.append("&key="+"AIzaSyCzIe_THjJzrwkBEhBnQlQFpq510_wTR88");
 
         Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
 
@@ -574,6 +627,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
     }
+
+
+
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
+    }
+
 
 
 

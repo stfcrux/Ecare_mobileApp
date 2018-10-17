@@ -287,6 +287,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
     }
 
 
+
     public void beginProfile(Contact contact) {
         Intent contactProfileActivity = new Intent(this, ContactProfileActivity.class);
 
@@ -297,9 +298,6 @@ public class ContactListActivity extends BaseActivity implements Serializable {
         startActivity(contactProfileActivity);
 
     }
-
-
-
 
 
 
