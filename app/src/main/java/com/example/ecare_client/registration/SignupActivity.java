@@ -57,7 +57,7 @@ public class SignupActivity extends BaseActivity {
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        
+
         //btnResetPassword  = (Button) findViewById(R.id.btn_reset_password);
 
         /*
