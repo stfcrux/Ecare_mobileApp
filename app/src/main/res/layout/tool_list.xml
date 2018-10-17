@@ -38,8 +38,8 @@
 
     <ImageView
         android:id="@+id/btnSettings"
-        android:layout_width="145dp"
-        android:layout_height="145dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="96dp"
         android:layout_toEndOf="@+id/textView2"
@@ -59,8 +59,8 @@
 
     <ImageView
         android:id="@+id/btnOpenChecklist"
-        android:layout_width="145dp"
-        android:layout_height="145dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/btnPersonalInfo"
         android:layout_marginBottom="159dp"
@@ -92,8 +92,8 @@
 
     <ImageView
         android:id="@+id/btnOpenMagnifier"
-        android:layout_width="145dp"
-        android:layout_height="145dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/btnOpenChecklist"
         android:background="@color/btn_login_bg"

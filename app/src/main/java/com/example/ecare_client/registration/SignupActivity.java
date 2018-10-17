@@ -206,6 +206,7 @@ public class SignupActivity extends BaseActivity {
                         child(user.getUid());
 
         userRef.child("Contacts").child("Null").setValue("Null");
+        userRef.child("Info").child("Null").setValue("Null");
         userRef.child("Email").setValue(user.getEmail());
 
         userRef.child("Online").setValue("false");
