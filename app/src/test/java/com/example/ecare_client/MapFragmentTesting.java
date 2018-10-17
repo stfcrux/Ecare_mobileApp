@@ -16,11 +16,14 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MapFragmentTesting {
+    private static final String GOOGLE_API_KEY = "AIzaSyCzIe_THjJzrwkBEhBnQlQFpq510_wTR88";
 
     @Test
     public void getDirectionsURLShouldReturnTrueIfCorrectURL() throws Exception {
-        //String correctURL = "https://maps.googleapis.com/maps/api/directions/json?origin=-37.8,144.959&destination=-37.81,144.9593&sensor=false&mode=walking";
-        String correctURL = "https://maps.googleapis.com/maps/api/directions/json?origin=-37.8,144.959&destination=-37.81,144.9593&sensor=false";
+
+        String correctURL = "https://maps.googleapis.com/maps/api/directions/json?origin=-37.8,144.959&destination=-37.81,144.9593&sensor=false&mode=walking"
+                + "&key=" + GOOGLE_API_KEY;
+
 
 
         Location location1 = Mockito.mock(Location.class);
