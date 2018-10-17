@@ -15,7 +15,6 @@ public class Contact implements Serializable {
     private boolean mOnline;
     private boolean mChecked;
     private String mKey;
-
     private String mNickname;
 
     private ContactListActivity mContext;
@@ -23,6 +22,7 @@ public class Contact implements Serializable {
     private Button messageButton = null;
 
     private ValueEventListener contactEventListener;
+    private ValueEventListener contactNicknameListener;
 
 
 
@@ -87,6 +87,14 @@ public class Contact implements Serializable {
 
     public void setContactEventListener(ValueEventListener listener) {
         contactEventListener = listener;
+    }
+
+    public ValueEventListener getContactNicknameListener() {
+        return contactNicknameListener;
+    }
+
+    public void setContactNicknameListener(ValueEventListener listener) {
+        contactNicknameListener = listener;
     }
 
     public ContactListActivity getContext() {

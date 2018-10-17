@@ -12,6 +12,7 @@ import com.example.ecare_client.R;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -331,12 +332,38 @@ public class ContactListActivity extends BaseActivity implements Serializable {
         // If the contact is already present at this point in the method,
         // then DON'T reset the ValueEventListener!!!!
 
-        final ContactListActivity context = this;
+        String contactEmail = "Null";
+        Boolean contactOnline = false;
+
+
+        Contact searchObject = new Contact(contactEmail, contactID, contactOnline);
+
+        int currentIndex = contacts.indexOf(searchObject);
+
+        if (currentIndex == -1) {
+            // Then a new contact has to be created.
+            contacts.add(0, searchObject);
+            adapter.notifyItemInserted(0);
+
+            searchObject.setContext(this);
+
+            // All the other values for the contact are determined
+            // in the EventListeners.
+
+        }
+
+        else {
+            Log.d("ERROR", "Contact already stored somehow!!!!");
+        }
+
+
 
         database = FirebaseDatabase.getInstance();
 
 
         DatabaseReference contactIDRef = database.getReference().child("Users").child(contactID);
+
+        DatabaseReference userContactRef = userRef.child("Contacts").child(contactID);
 
         // Also need to initialise the contact list.
 
@@ -347,6 +374,14 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
                 String contactEmail = "Null";
                 Boolean contactOnline = false;
+
+                String testKeyForNull = dataSnapshot.getKey();
+
+                if (testKeyForNull == null) {
+                    Log.d("Contact", "User deleted!");
+                    return;
+
+                }
 
                 for(DataSnapshot child : dataSnapshot.getChildren()) {
                     if (child.getKey().equals("Email")) {
@@ -363,8 +398,6 @@ public class ContactListActivity extends BaseActivity implements Serializable {
                 // Use this only to search for the required contact in "contacts" list,
                 // unless the contact does NOT already exist.
                 Contact searchObject = new Contact(contactEmail, contactID, contactOnline);
-                searchObject.setNickname(contactNickname);
-
 
                 int currentIndex = contacts.indexOf(searchObject);
 
@@ -381,7 +414,6 @@ public class ContactListActivity extends BaseActivity implements Serializable {
                     contactObject.setChecked(wasChecked);
 
                     contactObject.setName(contactEmail);
-                    contactObject.setNickname(contactNickname);
 
 
                     if (contactOnline) {
@@ -406,24 +438,14 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
                 }
 
+                else {
+                    Log.d("ERROR", "Contact not stored locally!");
+
+                }
+
                 // In case the contact wasn't previously in the list.
 
-                else {
-                    searchObject.setContactEventListener(this);
-                    searchObject.setContext(context);
 
-                    if (contactOnline) {
-                        contacts.add(0, searchObject);
-                        adapter.notifyItemInserted(0);
-                    }
-
-                    else {
-                        contacts.add(searchObject);
-                        int lastPosition = contacts.size() - 1;
-                        adapter.notifyItemInserted(lastPosition);
-
-                    }
-                }
 
 
             }
@@ -435,7 +457,51 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
         };
 
+
+        ValueEventListener contactNicknameListener = new ValueEventListener() {
+
+            @Override
+            // THE DATA SNAPSHOT IS AT THE CHILD!! NOT THE ROOT NODE!!!!
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String newNickname = (String) dataSnapshot.getValue();
+
+                // THIS VALUE MIGHT GET DELETED!!!!
+                if (newNickname == null) {
+                    Log.d("Contact", "Contact deleted from list!");
+                    return;
+                }
+
+
+                String contactEmail = "Null";
+                Boolean contactOnline = false;
+
+                Contact searchObject = new Contact(contactEmail, contactID, contactOnline);
+
+                int currentIndex = contacts.indexOf(searchObject);
+                // I don't think currentIndex can ever be -1, since the contact must exist.
+                Contact contactObject = contacts.get(currentIndex);
+
+                contactObject.setNickname(newNickname);
+
+                adapter.notifyItemChanged(currentIndex);
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Do nothing.
+            }
+
+
+        };
+
+        searchObject.setContactEventListener(contactEventListener);
+        searchObject.setContactNicknameListener(contactNicknameListener);
+
         contactIDRef.addValueEventListener(contactEventListener);
+        userContactRef.addValueEventListener(contactNicknameListener);
 
     }
 
@@ -487,6 +553,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
                         child("Users").child(contactID);
 
         contactRef.removeEventListener(contactObject.getContactEventListener());
+        contactRef.removeEventListener(contactObject.getContactNicknameListener());
 
         // Need to remove the previous event listener!!!!!
 

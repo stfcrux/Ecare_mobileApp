@@ -77,10 +77,13 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
             public void onClick(View view) {
                 String newText = contactNickname.getText().toString().trim();
 
-                auth.getCurrentUser().getUid();
+                String userID = auth.getCurrentUser().getUid();
+
+                database.getReference().child("Users").child(userID).
+                        child("Contacts").child(selectedContactKey).setValue(newText);
 
                 // FINISH THIS
-                asdjsadskda
+
 
             }
 
