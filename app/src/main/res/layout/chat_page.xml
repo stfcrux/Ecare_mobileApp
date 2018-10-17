@@ -54,7 +54,7 @@
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:hint="Type Something hewe"
+            android:hint="Type Something here"
             android:maxLines="2" />
 
         <Button
