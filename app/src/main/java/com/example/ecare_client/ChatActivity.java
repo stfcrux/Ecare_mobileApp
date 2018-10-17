@@ -57,6 +57,7 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
             actionBar.hide();
         }
 
+        /*
         // Check whether we're recreating a previously destroyed instance
         if (savedInstanceState != null) {
             // Restore value of members from saved state
@@ -64,6 +65,9 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
         }else {
             adapter = new MsgAdapter(getApplicationContext());
         }
+        */
+        //adapter = MainActivity.getAdapter(makeCallTo);
+
         TitleLayout titleLayout = (TitleLayout) findViewById(R.id.chat_title);
         titleLayout.setTitleText("Chat");
 
@@ -92,6 +96,15 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
         };
 
         makeCallTo = getIntent().getExtras().getString("ContactName");
+
+        if (MainActivity.getAdapter(makeCallTo)!=null){
+            adapter = MainActivity.getAdapter(makeCallTo);
+            Log.d(TAG, "Use main");
+        }else {
+            adapter = new MsgAdapter(getApplicationContext());
+            Log.d(TAG, "own");
+            Log.d(TAG, makeCallTo);
+        }
 
         //makeCallTo = "testexample@example.com";
 
