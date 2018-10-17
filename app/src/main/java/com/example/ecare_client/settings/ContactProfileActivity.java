@@ -195,6 +195,7 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
     @Override
     public void onStarted() {
 
+        /*
         Intent chatActivity = new Intent(this, ChatActivity.class);
 
         Bundle options = new Bundle();
@@ -203,6 +204,7 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
         chatActivity.putExtras(options);
 
         startActivity(chatActivity);
+        */
     }
 
     @Override
