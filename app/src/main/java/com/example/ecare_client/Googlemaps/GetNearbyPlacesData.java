@@ -65,6 +65,8 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
             mMap.addMarker(markerOptions);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+            markerOptions.snippet(String.valueOf(i)); // assigning index for marker
             //mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
         }
     }

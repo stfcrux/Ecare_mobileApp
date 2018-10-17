@@ -36,6 +36,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -59,7 +60,8 @@ import com.example.ecare_client.Googlemaps.DownloadPlacesURL;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, DirectionFinderListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        GoogleMap.OnMarkerClickListener{
 
     protected LatLng start;
     protected LatLng end;
@@ -80,6 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int PLACE_PICKER_REQUEST = 3;
     private String lat;
     private String lon;
+
 
 
     @Override
@@ -110,8 +113,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             etOrigin.setText(lat);
             etDestination.setText(lon);
         }
-
-
         // once clicked find route from start location to end location
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -587,6 +588,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
     }
+
+
+
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
+    }
+
 
 
 

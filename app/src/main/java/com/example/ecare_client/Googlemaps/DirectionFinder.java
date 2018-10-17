@@ -58,7 +58,7 @@ public class DirectionFinder {
         String sensor = "sensor=false";
 
         // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest + "&" + sensor;
+        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + "mode=walking";
 
         // Output format
         String output = "json";
