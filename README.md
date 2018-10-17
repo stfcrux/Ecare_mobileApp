@@ -58,12 +58,19 @@ Explain what these tests test and why
   the email of another user. User can engage with video chat/Text chat with an user they added
   by clicking the user of choice from the contact list
   
+- The top left button is our user settings button, where the user can choose to change thier contact
+  information. (Still debugging, errors with photo storing)
+  
 - To access the mapping functionalies, click the bottom left button. The user has to provide the start 
   and end location to view the route between them, User can either click use current location and
   the app will automatically input the user's location to the start location field, or they can manually
   type in where they want to go with text autocompelte.
   Likewise, to select thier destination location, they can use place picker where it will
   list all notable points of interest to the user and they can simply slect where they want to go.
+  
+- Nearby Places feature, at the bottom of the map screen, the user can choose to find near schools,
+  restaurents and hospitals, once found, the user can click on the given markers and can choose to
+  route to them from wherever they please to start from.
   
 - To access our other tools, user can click the bottom right button, where it has a 
   checklist feature a alarm clock feature and the magnifier feature.
@@ -89,14 +96,15 @@ Explain what these tests test and why
 . Implemented getting user's location
 . Implemented tracking of user's location
 . Setted up FireBase Server
-. Implemented User sign in and sign up
+. Implemented User sign in and sign up (need to allow storage of user settings upon registration)
 . Implemented contact List and ability to add contacts
+. Implemented the ability to change the nicknames of your contacts
 . Implemented Location routing from one point to another
 . Implemented Basic Checklist Feature
-. Implemented Weather Feature
+. Implemented Weather Feature 
 . Implemented Setting a alarmclock Feature
 . Implemented Help button Feature
-. Implemented Magnifier feature
+. Implemented Magnifier feature (need to refactor and change)
 ```
 
 
