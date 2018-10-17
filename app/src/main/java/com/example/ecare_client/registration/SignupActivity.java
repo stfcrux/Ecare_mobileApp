@@ -38,6 +38,9 @@ public class SignupActivity extends BaseActivity {
     private FirebaseAuth auth;
     private FirebaseDatabase database;
 
+    private LinearLayout btnGoogleSignIn;
+    private LinearLayout btnFacebookSignIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
