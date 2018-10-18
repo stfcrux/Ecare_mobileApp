@@ -20,6 +20,7 @@
         app:ci_shadowColor="#999999"
         app:ci_shadowRadius="5.0" />
 
+
     <EditText
         android:id="@+id/contact_nickname"
         android:layout_width="match_parent"

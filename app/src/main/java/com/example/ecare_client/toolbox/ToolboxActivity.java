@@ -35,23 +35,6 @@ public class ToolboxActivity extends BaseActivity {
         //setContentView(R.layout.main_page);
         Intent intent = getIntent();
 
-
-        ImageView personalInfo = findViewById(R.id.btnPersonalInfo);
-        personalInfo.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_UP:
-                        openPersonalInfo();
-                }
-                return false;
-            }
-
-            private void openPersonalInfo() {
-                Intent MapsActivity = new Intent(getApplicationContext(), MapsActivity.class);
-                startActivity(MapsActivity);
-            }
-        });
     }
 
 

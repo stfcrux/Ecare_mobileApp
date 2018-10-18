@@ -51,6 +51,8 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
     private ProgressDialog mSpinner;
 
+    public boolean isChatReady;
+
 
 
     private String selectedContactName;
@@ -62,6 +64,8 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
 
     protected void onCreate(Bundle savedInstanceState) {
+
+        isChatReady = true;
 
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -220,6 +224,14 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        isChatReady = false;
+
+    }
+
     public void beginChat(String contactName) {
 
         selectedContactName = contactName;
@@ -275,16 +287,17 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
     @Override
     public void onStarted() {
 
-        /*
-        Intent chatActivity = new Intent(this, ChatActivity.class);
+        if (isChatReady) {
+            Intent chatActivity = new Intent(this, ChatActivity.class);
 
-        Bundle options = new Bundle();
-        options.putString("ContactName", selectedContactName);
+            Bundle options = new Bundle();
+            options.putString("ContactName", selectedContactName);
 
-        chatActivity.putExtras(options);
+            chatActivity.putExtras(options);
 
-        startActivity(chatActivity);
-        */
+            startActivity(chatActivity);
+        }
+
     }
 
     @Override

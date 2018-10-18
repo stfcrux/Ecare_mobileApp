@@ -78,7 +78,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
                 int action = motionEvent.getAction();
 
-                if (action == MotionEvent.ACTION_DOWN) {
+                if (action == MotionEvent.ACTION_UP) {
 
                     // Start activity using the context of ContactListActivity.
                     (contact.getContext()).beginProfile(contact);
