@@ -44,6 +44,7 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
     private TextView contactNickname;
     private Button messageButton;
     private Button updateNicknameButton;
+    private TextView isCarerText;
 
     private FirebaseAuth auth;
     private FirebaseDatabase database;
@@ -58,6 +59,7 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
     private String selectedContactName;
     private String selectedContactKey;
     private String selectedContactNickname;
+    private Boolean selectedContactIsCarer;
 
     private ValueEventListener onlineListener;
 
@@ -89,12 +91,48 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
         contactNickname = (TextView) findViewById(R.id.contact_nickname);
         messageButton = (Button) findViewById(R.id.message_button);
         updateNicknameButton = (Button) findViewById(R.id.update_nickname);
+        isCarerText = (TextView) findViewById(R.id.is_carer_text);
 
         contactEmail.setText(selectedContactName);
 
         contactNickname.setText(selectedContactNickname);
 
         getProfilePicture();
+
+        DatabaseReference contactIsCarer =
+                database.getReference().child("Users")
+                        .child(selectedContactKey).child("Info").child("isCarer");
+
+
+        Query isCarerQuery = contactIsCarer;
+
+        isCarerQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    Boolean isCarer = Boolean.parseBoolean(dataSnapshot.getValue(String.class));
+                    if (isCarer) {
+                        isCarerText.setText("This contact is a carer.");
+                    }
+
+                    else {
+                        // Just set to nothing.
+                        isCarerText.setText("");
+
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
 
 
 
