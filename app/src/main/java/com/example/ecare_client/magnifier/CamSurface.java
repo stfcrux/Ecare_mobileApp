@@ -7,9 +7,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -37,7 +34,7 @@ import static android.hardware.Camera.Parameters.FOCUS_MODE_AUTO;
 /**
  * Created by Christian Illies on 29.07.15.
  */
-public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback, BitmapRenderer {
+public class CamSurface extends SurfaceView implements SurfaceHolder.Callback, BitmapRenderer {
 
     /**
      * The debug Tag identifier for the whole class.
@@ -290,7 +287,7 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
     /**
      * @param context activity
      */
-    public VisorSurface(Context context) {
+    public CamSurface(Context context) {
         super(context);
 
         Log.d(TAG, "VisorSurface instantiated");
@@ -357,7 +354,7 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
             c = getCameraInstance(++cameraId);
         }
 
-        VisorSurface.mCameraId = cameraId;
+        CamSurface.mCameraId = cameraId;
         return c; // returns null if camera is unavailable
     }
 
@@ -721,10 +718,10 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
 
         String currentMode = cameraParameters.getFocusMode();
         if (currentMode.equals(FOCUS_MODE_AUTO)) {
-            Toast.makeText(VisorSurface.this.getContext(), R.string.text_autofocus_enabled, Toast.LENGTH_SHORT).show();
+            Toast.makeText(CamSurface.this.getContext(), R.string.text_autofocus_enabled, Toast.LENGTH_SHORT).show();
             cameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
         } else {
-            Toast.makeText(VisorSurface.this.getContext(), R.string.text_autofocus_disabled, Toast.LENGTH_SHORT).show();
+            Toast.makeText(CamSurface.this.getContext(), R.string.text_autofocus_disabled, Toast.LENGTH_SHORT).show();
             cameraParameters.setFocusMode(FOCUS_MODE_AUTO);
         }
 
@@ -830,7 +827,7 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
     }
     private void updatePhotoViewBitmap() {
         // FIXME refactor!
-        ((VisorActivity) getContext()).mPhotoView.setImageBitmap(getBitmap());
+        ((MainActivity) getContext()).mPhotoView.setImageBitmap(getBitmap());
     }
 
     /**
@@ -841,7 +838,7 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
         final BitmapCreateThread bitmapCreateThread = BitmapCreateThread.getInstance(
                 mCameraPreviewRgb,
                 mCameraPreviewBufferData,
-                VisorSurface.this,
+                CamSurface.this,
                 mCameraPreviewWidth,
                 mCameraPreviewHeight,
                 width,
@@ -896,7 +893,7 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
         canvas.drawBitmap(mCameraPreviewBitmapBuffer, 0, 0, mColorFilterPaint);
 
         // I don't think we need this here:
-        // ((VisorActivity) getContext()).mPhotoView.setImageBitmap(getBitmap());
+        // ((MainActivity) getContext()).mPhotoView.setImageBitmap(getBitmap());
     }
 
 

@@ -95,7 +95,7 @@
             ></activity>
 
         <activity
-            android:name=".magnifier.VisorActivity"
+            android:name=".magnifier.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme"

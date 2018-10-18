@@ -16,7 +16,8 @@
         android:gravity="center"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
-        android:text="Chooese Time"/>
+        android:text="Chooese Time"
+        android:textAppearance="@style/TextAppearance.AppCompat" />
 
     <TextView
         android:layout_width="match_parent"
@@ -69,7 +70,7 @@
             android:id="@+id/ring_tv"
             style="@style/item_text_style"
             android:layout_alignParentLeft="true"
-            android:text="Alarm"/>
+            android:text="Alarm Effect" />
 
         <TextView
             android:id="@+id/arrow_two"

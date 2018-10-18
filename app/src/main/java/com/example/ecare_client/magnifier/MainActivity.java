@@ -24,13 +24,11 @@ import com.example.ecare_client.TitleLayout;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  */
-public class VisorActivity extends Activity {
+public class MainActivity extends Activity {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -52,12 +50,12 @@ public class VisorActivity extends Activity {
     /**
      * Tag name for the Log message.
      */
-    private static final String TAG = "VisorActivity";
+    private static final String TAG = "MainActivity";
 
     /**
      * our surface view containing the camera preview image.
      */
-    private VisorSurface mVisorView;
+    private CamSurface mVisorView;
 
 
     private boolean cameraPreviewState;
@@ -234,7 +232,7 @@ public class VisorActivity extends Activity {
         animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
         animScaleLongPress = AnimationUtils.loadAnimation(this, R.anim.longpress);
 
-        mVisorView = new VisorSurface(this);
+        mVisorView = new CamSurface(this);
         mPhotoView = new uk.co.senab.photoview.PhotoView(this);
 
 
@@ -323,7 +321,7 @@ public class VisorActivity extends Activity {
             mVisorView.playActionSoundShutter();
 
             FileOutputStream outputStream = new FileOutputStream(imageFile);
-            final int quality = VisorSurface.JPEG_QUALITY;
+            final int quality = CamSurface.JPEG_QUALITY;
             bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
             outputStream.flush();
             outputStream.close();
@@ -332,7 +330,7 @@ public class VisorActivity extends Activity {
             Toast toasty = Toast.makeText(this, R.string.text_image_stored + mPath, duration);
             toasty.show();
 
-            mVisorView.mState = VisorSurface.STATE_CLOSED;
+            mVisorView.mState = CamSurface.STATE_CLOSED;
             cameraPreviewIsActive(mZoomButton);
 
             openScreenshot(imageFile);

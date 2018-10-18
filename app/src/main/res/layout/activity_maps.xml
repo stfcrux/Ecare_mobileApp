@@ -17,15 +17,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Enter origin address"
-            android:focusable="false"/>
+            android:focusable="false"
+            android:hint="Enter starting address"
+            />
 
         <Button
             android:id="@+id/useCurrent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Use current location" />
+            android:background="#8fd8f0"
+            android:text="Use current location"
+            android:textAllCaps="false"/>
     </LinearLayout>
 
     <LinearLayout
@@ -46,7 +49,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Use Place Picker" />
+            android:background="#8fd8f0"
+            android:text="Use Place Picker"
+            android:textAllCaps="false"/>
 
     </LinearLayout>
 
@@ -55,11 +60,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
+
         <Button
+            android:id="@+id/btnFindPath"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Find path"
-            android:id="@+id/btnFindPath" />
+            android:background="@android:color/holo_blue_light"
+            android:text=" Find path "
+            android:textColor="@color/browser_actions_bg_grey"
+            android:textStyle="bold"/>
         <ImageView
             android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"

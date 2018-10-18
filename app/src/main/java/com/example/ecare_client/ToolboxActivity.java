@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.ecare_client.checklist.CheckListActivity;
+import com.example.ecare_client.magnifier.MainActivity;
 
 public class ToolboxActivity extends BaseActivity {
 
@@ -59,7 +60,7 @@ public class ToolboxActivity extends BaseActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        openToDOActivity();
+                        openToDoActivity();
                 }
                 return false;
 
@@ -83,7 +84,7 @@ public class ToolboxActivity extends BaseActivity {
             Intent personalInfo = new Intent(getApplicationContext(), com.example.ecare_client.settings.PersonalInfoActivity.class);
             startActivity(personalInfo);
         }
-    private void openToDOActivity() {
+    private void openToDoActivity() {
         Intent ChecklistActivity = new Intent(getApplicationContext(), CheckListActivity.class);
         startActivity(ChecklistActivity);
     }
@@ -92,7 +93,7 @@ public class ToolboxActivity extends BaseActivity {
         startActivity(AlarmClockActivity);
     }
     private void openMagnifier() {
-        Intent MagActivity = new Intent(getApplicationContext(), com.example.ecare_client.magnifier.VisorActivity.class);
+        Intent MagActivity = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(MagActivity);
     }
 

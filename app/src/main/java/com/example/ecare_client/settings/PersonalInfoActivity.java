@@ -51,7 +51,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private Button btnSaveInfo;
-    private TextInputEditText inputPhone,inputName, inputCarer;
+    private TextInputEditText inputPhone,inputName, inputCarer, inputCarerPhone;
     private CheckBox inputIsCarer;
     private Button btnChoose;
     private CircularImageView imageView;
@@ -66,7 +66,13 @@ public class PersonalInfoActivity extends AppCompatActivity {
         {
             isCarer = "true";
         }
-        return new UserInfo(inputPhone.getText().toString().trim(),inputName.getText().toString().trim(), pic, inputCarer.getText().toString().trim(),isCarer);
+        return new UserInfo(inputPhone.getText().toString().trim(),
+                inputName.getText().toString().trim(),
+                pic,
+                inputCarer.getText().toString().trim(),
+                isCarer,
+                inputCarerPhone.getText().toString().trim());
+
 
     }
     private void chooseImage() {
@@ -144,7 +150,9 @@ public class PersonalInfoActivity extends AppCompatActivity {
         inputPhone = (TextInputEditText) findViewById(R.id.phone_input_et);
         inputName = (TextInputEditText) findViewById(R.id.full_name_et);
         inputCarer = (TextInputEditText) findViewById(R.id.inputCarer);
+        inputCarerPhone = (TextInputEditText) findViewById(R.id.inputCarerPhone);
         inputIsCarer = (CheckBox) findViewById(R.id.carerCheckBox);
+
         btnChoose = (Button) findViewById(R.id.btnChoose);
         imageView = (CircularImageView) findViewById(R.id.profile_image);
 
@@ -167,6 +175,9 @@ public class PersonalInfoActivity extends AppCompatActivity {
 
                     String contactEmail = "Null";
                     String phoneNo = "Null";
+                    String carerName = "Null";
+                    String carerPhone = "Null";
+
 
                     for(DataSnapshot child : dataSnapshot.getChildren()) {
                         if (child.getKey().equals("email")) {
@@ -177,8 +188,14 @@ public class PersonalInfoActivity extends AppCompatActivity {
                             phoneNo = child.getValue(String.class);
                             inputPhone.setText(phoneNo);
                         }else if (child.getKey().equals("carerName")) {
-                            phoneNo = child.getValue(String.class);
-                            inputCarer.setText(phoneNo);
+                            carerName = child.getValue(String.class);
+                            inputCarer.setText(carerName);
+                        }else if (child.getKey().equals("carerName")) {
+                            carerName = child.getValue(String.class);
+                            inputCarer.setText(carerName);
+                        } else if (child.getKey().equals("carerPhone")) {
+                            carerPhone = child.getValue(String.class);
+                            inputCarerPhone.setText(carerPhone);
                         }else if (child.getKey().equals("picPath")) {
                             picPath = child.getValue(String.class);
                             GlideApp.with(getApplicationContext())
