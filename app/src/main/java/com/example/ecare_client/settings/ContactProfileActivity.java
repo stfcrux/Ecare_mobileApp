@@ -34,9 +34,12 @@ import com.sinch.android.rtc.SinchError;
 import java.io.File;
 import java.io.IOException;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ContactProfileActivity extends BaseActivity implements SinchService.StartFailedListener {
 
-    private ImageView contactPicture;
+    private CircleImageView contactPicture;
+
     private TextView contactEmail;
     private TextView contactNickname;
     private Button messageButton;
@@ -77,7 +80,7 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
         setContentView(R.layout.activity_contact_profile);
 
-        contactPicture = (ImageView) findViewById(R.id.contact_picture);
+        contactPicture = (CircleImageView) findViewById(R.id.contact_picture);
         contactEmail = (TextView) findViewById(R.id.contact_email);
         contactNickname = (TextView) findViewById(R.id.contact_nickname);
         messageButton = (Button) findViewById(R.id.message_button);

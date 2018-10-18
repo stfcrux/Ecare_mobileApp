@@ -107,6 +107,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_UP:
+
+
                         sendHelpSMS();
 
                 }
@@ -185,7 +187,16 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
         //find_weather();
 
-        locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+        try {
+            locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+        }
+
+        catch (SecurityException e) {
+            Toast.makeText(getApplicationContext(),
+                    "Location request failed.", Toast.LENGTH_LONG).show();
+        }
+
+
 
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
@@ -394,11 +405,20 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
     private void sendHelpSMS() {
 
-        locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+        try {
+            locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+        }
+
+        catch (SecurityException e) {
+            Toast.makeText(getApplicationContext(),
+                    "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+        }
+
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.SEND_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
+
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.SEND_SMS)) {
             } else {
@@ -412,10 +432,19 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+
+
         String phoneNo = "+610426443229";
         String myCurrentlocation = "https://www.google.com.au/maps/place/" + Lat + "+" + Lon;
         String message = "I need Help, I am at this location:" + myCurrentlocation;
+
+        Log.d("SMS REQUEST SEND CODE", "" + MY_PERMISSIONS_REQUEST_SEND_SMS);
+        Log.d("YOUR SMS CODE", "" + requestCode);
+
         switch (requestCode) {
+
+
+
             case MY_PERMISSIONS_REQUEST_SEND_SMS: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
