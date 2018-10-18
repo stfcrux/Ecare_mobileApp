@@ -52,7 +52,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
     private Button btnSaveInfo;
     private TextInputEditText inputPhone;
     private TextInputEditText inputName;
-    private Button btnChoose, btnUpload;
+    private Button btnChoose;
     private CircularImageView imageView;
 
     private Uri filePath;
@@ -136,7 +136,6 @@ public class PersonalInfoActivity extends AppCompatActivity {
         inputPhone = (TextInputEditText) findViewById(R.id.phone_input_et);
         inputName = (TextInputEditText) findViewById(R.id.full_name_et);
         btnChoose = (Button) findViewById(R.id.btnChoose);
-        btnUpload = (Button) findViewById(R.id.btnUpload);
         imageView = (CircularImageView) findViewById(R.id.profile_image);
 
         auth = FirebaseAuth.getInstance();
@@ -211,13 +210,6 @@ public class PersonalInfoActivity extends AppCompatActivity {
             }
         });
 
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                picPath = uploadImage();
-                // update user
-            }
-        });
 
 
     }
