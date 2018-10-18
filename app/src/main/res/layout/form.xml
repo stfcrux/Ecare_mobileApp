@@ -17,31 +17,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/layout_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <Button
-                android:id="@+id/btnChoose"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Choose" />
-
-            <Button
-                android:id="@+id/btnUpload"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Upload" />
-
-        </LinearLayout>
-
-
         <com.subinkrishna.widget.CircularImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
             android:layout_width="395dp"
@@ -50,11 +25,18 @@
             app:ci_borderColor="@android:color/darker_gray"
             app:ci_borderWidth="2dp"
             app:ci_placeholderBackgroundColor="@android:color/black"
-            app:ci_placeholderText="Photo"
+            app:ci_placeholderText="DP"
             app:ci_placeholderTextColor="@android:color/white"
             app:ci_placeholderTextSize="22sp"
             app:ci_shadowColor="#999999"
             app:ci_shadowRadius="5.0" />
+
+        <Button
+            android:id="@+id/btnChoose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="Choose" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

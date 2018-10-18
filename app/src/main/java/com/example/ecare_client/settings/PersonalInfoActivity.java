@@ -194,6 +194,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        picPath = uploadImage();
                         UserInfo userinfo = getUserForm();
 
                         userRef.child("Info").setValue(userinfo);
