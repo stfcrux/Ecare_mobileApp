@@ -27,18 +27,6 @@ public class ToolboxActivity extends BaseActivity {
         titleLayout.setTitleText("ToolBox");
 
 
-        ImageView personalInfo = (ImageView) findViewById(R.id.btnPersonalInfo);
-        personalInfo.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        openPersonalInfo();
-                }
-                return false;
-
-            }
-        });
 
         ImageView magnifier = (ImageView) findViewById(R.id.btnOpenMagnifier);
         magnifier.setOnTouchListener(new View.OnTouchListener() {

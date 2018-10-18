@@ -44,6 +44,7 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
     private TextView contactNickname;
     private Button messageButton;
     private Button updateNicknameButton;
+    private TextView isCarerText;
 
     private FirebaseAuth auth;
     private FirebaseDatabase database;
@@ -51,17 +52,22 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
     private ProgressDialog mSpinner;
 
+    public boolean isChatReady;
+
 
 
     private String selectedContactName;
     private String selectedContactKey;
     private String selectedContactNickname;
+    private Boolean selectedContactIsCarer;
 
     private ValueEventListener onlineListener;
 
 
 
     protected void onCreate(Bundle savedInstanceState) {
+
+        isChatReady = true;
 
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -85,12 +91,48 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
         contactNickname = (TextView) findViewById(R.id.contact_nickname);
         messageButton = (Button) findViewById(R.id.message_button);
         updateNicknameButton = (Button) findViewById(R.id.update_nickname);
+        isCarerText = (TextView) findViewById(R.id.is_carer_text);
 
         contactEmail.setText(selectedContactName);
 
         contactNickname.setText(selectedContactNickname);
 
         getProfilePicture();
+
+        DatabaseReference contactIsCarer =
+                database.getReference().child("Users")
+                        .child(selectedContactKey).child("Info").child("isCarer");
+
+
+        Query isCarerQuery = contactIsCarer;
+
+        isCarerQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    Boolean isCarer = Boolean.parseBoolean(dataSnapshot.getValue(String.class));
+                    if (isCarer) {
+                        isCarerText.setText("This contact is a carer.");
+                    }
+
+                    else {
+                        // Just set to nothing.
+                        isCarerText.setText("");
+
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
 
 
 
@@ -220,6 +262,14 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        isChatReady = false;
+
+    }
+
     public void beginChat(String contactName) {
 
         selectedContactName = contactName;
@@ -275,16 +325,17 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
     @Override
     public void onStarted() {
 
-        /*
-        Intent chatActivity = new Intent(this, ChatActivity.class);
+        if (isChatReady) {
+            Intent chatActivity = new Intent(this, ChatActivity.class);
 
-        Bundle options = new Bundle();
-        options.putString("ContactName", selectedContactName);
+            Bundle options = new Bundle();
+            options.putString("ContactName", selectedContactName);
 
-        chatActivity.putExtras(options);
+            chatActivity.putExtras(options);
 
-        startActivity(chatActivity);
-        */
+            startActivity(chatActivity);
+        }
+
     }
 
     @Override
