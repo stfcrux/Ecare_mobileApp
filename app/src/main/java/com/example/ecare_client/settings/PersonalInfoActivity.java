@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -51,7 +52,8 @@ public class PersonalInfoActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private Button btnSaveInfo;
     private TextInputEditText inputPhone;
-    private TextInputEditText inputName;
+    private TextInputEditText inputName, inputCarer;
+    private CheckBox inputIsCarer;
     private Button btnChoose;
     private CircularImageView imageView;
 
@@ -60,7 +62,12 @@ public class PersonalInfoActivity extends AppCompatActivity {
 
     private final int PICK_IMAGE_REQUEST = 71;
     private  UserInfo getUserForm(){
-        return new UserInfo(inputPhone.getText().toString().trim(),inputName.getText().toString().trim(), picPath);
+        String isCarer = "false";
+        if(inputIsCarer.isChecked())
+        {
+            isCarer = "true";
+        }
+        return new UserInfo(inputPhone.getText().toString().trim(),inputName.getText().toString().trim(), picPath, inputCarer.getText().toString().trim(),isCarer);
 
     }
     private void chooseImage() {
@@ -135,6 +142,8 @@ public class PersonalInfoActivity extends AppCompatActivity {
         //Initialize Views
         inputPhone = (TextInputEditText) findViewById(R.id.phone_input_et);
         inputName = (TextInputEditText) findViewById(R.id.full_name_et);
+        inputCarer = (TextInputEditText) findViewById(R.id.inputCarer);
+        inputIsCarer = (CheckBox) findViewById(R.id.carerCheckBox);
         btnChoose = (Button) findViewById(R.id.btnChoose);
         imageView = (CircularImageView) findViewById(R.id.profile_image);
 
@@ -166,6 +175,9 @@ public class PersonalInfoActivity extends AppCompatActivity {
                         }else if (child.getKey().equals("phone")) {
                             phoneNo = child.getValue(String.class);
                             inputPhone.setText(phoneNo);
+                        }else if (child.getKey().equals("carerName")) {
+                            phoneNo = child.getValue(String.class);
+                            inputCarer.setText(phoneNo);
                         }else if (child.getKey().equals("picPath")) {
                             picPath = child.getValue(String.class);
                             GlideApp.with(getApplicationContext())
@@ -174,7 +186,13 @@ public class PersonalInfoActivity extends AppCompatActivity {
                                     .into(imageView);
 
 
+                        }else if (child.getKey().equals("isCarer")) {
+                            if (child.getValue(String.class).equals("truex")){
+                                inputIsCarer.setChecked(true);
+
+                            }
                         }
+
                     }
                 }
             }
