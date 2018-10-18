@@ -1,4 +1,4 @@
-package com.example.ecare_client.visor;
+package com.example.ecare_client.magnifier;
 import com.example.ecare_client.R;
 
 import android.app.Activity;
@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.ImageFormat;
@@ -29,13 +30,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.example.ecare_client.visor.filters.BlackWhiteColorFilter;
-import com.example.ecare_client.visor.filters.BlueYellowColorFilter;
-import com.example.ecare_client.visor.filters.ColorFilter;
-import com.example.ecare_client.visor.filters.NoColorFilter;
-import com.example.ecare_client.visor.filters.WhiteBlackColorFilter;
-import com.example.ecare_client.visor.filters.YellowBlueColorFilter;
-import com.example.ecare_client.visor.threads.BitmapCreateThread;
+import com.example.ecare_client.magnifier.threads.BitmapCreateThread;
 
 import static android.hardware.Camera.Parameters.FOCUS_MODE_AUTO;
 
@@ -228,33 +223,8 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
      * The filter is an interface which takes some bytes as the param and
      * converts the bits to make several different color effects.
      */
-    private List<ColorFilter> mCameraColorFilterList;
     private int mCurrentColorFilterIndex;
 
-    /**
-     * const for the blue yellow color filter {@link BlueYellowColorFilter}
-     */
-    public final static ColorFilter BLUE_YELLOW_COLOR_FILTER = new BlueYellowColorFilter();
-
-    /**
-     * const for the yellow blue color filter {@link YellowBlueColorFilter}
-     */
-    public final static ColorFilter YELLOW_BLUE_COLOR_FILTER = new YellowBlueColorFilter();
-
-    /**
-     * const for the b/w color filter {@link BlackWhiteColorFilter}
-     */
-    public final static ColorFilter BLACK_WHITE_COLOR_FILTER = new BlackWhiteColorFilter();
-
-    /**
-     * const for the w/b color filter {@link WhiteBlackColorFilter}
-     */
-    public final static ColorFilter WHITE_BLACK_COLOR_FILTER = new WhiteBlackColorFilter();
-
-    /**
-     * const for the no color filter {@link NoColorFilter}
-     */
-    public final static ColorFilter NO_FILTER = new NoColorFilter();
 
     /**
      * stores the YUV image (format NV21) when onPreviewFrame was called
@@ -284,11 +254,6 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
             // Log.d(TAG, "mCameraPreviewCallbackHandler Camera.PreviewCallback called");
 
             mCameraPreviewBufferData = data;
-            if (!hasActiveFilterEnabled()) {
-                invalidate();
-                //Log.d(TAG, "mCameraPreviewCallbackHandler Camera.PreviewCallback no active Filter found. Invalidate view.");
-                return;
-            }
 
             runBitmapCreateThread(false);
         }
@@ -332,15 +297,12 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
 
         mCameraCurrentZoomLevel = 0;
         mCameraMaxZoomLevel = 0;
-        mCurrentColorFilterIndex = 0;
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(String.valueOf(R.string.visor_shared_preference_name), Context.MODE_PRIVATE);
         mCameraCurrentZoomLevel = sharedPreferences.getInt(String.valueOf(R.string.key_preference_zoom_level), mCameraCurrentZoomLevel);
-        mCurrentColorFilterIndex = sharedPreferences.getInt(String.valueOf(R.string.key_preference_color_mode), mCurrentColorFilterIndex);
         storedAutoFocusMode = sharedPreferences.getString(String.valueOf(R.string.key_preference_autofocus_mode), FOCUS_MODE_AUTO);
 
         mCameraFlashMode = false;
-        mColorFilterPaint = new Paint();
 
         mState = STATE_CLOSED;
 
@@ -433,7 +395,6 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putInt(String.valueOf(R.string.key_preference_zoom_level), mCameraCurrentZoomLevel);
-        editor.putInt(String.valueOf(R.string.key_preference_color_mode), mCurrentColorFilterIndex);
         editor.putString(String.valueOf(R.string.key_preference_autofocus_mode), currentFocusMode);
 
         editor.apply();
@@ -586,12 +547,6 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
             setCameraZoomLevel(mCameraCurrentZoomLevel);
         }
 
-        if (mCurrentColorFilterIndex > 0) {
-            mCurrentColorFilterIndex--;
-            // decrease index because
-            // the toggle causes the increment
-            toggleColorMode();
-        }
 
         if (mPauseOnReady && mCamera != null) {
             toggleCameraPreview();
@@ -873,43 +828,6 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
         if (mState == STATE_PREVIEW)
             setCameraZoomLevel(prevLevel);
     }
-
-    /**
-     * add several different color filters as a list, which we
-     * then toggle each time the corrosponding button gets pressed.
-     *
-     * @param colorFilters
-     */
-    public void setCameraColorFilters(List<ColorFilter> colorFilters) {
-        this.mCameraColorFilterList = colorFilters;
-    }
-
-    /**
-     * change color modes if the camera preview if supported.
-     */
-    public void toggleColorMode() {
-        if (mState == STATE_CLOSED) return;
-        if (mCameraColorFilterList == null) return;
-
-        mCurrentColorFilterIndex++;
-        if (mCurrentColorFilterIndex >= mCameraColorFilterList.size()) {
-            mCurrentColorFilterIndex = 0;
-        }
-
-        ColorFilter currentFilter = mCameraColorFilterList.get(mCurrentColorFilterIndex);
-        ColorMatrix colorMatrix = new ColorMatrix();
-        currentFilter.filter(colorMatrix);
-
-        ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(colorMatrix);
-        mColorFilterPaint.setColorFilter(colorFilter);
-
-        if (mState == STATE_OPENED) {
-            invalidate();
-        }
-
-        updatePhotoViewBitmap();
-    }
-
     private void updatePhotoViewBitmap() {
         // FIXME refactor!
         ((VisorActivity) getContext()).mPhotoView.setImageBitmap(getBitmap());
@@ -969,11 +887,6 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
             return;
         }
 
-        if (!((mState == STATE_PREVIEW && hasActiveFilterEnabled()) || mState == STATE_OPENED)) {
-            // Log.d(TAG, "onDraw called but the camera state is preview but no filter is enabled or the state is not open.");
-            return;
-        }
-
         /**
          * Description:
          * If the state is opened the preview is probably paused
@@ -986,15 +899,6 @@ public class VisorSurface extends SurfaceView implements SurfaceHolder.Callback,
         // ((VisorActivity) getContext()).mPhotoView.setImageBitmap(getBitmap());
     }
 
-    /**
-     * determines if a filter is active. A filter is active if it is not "NO_FILTER".
-     * Used to save performance while have normal (without color effects) camera preview enabled.
-     *
-     * @return true if the current color mode is not NO_FILTER
-     */
-    private boolean hasActiveFilterEnabled() {
-        return (mCameraColorFilterList.get(mCurrentColorFilterIndex) != NO_FILTER);
-    }
 
     /**
      * sets the camera level to the specified {zoomLevel}.
