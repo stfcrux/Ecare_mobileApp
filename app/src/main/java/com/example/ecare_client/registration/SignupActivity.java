@@ -183,7 +183,7 @@ public class SignupActivity extends BaseActivity {
                                     //-------------------------------
 
 
-                                    finish();
+                                    //finish();
                                 }
                             }
                         });
@@ -195,6 +195,7 @@ public class SignupActivity extends BaseActivity {
     @Override
     protected void onResume() {
         setOnline(false);
+        Log.d("ERROR", "set online false OnResume");
 
         super.onResume();
         progressBar.setVisibility(View.GONE);
@@ -203,6 +204,7 @@ public class SignupActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         setOnline(false);
+        Log.d("ERROR", "set online false OnDestroy");
 
         super.onDestroy();
     }
@@ -222,7 +224,8 @@ public class SignupActivity extends BaseActivity {
         userRef.child("Info").child("Null").setValue("Null");
         userRef.child("Email").setValue(user.getEmail());
 
-        userRef.child("Online").setValue("false");
+        userRef.child("Online").setValue("true");
+        Log.d("SUCCESS", "set online true");
 
     }
 
