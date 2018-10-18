@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneNumberUtils;
@@ -68,6 +69,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     private Location location;
     private double Lat;
     private double Lon;
+
+    private String phoneNo = "+61426443229";
 
 
     @Override
@@ -441,7 +444,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
 
 
+
+        // Default.
         String phoneNo = "+610426443229";
+
         String myCurrentlocation = "https://www.google.com.au/maps/place/" + Lat + "+" + Lon;
         String message = "I need Help, I am at this location:" + myCurrentlocation;
 
@@ -548,13 +554,46 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     }
 
     private void doSendSMS(){
-        String phoneNo = "+61426443229";
-        String myCurrentlocation = "https://www.google.com.au/maps/place/" + Lat + "+" + Lon;
-        String message = "I need Help, I am at this location:" + myCurrentlocation;
-        if (PhoneNumberUtils.isGlobalPhoneNumber(phoneNo)){
-            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"+phoneNo));
-            intent.putExtra("sms_body",message);
-            startActivity(intent);
-        }
+
+        String userID = auth.getCurrentUser().getUid();
+        DatabaseReference carerNoRef = database.getReference().
+                child("Users").child(userID).child("Info").child("carerPhone");
+        Query queryCarerNo = carerNoRef;
+
+
+        queryCarerNo.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    phoneNo = "+" + dataSnapshot.getValue(String.class);
+
+                    String myCurrentlocation = "https://www.google.com.au/maps/place/" + Lat + "+" + Lon;
+                    String message = "I need Help, I am at this location:" + myCurrentlocation;
+                    if (PhoneNumberUtils.isGlobalPhoneNumber(phoneNo)){
+                        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"+phoneNo));
+                        intent.putExtra("sms_body",message);
+                        startActivity(intent);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                // Then run the SMS anyway, but using the default number.
+                String myCurrentlocation = "https://www.google.com.au/maps/place/" + Lat + "+" + Lon;
+                String message = "I need Help, I am at this location:" + myCurrentlocation;
+                if (PhoneNumberUtils.isGlobalPhoneNumber(phoneNo)){
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"+phoneNo));
+                    intent.putExtra("sms_body",message);
+                    startActivity(intent);
+                }
+
+            }
+        });
+
+
+
     }
 }
