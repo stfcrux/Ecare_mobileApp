@@ -34,7 +34,6 @@ import com.sinch.android.rtc.SinchError;
 import java.io.File;
 import java.io.IOException;
 
-
 import com.subinkrishna.widget.CircularImageView;
 
 public class ContactProfileActivity extends BaseActivity implements SinchService.StartFailedListener {

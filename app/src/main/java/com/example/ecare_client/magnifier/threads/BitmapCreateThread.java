@@ -1,4 +1,4 @@
-package com.example.ecare_client.visor.threads;
+package com.example.ecare_client.magnifier.threads;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -6,8 +6,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
 
-import com.example.ecare_client.visor.BitmapRenderer;
-import com.example.ecare_client.visor.NativeYuvDecoder;
+import com.example.ecare_client.magnifier.BitmapRenderer;
 
 /**
  * An external thread to render the bitmap out of the raw yuvData from the legacy camera preview API.
@@ -114,14 +113,6 @@ public class BitmapCreateThread implements Runnable {
         // YuvImage yuvImage = new YuvImage(yuvData, ImageFormat.NV21, previewWidth, previewHeight, null);
 
 
-        // greyscale bitmap rendering is a bit faster than yuv-to-rgb convert.
-        //int[] rgbData;
-
-        // different strategies (for performance): use greyscale in preview mode and rgb in picture mode.
-        //if(!useRgb) rgbData = this.decodeYuvWithNativeYuvToGreyScale(yuvData, previewWidth, previewHeight);
-        if(!useRgb) this.decodeYuvWithNativeYuvToGreyScale(rgbArray, yuvData, previewWidth, previewHeight);
-        else this.decodeYuvToRgb(rgbArray, yuvData, previewWidth, previewHeight);
-
         if(renderedBitmap == null) {
             renderedBitmap = Bitmap.createBitmap(previewWidth, previewHeight, android.graphics.Bitmap.Config.ARGB_8888);
         }
@@ -159,20 +150,6 @@ public class BitmapCreateThread implements Runnable {
         return scaledBitmap;
     }
 
-    private void decodeYuvWithNativeYuvToGreyScale(int[] rgb, byte[] yuvData, int width, int height) {
-        //int pixelCount = width * height;
-        //)//int[] out = new int[pixelCount];
-        NativeYuvDecoder.YUVtoRGBGreyscale(yuvData, width, height, rgb);
-        //return out;
-    }
-
-    // NOTE does change the colors
-    private void decodeYuvWithNativeYuvToRgb(int[] rgb, byte[] yuvData, int width, int height) {
-        //int pixelCount = width * height;
-        // int[] out = new int[pixelCount];
-        NativeYuvDecoder.YUVtoRBGA(yuvData, width, height, rgb);
-        //return out;
-    }
 
     /**
      * decodes YUV to RGB

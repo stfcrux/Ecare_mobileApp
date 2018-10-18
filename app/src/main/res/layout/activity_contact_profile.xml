@@ -5,11 +5,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
     <com.subinkrishna.widget.CircularImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/contact_picture"
-        android:layout_width="match_parent"
-        android:layout_height="202dp"
-        android:src="@drawable/blank_pic" />
+        android:layout_width="395dp"
+        android:layout_height="96dp"
+        android:src="@drawable/blank_pic"
+        app:ci_borderColor="@android:color/darker_gray"
+        app:ci_borderWidth="2dp"
+        app:ci_placeholderBackgroundColor="@android:color/black"
+        app:ci_placeholderText="Photo"
+        app:ci_placeholderTextColor="@android:color/white"
+        app:ci_placeholderTextSize="22sp"
+        app:ci_shadowColor="#999999"
+        app:ci_shadowRadius="5.0" />
+
 
     <EditText
         android:id="@+id/contact_nickname"

@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,17 +51,22 @@ public class PersonalInfoActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private Button btnSaveInfo;
-    private TextInputEditText inputPhone;
-    private TextInputEditText inputName;
-    private Button btnChoose, btnUpload;
+    private TextInputEditText inputPhone,inputName, inputCarer;
+    private CheckBox inputIsCarer;
+    private Button btnChoose;
     private CircularImageView imageView;
 
     private Uri filePath;
     private String picPath;
 
     private final int PICK_IMAGE_REQUEST = 71;
-    private  UserInfo getUserForm(){
-        return new UserInfo(inputPhone.getText().toString().trim(),inputName.getText().toString().trim(), picPath);
+    private  UserInfo getUserForm(String pic){
+        String isCarer = "false";
+        if(inputIsCarer.isChecked())
+        {
+            isCarer = "true";
+        }
+        return new UserInfo(inputPhone.getText().toString().trim(),inputName.getText().toString().trim(), pic, inputCarer.getText().toString().trim(),isCarer);
 
     }
     private void chooseImage() {
@@ -87,9 +93,8 @@ public class PersonalInfoActivity extends AppCompatActivity {
         }
     }
     private String uploadImage() {
-        String path = null;
-        if(filePath != null)
-        {
+        String path = picPath;
+        if(filePath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
@@ -118,6 +123,9 @@ public class PersonalInfoActivity extends AppCompatActivity {
                             progressDialog.setMessage("Uploaded "+(int)progress+"%");
                         }
                     });
+        }else{
+            Toast.makeText(getApplicationContext(), "No new picture file",
+                    Toast.LENGTH_LONG).show();
         }
         return path;
     }
@@ -135,8 +143,9 @@ public class PersonalInfoActivity extends AppCompatActivity {
         //Initialize Views
         inputPhone = (TextInputEditText) findViewById(R.id.phone_input_et);
         inputName = (TextInputEditText) findViewById(R.id.full_name_et);
+        inputCarer = (TextInputEditText) findViewById(R.id.inputCarer);
+        inputIsCarer = (CheckBox) findViewById(R.id.carerCheckBox);
         btnChoose = (Button) findViewById(R.id.btnChoose);
-        btnUpload = (Button) findViewById(R.id.btnUpload);
         imageView = (CircularImageView) findViewById(R.id.profile_image);
 
         auth = FirebaseAuth.getInstance();
@@ -147,7 +156,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
         final FirebaseUser currentUser = auth.getCurrentUser();
 
         final DatabaseReference userRef = database.getReference().child("Users").child(currentUser.getUid());
-        picPath = "Null";
+        picPath = "null";
         Context context = this;
         DatabaseReference infoRef = userRef.child("Info");
         // Attach a listener to read the data at our posts reference
@@ -167,6 +176,9 @@ public class PersonalInfoActivity extends AppCompatActivity {
                         }else if (child.getKey().equals("phone")) {
                             phoneNo = child.getValue(String.class);
                             inputPhone.setText(phoneNo);
+                        }else if (child.getKey().equals("carerName")) {
+                            phoneNo = child.getValue(String.class);
+                            inputCarer.setText(phoneNo);
                         }else if (child.getKey().equals("picPath")) {
                             picPath = child.getValue(String.class);
                             GlideApp.with(getApplicationContext())
@@ -175,7 +187,12 @@ public class PersonalInfoActivity extends AppCompatActivity {
                                     .into(imageView);
 
 
+                        }else if (child.getKey().equals("isCarer")) {
+                            if (child.getValue(String.class).equals("true")){
+                                inputIsCarer.setChecked(true);
+                            }
                         }
+
                     }
                 }
             }
@@ -186,16 +203,18 @@ public class PersonalInfoActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         btnSaveInfo = (Button) findViewById(R.id.btn_save);
         btnSaveInfo.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UserInfo userinfo = getUserForm();
-
+                        picPath = uploadImage();
+//                        if (picPath.equals("null")){
+//                            picPath =
+//                        }
+                        UserInfo userinfo = getUserForm(picPath);
+                        Toast.makeText(getApplicationContext(), "Basic info saved successfully",
+                                Toast.LENGTH_LONG).show();
                         userRef.child("Info").setValue(userinfo);
 
                     }
@@ -207,14 +226,6 @@ public class PersonalInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 chooseImage();
-            }
-        });
-
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                picPath = uploadImage();
-                // update user
             }
         });
 
