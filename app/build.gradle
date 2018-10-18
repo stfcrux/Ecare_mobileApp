@@ -61,7 +61,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:16.0.3'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.subinkrishna:circularimageview:1.2.2'
     implementation 'com.firebaseui:firebase-ui-storage:3.3.0'
 
 

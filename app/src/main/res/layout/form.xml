@@ -41,18 +41,20 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imgView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.subinkrishna.widget.CircularImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
-            android:layout_width="394dp"
+            android:layout_width="395dp"
             android:layout_height="96dp"
             android:src="@drawable/blank_pic"
-            app:civ_border_color="#FF000000"
-            app:civ_border_width="2dp" />
+            app:ci_borderColor="@android:color/darker_gray"
+            app:ci_borderWidth="2dp"
+            app:ci_placeholderBackgroundColor="@android:color/black"
+            app:ci_placeholderText="Photo"
+            app:ci_placeholderTextColor="@android:color/white"
+            app:ci_placeholderTextSize="22sp"
+            app:ci_shadowColor="#999999"
+            app:ci_shadowRadius="5.0" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

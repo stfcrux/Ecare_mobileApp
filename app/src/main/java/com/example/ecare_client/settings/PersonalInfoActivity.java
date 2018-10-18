@@ -37,11 +37,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.subinkrishna.widget.CircularImageView;
 
 import java.io.IOException;
 import java.util.UUID;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PersonalInfoActivity extends AppCompatActivity {
 
@@ -53,7 +53,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
     private TextInputEditText inputPhone;
     private TextInputEditText inputName;
     private Button btnChoose, btnUpload;
-    private CircleImageView imageView;
+    private CircularImageView imageView;
 
     private Uri filePath;
     private String picPath;
@@ -93,7 +93,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-             path = "images/"+ UUID.randomUUID().toString();
+            path = "images/"+ UUID.randomUUID().toString();
             StorageReference ref = storageReference.child(path);
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -137,7 +137,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
         inputName = (TextInputEditText) findViewById(R.id.full_name_et);
         btnChoose = (Button) findViewById(R.id.btnChoose);
         btnUpload = (Button) findViewById(R.id.btnUpload);
-        imageView = (CircleImageView) findViewById(R.id.profile_image);
+        imageView = (CircularImageView) findViewById(R.id.profile_image);
 
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
@@ -169,9 +169,9 @@ public class PersonalInfoActivity extends AppCompatActivity {
                             inputPhone.setText(phoneNo);
                         }else if (child.getKey().equals("picPath")) {
                             picPath = child.getValue(String.class);
-                            GlideApp.with(context)
+                            GlideApp.with(getApplicationContext())
                                     .load(storageReference.child(picPath))
-                                    .override(100, Target.SIZE_ORIGINAL)
+                                    .override(96, Target.SIZE_ORIGINAL)
                                     .into(imageView);
 
 
@@ -213,7 +213,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 picPath = uploadImage();
+                picPath = uploadImage();
                 // update user
             }
         });
