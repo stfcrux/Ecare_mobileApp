@@ -51,21 +51,36 @@
         android:layout_weight="1"
         android:gravity="center">
 
-        <Button
-            android:id="@+id/answerButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Answer"
-            android:textSize="20sp" />
+        <LinearLayout
+            android:id="@+id/layout_button"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:weightSum="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/declineButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/answerButton"
-            android:text="Cancel"
-            android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/answerButton"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_green_light"
+                android:text="Answer"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+            <Button
+                android:id="@+id/declineButton"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="#fb6b6b"
+                android:text="Cancel"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
 
     </RelativeLayout>
+
 
 </LinearLayout>

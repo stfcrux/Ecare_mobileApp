@@ -14,9 +14,8 @@
         android:background="@color/colorPrimaryDark"
 
         android:fitsSystemWindows="true"
-        android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:padding="30dp">
 
 
         <ImageView
@@ -52,7 +51,6 @@
                 android:layout_height="wrap_content"
                 android:focusableInTouchMode="true"
                 android:hint="@string/hint_password"
-                android:imeActionId="@+id/login"
                 android:imeOptions="actionUnspecified"
                 android:inputType="textPassword"
                 android:maxLines="1"
@@ -61,30 +59,29 @@
 
         </android.support.design.widget.TextInputLayout>
 
+
         <Button
             android:id="@+id/sign_up_button"
-            style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:background="@color/colorAccent"
             android:text="@string/action_sign_in_short"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
 
-        <!-- Link to Login Screen -->
+            <!-- Link to Login Screen -->
 
 
         <Button
             android:id="@+id/sign_in_button"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
-            android:background="@null"
-            android:text="@string/btn_link_to_login"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="15dp" />
+            android:background="@color/bg_login"
+            android:text="Log in"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"/>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"

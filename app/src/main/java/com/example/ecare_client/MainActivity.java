@@ -11,9 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneNumberUtils;
@@ -182,10 +180,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             }
         };
 
-        t1_temp = (TextView) findViewById(R.id.textView);
-        t2_city = (TextView) findViewById(R.id.textView3);
-        t3_description = (TextView) findViewById(R.id.textView4);
-        t4_date = (TextView) findViewById(R.id.textView2);
+        t1_temp = (TextView) findViewById(R.id.temp_text);
+        t2_city = (TextView) findViewById(R.id.city_text);
+        t3_description = (TextView) findViewById(R.id.descrip_text);
+        t4_date = (TextView) findViewById(R.id.date_text);
 
         //find_weather();
 
@@ -343,7 +341,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     //  t1_temp.setText(temp);
                     t2_city.setText(city);
                     t3_description.setText(description);
-                    ImageView image = (ImageView) findViewById(R.id.imageView);
+                    ImageView image = (ImageView) findViewById(R.id.weather_imageView);
                     changeImage(description, image);
 
                     Calendar calendar = Calendar.getInstance();
