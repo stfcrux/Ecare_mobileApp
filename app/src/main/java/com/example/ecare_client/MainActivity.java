@@ -10,11 +10,13 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -38,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -64,6 +67,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     private LocationListener locationListener;
     private FirebaseAuth auth;
     private FirebaseDatabase database;
+    private Location location;
     private double Lat;
     private double Lon;
 
@@ -107,10 +111,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_UP:
-
-
-                        sendHelpSMS();
-
+                        //sendHelpSMS();
+                        doSendSMS();
                 }
                 return false;
             }
@@ -196,7 +198,14 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     "Location request failed.", Toast.LENGTH_LONG).show();
         }
 
-
+        location = beginLocatioon();
+        if (location!=null){
+            Lat = location.getLatitude();
+            Lon = location.getLongitude();
+            find_weather(Lat,Lon);
+            Log.d(TAG, "onCreate:"+Lat);
+            Log.d(TAG, "onCreate:"+Lon);
+        }
 
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
@@ -506,7 +515,48 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         return contacts.get(key);
     }
 
-    private String findEmail(String id) {
-        return "s";
+    private String judgeProvider(LocationManager locationManager) {
+        List<String> prodiverlist = locationManager.getProviders(true);
+        if(prodiverlist.contains(LocationManager.NETWORK_PROVIDER)){
+            return LocationManager.NETWORK_PROVIDER;//网络定位
+        }else if(prodiverlist.contains(LocationManager.GPS_PROVIDER)) {
+            return LocationManager.GPS_PROVIDER;//GPS定位
+        }else{
+            Toast.makeText(getApplicationContext(),"没有可用的位置提供器",Toast.LENGTH_SHORT).show();
+        }
+        return null;
+    }
+
+    public Location beginLocatioon() {
+        Log.d(TAG, "beginLocatioon:used ");
+        //获得位置服务
+        //locationManager = activity.getLocationManager();
+        //provider =
+        //有位置提供器的情况
+        if (judgeProvider(locationManager)!= null) {
+            //为了压制getLastKnownLocation方法的警告
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return null;
+            }
+            return locationManager.getLastKnownLocation(judgeProvider(locationManager));
+        }else{
+            //不存在位置提供器的情况
+            Toast.makeText(getApplicationContext(),"不存在位置提供器的情况",Toast.LENGTH_SHORT).show();
+        }
+        return null;
+    }
+
+    private void doSendSMS(){
+        String phoneNo = "+61426443229";
+        String myCurrentlocation = "https://www.google.com.au/maps/place/" + Lat + "+" + Lon;
+        String message = "I need Help, I am at this location:" + myCurrentlocation;
+        if (PhoneNumberUtils.isGlobalPhoneNumber(phoneNo)){
+            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"+phoneNo));
+            intent.putExtra("sms_body",message);
+            startActivity(intent);
+        }
     }
 }

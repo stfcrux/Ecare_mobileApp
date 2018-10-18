@@ -10,13 +10,16 @@ import com.sinch.android.rtc.messaging.MessageClientListener;
 import com.sinch.android.rtc.messaging.MessageDeliveryInfo;
 import com.sinch.android.rtc.messaging.MessageFailureInfo;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +46,7 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
     private static final String TAG = "ChatActivity";
     private TextView leftMsg;
     private TextView rightMsg;
+    private Location location;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private String Lat;
@@ -127,6 +131,15 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
         if(rightMsg != null && leftMsg !=null) {
             rightMsg.setOnClickListener(buttonClickListener);
             leftMsg.setOnClickListener(buttonClickListener);
+        }
+
+        location = beginLocatioon();
+        if (location!=null){
+            Lat = String.valueOf(location.getLatitude());
+            Lon = String.valueOf(location.getLongitude());
+            //find_weather(Lat,Lon);
+            Log.d(TAG, "onCreate:"+Lat);
+            Log.d(TAG, "onCreate:"+Lon);
         }
         locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
     }
@@ -265,6 +278,40 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable("adapter",adapter);
         super.onSaveInstanceState(outState);
+    }
+
+    private String judgeProvider(LocationManager locationManager) {
+        List<String> prodiverlist = locationManager.getProviders(true);
+        if(prodiverlist.contains(LocationManager.NETWORK_PROVIDER)){
+            return LocationManager.NETWORK_PROVIDER;//网络定位
+        }else if(prodiverlist.contains(LocationManager.GPS_PROVIDER)) {
+            return LocationManager.GPS_PROVIDER;//GPS定位
+        }else{
+            Toast.makeText(getApplicationContext(),"没有可用的位置提供器",Toast.LENGTH_SHORT).show();
+        }
+        return null;
+    }
+
+    public Location beginLocatioon() {
+        Log.d(TAG, "beginLocatioon:used ");
+        //获得位置服务
+        //locationManager = activity.getLocationManager();
+        //provider =
+        //有位置提供器的情况
+        if (judgeProvider(locationManager)!= null) {
+            //为了压制getLastKnownLocation方法的警告
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return null;
+            }
+            return locationManager.getLastKnownLocation(judgeProvider(locationManager));
+        }else{
+            //不存在位置提供器的情况
+            Toast.makeText(getApplicationContext(),"不存在位置提供器的情况",Toast.LENGTH_SHORT).show();
+        }
+        return null;
     }
 
 }
