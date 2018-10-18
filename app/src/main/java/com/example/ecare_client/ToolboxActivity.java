@@ -92,7 +92,7 @@ public class ToolboxActivity extends BaseActivity {
         startActivity(AlarmClockActivity);
     }
     private void openMagnifier() {
-        Intent MagActivity = new Intent(getApplicationContext(), com.example.ecare_client.visor.VisorActivity.class);
+        Intent MagActivity = new Intent(getApplicationContext(), com.example.ecare_client.magnifier.VisorActivity.class);
         startActivity(MagActivity);
     }
 

@@ -1,4 +1,4 @@
-package com.example.ecare_client.visor;
+package com.example.ecare_client.magnifier;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.example.ecare_client.R;
 import com.example.ecare_client.TitleLayout;
-import com.example.ecare_client.visor.filters.ColorFilter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -60,10 +59,7 @@ public class VisorActivity extends Activity {
      */
     private VisorSurface mVisorView;
 
-    /**
-     * Is the preview running? > Pause Btn + Zoom Btn
-     * If not > Play Btn + Photo Share Btn
-     */
+
     private boolean cameraPreviewState;
 
     /**
@@ -86,52 +82,6 @@ public class VisorActivity extends Activity {
         }
     };
 
-    private View.OnClickListener colorModeClickHandler = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            v.startAnimation(animScale);
-            playClickSound(v);
-
-            mVisorView.toggleColorMode();
-        }
-    };
-
-    private View.OnClickListener pauseClickHandler = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            v.startAnimation(animScale);
-            playClickSound(v);
-
-            mVisorView.toggleCameraPreview();
-            ImageButton btn = (ImageButton) v;
-            // FrameLayout previewLayout = getCameraPreviewFrame();
-
-            if (cameraPreviewState) {
-                cameraPreviewIsPaused(btn);
-            } else {
-                cameraPreviewIsActive(btn);
-            }
-
-            // btn.invalidateDrawable(null);
-            cameraPreviewState = !cameraPreviewState;
-        }
-    };
-
-    private void cameraPreviewIsPaused(ImageButton playOrPauseButton) {
-        playOrPauseButton.setImageResource(R.drawable.ic_play);
-        mZoomButton.setImageResource(R.drawable.ic_camera);
-        mFlashButton.setAlpha(64);
-        mFlashButton.getBackground().setAlpha(64);
-
-        /** enable pinch to zoom via PhotoView from https://github.com/chrisbanes/PhotoView */
-        mPhotoView.setImageBitmap(mVisorView.getBitmap());
-
-        mVisorView.setAlpha(0);
-        // mVisorView.setVisibility(View.GONE); // the change of visiblity would cause a surfaceDestroy!
-
-        mPhotoView.setVisibility(View.VISIBLE);
-        mPhotoView.setAlpha(255);
-    }
 
     private void cameraPreviewIsActive(ImageButton playOrPauseButton) {
         playOrPauseButton.setImageResource(R.drawable.ic_pause);
@@ -194,7 +144,6 @@ public class VisorActivity extends Activity {
      * Store the reference to swap the icon on it if we pause the preview.
      */
     private ImageButton mZoomButton;
-    private ImageButton mPauseButton;
     private ImageButton mFlashButton;
     private Animation animScale;
     private Animation animScaleLongPress;
@@ -288,14 +237,8 @@ public class VisorActivity extends Activity {
         mVisorView = new VisorSurface(this);
         mPhotoView = new uk.co.senab.photoview.PhotoView(this);
 
-        List<ColorFilter> filterList = new ArrayList<ColorFilter>();
-        filterList.add(VisorSurface.NO_FILTER);
-        filterList.add(VisorSurface.BLACK_WHITE_COLOR_FILTER);
-        filterList.add(VisorSurface.WHITE_BLACK_COLOR_FILTER);
-        filterList.add(VisorSurface.BLUE_YELLOW_COLOR_FILTER);
-        filterList.add(VisorSurface.YELLOW_BLUE_COLOR_FILTER);
 
-        mVisorView.setCameraColorFilters(filterList);
+
         FrameLayout previewLayout = getCameraPreviewFrame();
         previewLayout.setBackgroundColor(Color.BLACK);
         previewLayout.addView(mVisorView);
@@ -330,18 +273,10 @@ public class VisorActivity extends Activity {
         ImageButton flashButton = (ImageButton) findViewById(R.id.button_flash);
         flashButton.setOnClickListener(flashLightClickHandler);
 
-        // Add a listener to the Flash button
-        ImageButton colorButton = (ImageButton) findViewById(R.id.button_color);
-        colorButton.setOnClickListener(colorModeClickHandler);
-
-        ImageButton pauseButton = (ImageButton) findViewById(R.id.button_pause);
-        pauseButton.setOnClickListener(pauseClickHandler);
-
         mVisorView.setZoomButton(zoomButton);
         mVisorView.setFlashButton(flashButton);
 
         mZoomButton = zoomButton;
-        mPauseButton = pauseButton;
         mFlashButton = flashButton;
     }
 
@@ -366,7 +301,6 @@ public class VisorActivity extends Activity {
 
         if (cameraPreviewState != true) {
             cameraPreviewState = true;
-            cameraPreviewIsActive(mPauseButton);
         }
 
         Log.d(TAG, "onResume called!");

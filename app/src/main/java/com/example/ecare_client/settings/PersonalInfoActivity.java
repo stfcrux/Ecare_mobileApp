@@ -51,8 +51,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private Button btnSaveInfo;
-    private TextInputEditText inputPhone;
-    private TextInputEditText inputName, inputCarer;
+    private TextInputEditText inputPhone,inputName, inputCarer;
     private CheckBox inputIsCarer;
     private Button btnChoose;
     private CircularImageView imageView;
@@ -61,13 +60,13 @@ public class PersonalInfoActivity extends AppCompatActivity {
     private String picPath;
 
     private final int PICK_IMAGE_REQUEST = 71;
-    private  UserInfo getUserForm(){
+    private  UserInfo getUserForm(String pic){
         String isCarer = "false";
         if(inputIsCarer.isChecked())
         {
             isCarer = "true";
         }
-        return new UserInfo(inputPhone.getText().toString().trim(),inputName.getText().toString().trim(), picPath, inputCarer.getText().toString().trim(),isCarer);
+        return new UserInfo(inputPhone.getText().toString().trim(),inputName.getText().toString().trim(), pic, inputCarer.getText().toString().trim(),isCarer);
 
     }
     private void chooseImage() {
@@ -94,9 +93,8 @@ public class PersonalInfoActivity extends AppCompatActivity {
         }
     }
     private String uploadImage() {
-        String path = null;
-        if(filePath != null)
-        {
+        String path = picPath;
+        if(filePath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
@@ -125,6 +123,9 @@ public class PersonalInfoActivity extends AppCompatActivity {
                             progressDialog.setMessage("Uploaded "+(int)progress+"%");
                         }
                     });
+        }else{
+            Toast.makeText(getApplicationContext(), "No new picture file",
+                    Toast.LENGTH_LONG).show();
         }
         return path;
     }
@@ -155,7 +156,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
         final FirebaseUser currentUser = auth.getCurrentUser();
 
         final DatabaseReference userRef = database.getReference().child("Users").child(currentUser.getUid());
-        picPath = "Null";
+        picPath = "null";
         Context context = this;
         DatabaseReference infoRef = userRef.child("Info");
         // Attach a listener to read the data at our posts reference
@@ -187,9 +188,8 @@ public class PersonalInfoActivity extends AppCompatActivity {
 
 
                         }else if (child.getKey().equals("isCarer")) {
-                            if (child.getValue(String.class).equals("truex")){
+                            if (child.getValue(String.class).equals("true")){
                                 inputIsCarer.setChecked(true);
-
                             }
                         }
 
@@ -203,17 +203,18 @@ public class PersonalInfoActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         btnSaveInfo = (Button) findViewById(R.id.btn_save);
         btnSaveInfo.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         picPath = uploadImage();
-                        UserInfo userinfo = getUserForm();
-
+//                        if (picPath.equals("null")){
+//                            picPath =
+//                        }
+                        UserInfo userinfo = getUserForm(picPath);
+                        Toast.makeText(getApplicationContext(), "Basic info saved successfully",
+                                Toast.LENGTH_LONG).show();
                         userRef.child("Info").setValue(userinfo);
 
                     }
@@ -227,7 +228,6 @@ public class PersonalInfoActivity extends AppCompatActivity {
                 chooseImage();
             }
         });
-
 
 
     }

@@ -1,4 +1,4 @@
-package com.example.ecare_client.visor;
+package com.example.ecare_client.magnifier;
 
 
 import android.graphics.Bitmap;
