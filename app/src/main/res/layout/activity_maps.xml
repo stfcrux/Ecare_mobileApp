@@ -102,7 +102,41 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="345dp" />
+        android:layout_height="328dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/B_parks"
+            android:layout_width="109dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/TF_parks"
+            android:onClick="onClick"
+            android:text="Parks" />
+
+        <Button
+            android:id="@+id/B_banks"
+            android:layout_width="112dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/TF_location"
+            android:layout_toEndOf="@+id/B_banks"
+            android:onClick="onClick"
+            android:text="Bankss" />
+
+        <Button
+            android:id="@+id/B_taxistands"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/TF_location"
+            android:layout_toEndOf="@+id/B_taxistands"
+            android:onClick="onClick"
+            android:text="Taxi Stands" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -119,22 +153,22 @@
             android:text="Hospitals" />
 
         <Button
-            android:id="@+id/B_schools"
+            android:id="@+id/B_pharmacies"
             android:layout_width="112dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/TF_location"
-            android:layout_toEndOf="@+id/B_hopistals"
+            android:layout_toEndOf="@+id/B_pharmacies"
             android:onClick="onClick"
-            android:text="Schools" />
+            android:text="Pharmacies" />
 
         <Button
-            android:id="@+id/B_restaurants"
+            android:id="@+id/B_supermarkets"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/TF_location"
-            android:layout_toEndOf="@+id/B_schools"
+            android:layout_toEndOf="@+id/B_supermarkets"
             android:onClick="onClick"
-            android:text="Restautants" />
+            android:text="Supermarkets" />
 
     </LinearLayout>
 

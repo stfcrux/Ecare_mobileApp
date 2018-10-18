@@ -604,25 +604,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
 
 
-            case R.id.B_schools:
+            case R.id.B_banks:
                 mMap.clear();
-                String school = "school";
-                url = getNearbyPlacesUrl(latitude, longitude, school);
+                String bank = "bank";
+                url = getNearbyPlacesUrl(latitude, longitude, bank);
                 dataTransfer[0] = mMap;
                 dataTransfer[1] = url;
 
                 getNearbyPlacesData.execute(dataTransfer);
-                Toast.makeText(MapsActivity.this, "Showing Nearby Schools", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.this, "Showing Nearby Banks", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.B_restaurants:
+            case R.id.B_supermarkets:
                 mMap.clear();
-                String resturant = "restuarant";
-                url = getNearbyPlacesUrl(latitude, longitude, resturant);
+                String supermarket = "supermarket";
+                url = getNearbyPlacesUrl(latitude, longitude, supermarket);
                 dataTransfer[0] = mMap;
                 dataTransfer[1] = url;
 
                 getNearbyPlacesData.execute(dataTransfer);
-                Toast.makeText(MapsActivity.this, "Showing Nearby Restaurants", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.this, "Showing Nearby Supermarkets", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.B_taxistands:
+                mMap.clear();
+                String taxistands = "taxi_stand";
+                url = getNearbyPlacesUrl(latitude, longitude, taxistands);
+                dataTransfer[0] = mMap;
+                dataTransfer[1] = url;
+
+                getNearbyPlacesData.execute(dataTransfer);
+                Toast.makeText(MapsActivity.this, "Showing Nearby Taxi Stands", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.B_pharmacies:
+                mMap.clear();
+                String pharmacy = "pharmacy";
+                url = getNearbyPlacesUrl(latitude, longitude, pharmacy);
+                dataTransfer[0] = mMap;
+                dataTransfer[1] = url;
+
+                getNearbyPlacesData.execute(dataTransfer);
+                Toast.makeText(MapsActivity.this, "Showing Nearby Pharmacies", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.B_parks:
+                mMap.clear();
+                String parks = "park";
+                url = getNearbyPlacesUrl(latitude, longitude, parks);
+                dataTransfer[0] = mMap;
+                dataTransfer[1] = url;
+
+                getNearbyPlacesData.execute(dataTransfer);
+                Toast.makeText(MapsActivity.this, "Showing Nearby Parks", Toast.LENGTH_SHORT).show();
                 break;
 
         }
