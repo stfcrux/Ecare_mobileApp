@@ -34,11 +34,12 @@ import com.sinch.android.rtc.SinchError;
 import java.io.File;
 import java.io.IOException;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+
+import com.subinkrishna.widget.CircularImageView;
 
 public class ContactProfileActivity extends BaseActivity implements SinchService.StartFailedListener {
 
-    private CircleImageView contactPicture;
+    private CircularImageView contactPicture;
 
     private TextView contactEmail;
     private TextView contactNickname;
@@ -51,6 +52,8 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
     private ProgressDialog mSpinner;
 
+    public boolean isChatReady;
+
 
 
     private String selectedContactName;
@@ -62,6 +65,8 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
 
     protected void onCreate(Bundle savedInstanceState) {
+
+        isChatReady = true;
 
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -80,7 +85,7 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
         setContentView(R.layout.activity_contact_profile);
 
-        contactPicture = (CircleImageView) findViewById(R.id.contact_picture);
+        contactPicture = (CircularImageView) findViewById(R.id.contact_picture);
         contactEmail = (TextView) findViewById(R.id.contact_email);
         contactNickname = (TextView) findViewById(R.id.contact_nickname);
         messageButton = (Button) findViewById(R.id.message_button);
@@ -220,6 +225,14 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        isChatReady = false;
+
+    }
+
     public void beginChat(String contactName) {
 
         selectedContactName = contactName;
@@ -275,16 +288,17 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
     @Override
     public void onStarted() {
 
-        /*
-        Intent chatActivity = new Intent(this, ChatActivity.class);
+        if (isChatReady) {
+            Intent chatActivity = new Intent(this, ChatActivity.class);
 
-        Bundle options = new Bundle();
-        options.putString("ContactName", selectedContactName);
+            Bundle options = new Bundle();
+            options.putString("ContactName", selectedContactName);
 
-        chatActivity.putExtras(options);
+            chatActivity.putExtras(options);
 
-        startActivity(chatActivity);
-        */
+            startActivity(chatActivity);
+        }
+
     }
 
     @Override
