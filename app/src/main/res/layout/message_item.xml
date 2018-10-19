@@ -10,8 +10,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/left_layout"
         android:layout_gravity="left"
-        android:background="@drawable/message_right"
-        android:scaleX="-1">
+        android:background="@drawable/message_left">
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,8 +26,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/right_layout"
         android:layout_gravity="right"
-        android:background="@drawable/message_left"
-        android:scaleX="-1">
+        android:background="@drawable/message_right">
 
         <TextView
             android:layout_width="wrap_content"
