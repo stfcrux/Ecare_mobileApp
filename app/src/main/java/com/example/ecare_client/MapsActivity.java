@@ -317,7 +317,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             + ", " + addresses.get(0).getLocality() +", " +
                             addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
 
-                    start = new LatLng(addresses.get(0).getLatitude(),addresses.get(0).getLongitude());
+                    start = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                 }
             }
         }
@@ -339,7 +339,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             + ", " + addresses.get(0).getLocality() +", " +
                             addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
 
-                    end = new LatLng(addresses.get(0).getLatitude(),addresses.get(0).getLongitude());
+                    end = new LatLng(Double.valueOf(lat), Double.valueOf(lon));
                 }
             }
         }
