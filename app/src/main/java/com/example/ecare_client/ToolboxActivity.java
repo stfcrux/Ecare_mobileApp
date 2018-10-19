@@ -41,6 +41,18 @@ public class ToolboxActivity extends BaseActivity {
             }
         });
 
+        ImageView userSetting = (ImageView) findViewById(R.id.btnPersonalInfo);
+        userSetting.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        openPersonalInfo();
+                }
+                return false;
+
+            }
+        });
 
         ImageView checkList = (ImageView) findViewById(R.id.btnOpenChecklist);
         checkList.setOnTouchListener(new View.OnTouchListener() {
