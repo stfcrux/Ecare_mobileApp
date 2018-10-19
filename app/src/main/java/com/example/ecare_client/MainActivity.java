@@ -575,13 +575,13 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                         startActivity(intent);
                     }
 
+                    else {
+                        Toast.makeText(getApplicationContext(),
+                                "You must enter a valid Primary Carer Phone No. in Personal Info.", Toast.LENGTH_LONG).show();
+                    }
+
                 }
 
-                else {
-                    Toast.makeText(getApplicationContext(),
-                            "You must enter a Primary Carer Phone No. in Personal Info.", Toast.LENGTH_LONG).show();
-
-                }
             }
 
             @Override
@@ -599,6 +599,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             }
         });
 
+
+
+    }
+
+    private void showHelpButtonMessage() {
 
 
     }
