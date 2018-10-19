@@ -576,6 +576,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     }
 
                 }
+
+                else {
+                    Toast.makeText(getApplicationContext(),
+                            "You must enter a Primary Carer Phone No. in Personal Info.", Toast.LENGTH_LONG).show();
+
+                }
             }
 
             @Override
