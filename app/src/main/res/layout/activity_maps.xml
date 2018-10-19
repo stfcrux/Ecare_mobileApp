@@ -125,7 +125,7 @@
             android:layout_below="@+id/TF_location"
             android:layout_toEndOf="@+id/B_banks"
             android:onClick="onClick"
-            android:text="Bankss" />
+            android:text="Banks" />
 
         <Button
             android:id="@+id/B_taxistands"
