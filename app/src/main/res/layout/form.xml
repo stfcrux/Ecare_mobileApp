@@ -63,15 +63,23 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <CheckBox
+            android:id="@+id/carerCheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="I am using this app as a carer" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="OR"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/inputCarer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Primary Carer Name" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -83,21 +91,22 @@
                     android:layout_height="wrap_content"
                     android:hint="Primary Carer Phone No." />
             </android.support.design.widget.TextInputLayout>
-        </android.support.design.widget.TextInputLayout>
 
-        <CheckBox
-            android:id="@+id/carerCheckBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="I am using this app as a carer"
-            />
+
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/inputCarer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Primary Carer Name" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/btn_save"
             style="@style/ButtonBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="40dp"
             android:minHeight="35dp"
             android:text="Save" />
 
