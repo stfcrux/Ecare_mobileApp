@@ -100,7 +100,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
         Query queryContacts = userRef.child("Contacts").orderByKey();
 
-
+        // Make a load contacts method!!!!
         queryContacts.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -259,6 +259,15 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
 
 
+
+    }
+
+
+    protected void loadContacts() {
+
+    }
+
+    protected void addContact(String inputContactEmail) {
 
     }
 
