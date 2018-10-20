@@ -63,15 +63,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
     final private ContactAdapter adapter = new ContactAdapter(contacts);
     private RecyclerView contactListView;
 
-
-
-
-
-
     // Set layout manager to position the items
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,10 +121,8 @@ public class ContactListActivity extends BaseActivity implements Serializable {
                     }
 
                     setContactListeners(contactIDs,
-                            contactNicknames,
                             contacts,
-                            adapter,
-                            contactListView);
+                            adapter);
 
 
                 }
@@ -143,11 +133,6 @@ public class ContactListActivity extends BaseActivity implements Serializable {
                 // Do nothing.
             }
         });
-
-
-
-
-
 
 
         //-----------------------------------------------------------------------------
@@ -165,7 +150,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
         // Refresh list after doing the query, even before pressing AddContact.
 
 
-
+        // MAKE A createNewContact METHOD!!!!!!
         btnAddContact.setOnClickListener(
             new View.OnClickListener() {
                 @Override
@@ -199,6 +184,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
 
                                     // NEED TO CHECK IF THE CONTACT IS ALREADY RECORDED.
+                                    // SEARCH BY THE USER KEY!!!
                                     String contactUid = matchingContact.getKey();
 
                                     Contact searchObject = new Contact("Null", contactUid, false);
@@ -227,10 +213,8 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
 
                                     setContactListener(contactUid,
-                                            contactNickname,
                                             contacts,
-                                            adapter,
-                                            contactListView);
+                                            adapter);
 
 
                                 }
@@ -312,22 +296,13 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
 
     protected void setContactListeners(ArrayList<String> contactIDs,
-                                       ArrayList<String> contactNicknames,
                                        final ArrayList<Contact> contacts,
-                                       final ContactAdapter adapter,
-                                       final RecyclerView listView) {
+                                       final ContactAdapter adapter) {
 
-
-        int nicknameIndex = 0;
-        String contactNickname;
 
         for (String contactID : contactIDs) {
-            contactNickname = contactNicknames.get(nicknameIndex);
 
-            setContactListener(contactID, contactNickname,
-                    contacts, adapter, listView);
-
-            nicknameIndex += 1;
+            setContactListener(contactID, contacts, adapter);
 
         }
 
@@ -339,10 +314,8 @@ public class ContactListActivity extends BaseActivity implements Serializable {
     // (Of course, you can call it multiple times if entering
     // the activity multiple times).
     protected void setContactListener(final String contactID,
-                                      final String contactNickname,
                                       final ArrayList<Contact> contacts,
-                                      final ContactAdapter adapter,
-                                      final RecyclerView listView) {
+                                      final ContactAdapter adapter) {
 
         // If the contact is already present at this point in the method,
         // then DON'T reset the ValueEventListener!!!!
@@ -351,27 +324,19 @@ public class ContactListActivity extends BaseActivity implements Serializable {
         Boolean contactOnline = false;
 
 
-        Contact searchObject = new Contact(contactEmail, contactID, contactOnline);
+        Contact newContactObject = new Contact(contactEmail, contactID, contactOnline);
 
-        int currentIndex = contacts.indexOf(searchObject);
-
-        if (currentIndex == -1) {
-            // Then a new contact has to be created.
-            contacts.add(0, searchObject);
-            adapter.notifyItemInserted(0);
-
-            searchObject.setContext(this);
-
-            // All the other values for the contact are determined
-            // in the EventListeners.
-
-        }
-
-        else {
-            Log.d("ERROR", "Contact already stored somehow!!!!");
-        }
+        //int currentIndex = contacts.indexOf(newContactObject);
 
 
+        // Then a new contact has to be created.
+        contacts.add(0, newContactObject);
+        adapter.notifyItemInserted(0);
+
+        newContactObject.setContext(this);
+
+        // All the other values for the contact are determined
+        // in the EventListeners.
 
         database = FirebaseDatabase.getInstance();
 
@@ -512,8 +477,8 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
         };
 
-        searchObject.setContactEventListener(contactEventListener);
-        searchObject.setContactNicknameListener(contactNicknameListener);
+        newContactObject.setContactEventListener(contactEventListener);
+        newContactObject.setContactNicknameListener(contactNicknameListener);
 
         contactIDRef.addValueEventListener(contactEventListener);
         userContactRef.addValueEventListener(contactNicknameListener);

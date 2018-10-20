@@ -113,6 +113,7 @@ public class SignupActivity extends BaseActivity {
                         .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
+
                                 if (task.isSuccessful()) {
                                     setOnline(true);
                                     loginClicked(email);
@@ -181,7 +182,7 @@ public class SignupActivity extends BaseActivity {
                                             //-------------------------------
                                             MainActivity.class));
                                     //-------------------------------
-                                    //finish();
+
                                 }
                             }
                         });

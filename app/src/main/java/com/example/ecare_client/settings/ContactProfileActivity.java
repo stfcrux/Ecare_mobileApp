@@ -66,7 +66,6 @@ public class ContactProfileActivity extends BaseActivity implements SinchService
     private String selectedContactName;
     private String selectedContactKey;
     private String selectedContactNickname;
-    private Boolean selectedContactIsCarer;
 
     private ValueEventListener onlineListener;
 
