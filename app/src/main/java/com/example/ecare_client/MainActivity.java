@@ -70,7 +70,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     private double Lat;
     private double Lon;
 
-    private String phoneNo = "+61426443229";
+    private String phoneNo = null;
 
 
     @Override
@@ -78,10 +78,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_page_layout);
 
-        //asking for permissions here
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        //    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.READ_PHONE_STATE},100);
-        //}
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // Name, email address, and profile photo Url
@@ -99,7 +95,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_UP:
-
                         openContactListActivity();
                 }
                 return false;
@@ -112,7 +107,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_UP:
-                        //sendHelpSMS();
                         doSendSMS();
                 }
                 return false;
@@ -166,29 +160,18 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                 Lon = location.getLongitude();
                 find_weather(Lat, Lon);
             }
-
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
+            public void onStatusChanged(String provider, int status, Bundle extras) { }
             @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
+            public void onProviderEnabled(String provider) { }
             @Override
-            public void onProviderDisabled(String provider) {
-
-            }
+            public void onProviderDisabled(String provider) { }
         };
 
         t1_temp = (TextView) findViewById(R.id.temp_text);
         t2_city = (TextView) findViewById(R.id.city_text);
         t3_description = (TextView) findViewById(R.id.descrip_text);
         t4_date = (TextView) findViewById(R.id.date_text);
-
-        //find_weather();
 
         try {
             locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
@@ -199,7 +182,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     "Location request failed.", Toast.LENGTH_LONG).show();
         }
 
-        location = beginLocatioon();
+        location = beginLocation();
         if (location!=null){
             Lat = location.getLatitude();
             Lon = location.getLongitude();
@@ -245,9 +228,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Do nothing.
-            }
+            public void onCancelled(DatabaseError databaseError) { }
         });
 
 
@@ -257,10 +238,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     public void onClick(View v) {
     }
 
-//    @Override
-//    protected void onServiceConnected() {
-//        getSinchServiceInterface().setStartListener(this);
-//    }
 
     @Override
     protected void onPause() {
@@ -269,34 +246,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         }
         super.onPause();
     }
-
-//    @Override
-//    public void onStartFailed(SinchError error) {
-//        Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show();
-//        if (mSpinner != null) {
-//            mSpinner.dismiss();
-//        }
-//    }
-
-//    @Override
-//    public void onStarted() {
-//        openContactListActivity();
-//    }
-
-    private void loginClicked() {
-        String userName = email;
-        if (!getSinchServiceInterface().isStarted()) {
-            getSinchServiceInterface().startClient(userName);
-            showSpinner();
-        }
-        openContactListActivity();
-    }
-    /*
-    private void openChatActivity() {
-        Intent chatActivity = new Intent(this, ChatActivity.class);
-        startActivity(chatActivity);
-    }
-    */
 
     private void openMapsActivity() {
         Intent MapsActivity = new Intent(getApplicationContext(), MapsActivity.class);
@@ -311,21 +260,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     private void openContactListActivity() {
         Intent ContactListActivity = new Intent(getApplicationContext(), com.example.ecare_client.settings.ContactListActivity.class);
         startActivity(ContactListActivity);
-
     }
 
     private void openPersonalInfoActivity() {
-        Intent personalInfoActivity = new Intent(this, PersonalInfoActivity.class);
+        Intent personalInfoActivity = new Intent(getApplicationContext(), PersonalInfoActivity.class);
         startActivity(personalInfoActivity);
     }
-
-    private void showSpinner() {
-        mSpinner = new ProgressDialog(this);
-        mSpinner.setTitle("Logging in");
-        mSpinner.setMessage("Please wait...");
-        mSpinner.show();
-    }
-
 
     private void find_weather(double lat, double lon) {
         String url = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=f4d6dace6e140800a81c7003610b7de2&units=Imperial";
@@ -341,7 +281,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     String description = object.getString("description");
                     String city = response.getString("name");
 
-                    //  t1_temp.setText(temp);
                     t2_city.setText(city);
                     t3_description.setText(description);
                     ImageView image = (ImageView) findViewById(R.id.weather_imageView);
@@ -413,105 +352,33 @@ public class MainActivity extends BaseActivity implements OnClickListener {
         }
     }
 
-    private void sendHelpSMS() {
-
-        try {
-            locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
-        }
-
-        catch (SecurityException e) {
-            Toast.makeText(getApplicationContext(),
-                    "SMS failed, please try again.", Toast.LENGTH_LONG).show();
-        }
-
-
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.SEND_SMS)) {
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.SEND_SMS},
-                        MY_PERMISSIONS_REQUEST_SEND_SMS);
-            }
-        }
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-
-
-
-        // Default.
-        String phoneNo = "+610426443229";
-
-        String myCurrentlocation = "https://www.google.com.au/maps/place/" + Lat + "+" + Lon;
-        String message = "I need Help, I am at this location:" + myCurrentlocation;
-
-        Log.d("SMS REQUEST SEND CODE", "" + MY_PERMISSIONS_REQUEST_SEND_SMS);
-        Log.d("YOUR SMS CODE", "" + requestCode);
-
-        switch (requestCode) {
-
-
-
-            case MY_PERMISSIONS_REQUEST_SEND_SMS: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(phoneNo, null, message, null, null);
-                    Toast.makeText(getApplicationContext(), "SMS sent.",
-                            Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getApplicationContext(),
-                            "SMS failed, please try again.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-            }
-        }
-
-    }
 
     private void createMsgAdapter(ArrayList<String> contact) {
         Log.d(TAG, "createMsgAdapter:work");
         for (String people : contact) {
             Log.d(TAG, "forloop work");
             database = FirebaseDatabase.getInstance();
-
             DatabaseReference user = database.getReference().child("Users").child(people);
-
-            // Also need to initialise the contact list.
             ValueEventListener userEventListener = new ValueEventListener() {
                 @Override
                 // THE DATA SNAPSHOT IS AT THE CHILD!! NOT THE ROOT NODE!!!!
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Log.d(TAG, "onDataChange:work ");
-
-                    //String contactEmail = "Null";
-
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         Log.d(TAG, "work");
                         if (child.getKey().equals("Email")) {
                             contacts.put(child.getValue(String.class), new MsgAdapter(getApplicationContext()));
                             Log.d(TAG, child.getValue(String.class));
-                            //contactEmail = child.getValue(String.class);
                         }
                     }
                 }
 
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Do nothing.
-                }
+                public void onCancelled(DatabaseError databaseError) { }
 
             };
             user.addValueEventListener(userEventListener);
-            //Log.d(TAG, people);
-            //contacts.put(people, new MsgAdapter(getApplicationContext()));
         }
     }
 
@@ -522,23 +389,21 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     private String judgeProvider(LocationManager locationManager) {
         List<String> prodiverlist = locationManager.getProviders(true);
         if(prodiverlist.contains(LocationManager.NETWORK_PROVIDER)){
-            return LocationManager.NETWORK_PROVIDER;//网络定位
+            return LocationManager.NETWORK_PROVIDER;
         }else if(prodiverlist.contains(LocationManager.GPS_PROVIDER)) {
-            return LocationManager.GPS_PROVIDER;//GPS定位
+            return LocationManager.GPS_PROVIDER;
         }else{
-            Toast.makeText(getApplicationContext(),"没有可用的位置提供器",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Location provider does not exist",Toast.LENGTH_SHORT).show();
         }
         return null;
     }
 
-    public Location beginLocatioon() {
-        Log.d(TAG, "beginLocatioon:used ");
-        //获得位置服务
-        //locationManager = activity.getLocationManager();
-        //provider =
-        //有位置提供器的情况
+    public Location beginLocation() {
+        Log.d(TAG, "beginLocation:used ");
+        //access lication service
+        //if we have location provider
         if (judgeProvider(locationManager)!= null) {
-            //为了压制getLastKnownLocation方法的警告
+            //to avoid getLastKnownLocation  warning
             if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -547,20 +412,16 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             }
             return locationManager.getLastKnownLocation(judgeProvider(locationManager));
         }else{
-            //不存在位置提供器的情况
-            Toast.makeText(getApplicationContext(),"不存在位置提供器的情况",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Location provider does not exist",Toast.LENGTH_SHORT).show();
         }
         return null;
     }
 
     private void doSendSMS(){
-
         String userID = auth.getCurrentUser().getUid();
         DatabaseReference carerNoRef = database.getReference().
                 child("Users").child(userID).child("Info").child("carerPhone");
         Query queryCarerNo = carerNoRef;
-
-
         queryCarerNo.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -579,14 +440,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                         Toast.makeText(getApplicationContext(),
                                 "You must enter a valid Primary Carer Phone No. in Personal Info.", Toast.LENGTH_LONG).show();
                     }
-
                 }
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
                 // Then run the SMS anyway, but using the default number.
                 String myCurrentlocation = "https://www.google.com.au/maps/place/" + Lat + "+" + Lon;
                 String message = "I need Help, I am at this location:" + myCurrentlocation;
@@ -598,13 +455,5 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
             }
         });
-
-
-
-    }
-
-    private void showHelpButtonMessage() {
-
-
     }
 }

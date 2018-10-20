@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.ecare_client.BaseActivity;
-import com.example.ecare_client.settings.ContactListActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -107,7 +105,6 @@ public class SignupActivity extends BaseActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-
                                     setOnline(true);
                                     loginClicked(email);
 
@@ -117,10 +114,7 @@ public class SignupActivity extends BaseActivity {
                                     //-------------------------------
 
                                     startActivity(intent);
-
-
                                 }
-
                                 else {
                                     Toast.makeText(SignupActivity.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
@@ -128,9 +122,6 @@ public class SignupActivity extends BaseActivity {
                                 }
                             }
                         });
-
-
-
             }
         });
 
@@ -181,13 +172,10 @@ public class SignupActivity extends BaseActivity {
                                             //-------------------------------
                                             MainActivity.class));
                                     //-------------------------------
-
-
                                     //finish();
                                 }
                             }
                         });
-
             }
         });
     }
@@ -196,7 +184,6 @@ public class SignupActivity extends BaseActivity {
     protected void onResume() {
         setOnline(false);
         Log.d("ERROR", "set online false OnResume");
-
         super.onResume();
         progressBar.setVisibility(View.GONE);
     }
@@ -205,12 +192,10 @@ public class SignupActivity extends BaseActivity {
     protected void onDestroy() {
         setOnline(false);
         Log.d("ERROR", "set online false OnDestroy");
-
         super.onDestroy();
     }
 
     protected void createNewUser() {
-
         FirebaseUser user = auth.getCurrentUser();
 
 
@@ -226,7 +211,6 @@ public class SignupActivity extends BaseActivity {
 
         userRef.child("Online").setValue("true");
         Log.d("SUCCESS", "set online true");
-
     }
 
     protected void setOnline(boolean value) {
