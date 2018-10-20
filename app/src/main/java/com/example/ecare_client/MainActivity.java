@@ -23,9 +23,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneNumberUtils;
-import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -65,12 +63,13 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends BaseActivity implements OnClickListener {
 
+
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 0;
     static private HashMap<String, MsgAdapter> contacts = new HashMap<String, MsgAdapter>();
     private ProgressDialog mSpinner;
     private String email = "null";
     private static final String TAG = "MainActivity";
-    private TextView t1_temp, t2_city, t3_description, t4_date;
+    private TextView temp_view, city_view, description_view, date_view;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private FirebaseAuth auth;
@@ -177,10 +176,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             public void onProviderDisabled(String provider) { }
         };
 
-        t1_temp = (TextView) findViewById(R.id.temp_text);
-        t2_city = (TextView) findViewById(R.id.city_text);
-        t3_description = (TextView) findViewById(R.id.descrip_text);
-        t4_date = (TextView) findViewById(R.id.date_text);
+        temp_view = (TextView) findViewById(R.id.temp_text);
+        city_view = (TextView) findViewById(R.id.city_text);
+        description_view = (TextView) findViewById(R.id.descrip_text);
+        date_view = (TextView) findViewById(R.id.date_text);
 
         try {
             locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
@@ -290,8 +289,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     String description = object.getString("description");
                     String city = response.getString("name");
 
-                    t2_city.setText(city);
-                    t3_description.setText(description);
+                    city_view.setText(city);
+                    description_view.setText(description);
                     ImageView image = (ImageView) findViewById(R.id.weather_imageView);
                     changeImage(description, image);
 
@@ -299,13 +298,13 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     DateFormat sdf = SimpleDateFormat.getDateInstance();
                     String formatted_date = sdf.format(calendar.getTime());
 
-                    t4_date.setText(formatted_date);
+                    date_view.setText(formatted_date);
 
                     double temp_int = Double.parseDouble(temp);
                     double centi = (temp_int - 32) / 1.8000;
                     centi = Math.round(centi);
                     int i = (int) centi;
-                    t1_temp.setText(String.valueOf(i));
+                    temp_view.setText(String.valueOf(i));
 
 
                 } catch (JSONException e) {
@@ -464,7 +463,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                     intent.putExtra("sms_body",message);
                     startActivity(intent);
                 }
-
             }
         });
     }
