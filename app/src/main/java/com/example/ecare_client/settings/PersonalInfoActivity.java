@@ -1,3 +1,12 @@
+/* Code developed by Team Morgaint
+ * for Subject IT Project COMP30022
+ * Team member:
+ * Chengyao Xu
+ * Jin Wei Loh
+ * Philip Cervenjak
+ * Qianqian Zheng
+ * Sicong Hu
+ */
 package com.example.ecare_client.settings;
 
 import android.app.ProgressDialog;
@@ -11,17 +20,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.request.target.Target;
-import com.example.ecare_client.MainActivity;
 import com.example.ecare_client.R;
 import com.example.ecare_client.TitleLayout;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,7 +36,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;

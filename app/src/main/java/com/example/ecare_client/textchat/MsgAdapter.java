@@ -1,6 +1,13 @@
+/* Code developed by Team Morgaint
+ * for Subject IT Project COMP30022
+ * Team member:
+ * Chengyao Xu
+ * Jin Wei Loh
+ * Philip Cervenjak
+ * Qianqian Zheng
+ * Sicong Hu
+ */
 package com.example.ecare_client.textchat;
-
-
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,15 +23,13 @@ import android.util.Pair;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.ecare_client.ChatActivity;
+
 import com.example.ecare_client.MapsActivity;
 import com.sinch.android.rtc.messaging.Message;
 import com.example.ecare_client.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,9 +80,9 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> impl
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Pair msg = mMessages.get(position);
         int type = getMsgType(position);
         final String content = mMessages.get(position).first.getTextBody();
+        /** if the message is current location set the onclick method**/
         if (content.equals("Click to see my current location")){
             Map<String,String> header = mMessages.get(position).first.getHeaders();
             final String lat = header.get("lat");
@@ -86,8 +91,6 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> impl
             holder.rightMsg.setFocusable(false);
             holder.leftMsg.setClickable(true);
             holder.rightMsg.setClickable(true);
-            holder.leftMsg.setContentDescription("location");
-            holder.rightLayout.setContentDescription("location");
             holder.leftMsg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -112,19 +115,16 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> impl
                     context.startActivity(intent);
                 }
             });
-            Log.d(TAG, holder.leftMsg.getContentDescription().toString());
         }
         if (type == DIRECTION_INCOMING){
-            //如果是收到消息，显示左边布局，隐藏右边布局
+            //if the message is incoming, display left layout, hide right layout
             holder.lefrLayout.setVisibility(View.VISIBLE);
             holder.rightLayout.setVisibility(View.GONE);
             holder.leftMsg.setText(content);
-            //holder.leftMsg.setClickable(false);
         } else if (type == DIRECTION_OUTGOING){
             holder.rightLayout.setVisibility(View.VISIBLE);
             holder.lefrLayout.setVisibility(View.GONE);
             holder.rightMsg.setText(content);
-            //holder.rightMsg.setClickable(false);
         }
     }
 
@@ -137,40 +137,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> impl
         return mMessages.size();
     }
 
-    private View.OnClickListener buttonClickListener = new View.OnClickListener(){
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.left_msg:
-                case R.id.right_msg:
-                    if(v.getContentDescription()!= null && v.getContentDescription().toString().equals("location")){
-                        openMapActivity();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
-    private View.OnTouchListener editTextTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            switch (event.getAction()){
-                case MotionEvent.ACTION_UP:
-                    if(v.getContentDescription()!= null && v.getContentDescription().toString().equals("location")){
-                        openMapActivity();
-                    }
-            }
-            return false;
-        }
-    };
-
-    private void openMapActivity(){
-        Intent intent = new Intent(context,MapsActivity.class);
-        context.startActivity(intent);
-        Log.d(TAG, "openMapActivity: ");
-    }
 
     public int describeContents() {
         return 0;

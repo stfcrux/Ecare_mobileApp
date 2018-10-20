@@ -1,3 +1,12 @@
+/* Code developed by Team Morgaint
+ * for Subject IT Project COMP30022
+ * Team member:
+ * Chengyao Xu
+ * Jin Wei Loh
+ * Philip Cervenjak
+ * Qianqian Zheng
+ * Sicong Hu
+ */
 package com.example.ecare_client.videochat;
 import com.example.ecare_client.BaseActivity;
 import com.example.ecare_client.R;
@@ -77,7 +86,7 @@ public class CallScreenActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.callscreen);
 
-        mAudioPlayer = new AudioPlayer(this);
+        mAudioPlayer = new AudioPlayer(getApplicationContext());
         mCallDuration = (TextView) findViewById(R.id.callDuration);
         mCallerName = (TextView) findViewById(R.id.remoteUser);
         mCallState = (TextView) findViewById(R.id.callState);
@@ -108,7 +117,6 @@ public class CallScreenActivity extends BaseActivity {
             Log.e(TAG, "Started with invalid callId, aborting.");
             finish();
         }
-
         updateUI();
     }
 
@@ -117,7 +125,6 @@ public class CallScreenActivity extends BaseActivity {
         if (getSinchServiceInterface() == null) {
             return; // early
         }
-
         Call call = getSinchServiceInterface().getCall(mCallId);
         if (call != null) {
             mCallerName.setText(call.getRemoteUserId());
@@ -167,7 +174,7 @@ public class CallScreenActivity extends BaseActivity {
         long totalSeconds = timespan / 1000;
         long minutes = totalSeconds / 60;
         long seconds = totalSeconds % 60;
-        return String.format(Locale.US, "%02d:%02d", minutes, seconds);
+        return String.format(Locale.US ,"%02d:%02d", minutes, seconds);
     }
 
     //method to update live duration of the call

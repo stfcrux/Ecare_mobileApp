@@ -1,3 +1,12 @@
+/* Code developed by Team Morgaint
+ * for Subject IT Project COMP30022
+ * Team member:
+ * Chengyao Xu
+ * Jin Wei Loh
+ * Philip Cervenjak
+ * Qianqian Zheng
+ * Sicong Hu
+ */
 package com.example.ecare_client.settings;
 
 import android.app.ProgressDialog;
@@ -6,10 +15,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 

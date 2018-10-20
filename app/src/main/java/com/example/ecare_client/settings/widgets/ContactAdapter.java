@@ -1,26 +1,30 @@
+/* Code developed by Team Morgaint
+ * for Subject IT Project COMP30022
+ * Team member:
+ * Chengyao Xu
+ * Jin Wei Loh
+ * Philip Cervenjak
+ * Qianqian Zheng
+ * Sicong Hu
+ */
 package com.example.ecare_client.settings.widgets;
 
-import com.example.ecare_client.SinchService;
-import com.example.ecare_client.BaseActivity;
 
-import com.example.ecare_client.ChatActivity;
 import com.example.ecare_client.R;
 import com.example.ecare_client.settings.Contact;
-import com.example.ecare_client.settings.ContactProfileActivity;
+
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;

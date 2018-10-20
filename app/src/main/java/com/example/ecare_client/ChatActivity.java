@@ -1,3 +1,12 @@
+/* Code developed by Team Morgaint
+ * for Subject IT Project COMP30022
+ * Team member:
+ * Chengyao Xu
+ * Jin Wei Loh
+ * Philip Cervenjak
+ * Qianqian Zheng
+ * Sicong Hu
+ */
 package com.example.ecare_client;
 
 import com.example.ecare_client.videochat.*;
@@ -17,8 +26,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +37,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class ChatActivity extends BaseActivity implements MessageClientListener{
@@ -61,16 +68,6 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
             actionBar.hide();
         }
 
-        /*
-        // Check whether we're recreating a previously destroyed instance
-        if (savedInstanceState != null) {
-            // Restore value of members from saved state
-            adapter = savedInstanceState.getParcelable("adapter");
-        }else {
-            adapter = new MsgAdapter(getApplicationContext());
-        }
-        */
-        //adapter = MainActivity.getAdapter(makeCallTo);
 
         TitleLayout titleLayout = (TitleLayout) findViewById(R.id.chat_title);
         titleLayout.setTitleText("Chat");
@@ -110,7 +107,6 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
             Log.d(TAG, makeCallTo);
         }
 
-        //makeCallTo = "testexample@example.com";
 
         rightMsg = (TextView) findViewById(R.id.right_msg);
         leftMsg = (TextView) findViewById(R.id.left_msg);
@@ -133,7 +129,7 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
             leftMsg.setOnClickListener(buttonClickListener);
         }
 
-        location = beginLocatioon();
+        location = beginLocation();
         if (location!=null){
             Lat = String.valueOf(location.getLatitude());
             Lon = String.valueOf(location.getLongitude());
@@ -148,16 +144,11 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
     private void sendMsg(){
         String content = inputText.getText().toString();
         if (!"".equals(content)) {
-
             getSinchServiceInterface().sendMessage(makeCallTo, content);
-            //adapter.notifyItemInserted(adapter.getItemCount() - 1); 当有新消息时涮新RecyclerView 中的显示
-            msgRecyclerView.scrollToPosition(adapter.getItemCount() - 1);//定位到最后一行;
-            inputText.setText("");//清空输入栏；
+            inputText.setText("");//clear text input；
         }
 
     }
-
-
 
     //to place the call to the entered name
     private void callButtonClicked() {
@@ -184,23 +175,11 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
                     sendCurrentLocation();
                     break;
                 case R.id.more:
-
                         sendCurrentLocation.setVisibility(View.VISIBLE);
                         sendCurrentLocation.setClickable(true);
                         videochat.setVisibility(View.VISIBLE);
                         videochat.setClickable(true);
                         more.setContentDescription("back");
-
-                    /*
-                    if (more.getContentDescription().equals("back")){
-                        sendCurrentLocation.setVisibility(View.INVISIBLE);
-                        sendCurrentLocation.setClickable(false);
-                        videochat.setVisibility(View.INVISIBLE);
-                        videochat.setClickable(false);
-                        more.setContentDescription(null);
-
-                    }
-                    */
                 default:
                     break;
             }
@@ -218,17 +197,19 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
 
     @Override
     public void onIncomingMessage(MessageClient client, Message message) {
-
         adapter.addMessage(message, adapter.DIRECTION_INCOMING);
-        //leftMsg.setOnClickListener(buttonClickListener);
+        // update recycler view
+        adapter.notifyItemInserted(adapter.getItemCount() - 1);
+        msgRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     @Override
     public void onMessageSent(MessageClient client, Message message, String recipientId) {
-
         adapter.addMessage(message, adapter.DIRECTION_OUTGOING);
-        //rightMsg.setOnClickListener(buttonClickListener);
-        //Toast.makeText(this, "Sent", Toast.LENGTH_LONG);
+        // update recycler view
+        adapter.notifyItemInserted(adapter.getItemCount() - 1);
+        msgRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
+
     }
 
     @Override
@@ -261,17 +242,8 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
         locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
         String message = "Click to see my current location";
         if (!"".equals(message)) {
-
             getSinchServiceInterface().sendLocation(makeCallTo,message,Lat,Lon);
-            //adapter.notifyItemInserted(adapter.getItemCount() - 1); 当有新消息时涮新RecyclerView 中的显示
-            msgRecyclerView.scrollToPosition(adapter.getItemCount() - 1);//定位到最后一行;
-            //inputText.setText("");//清空输入栏；
         }
-    }
-
-    private void openMapActivity(){
-        Intent MapsActivity = new Intent(getApplicationContext(), MapsActivity.class);
-        startActivity(MapsActivity);
     }
 
     @Override
@@ -283,23 +255,21 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
     private String judgeProvider(LocationManager locationManager) {
         List<String> prodiverlist = locationManager.getProviders(true);
         if(prodiverlist.contains(LocationManager.NETWORK_PROVIDER)){
-            return LocationManager.NETWORK_PROVIDER;//网络定位
+            return LocationManager.NETWORK_PROVIDER;
         }else if(prodiverlist.contains(LocationManager.GPS_PROVIDER)) {
-            return LocationManager.GPS_PROVIDER;//GPS定位
+            return LocationManager.GPS_PROVIDER;
         }else{
-            Toast.makeText(getApplicationContext(),"没有可用的位置提供器",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Location provider does not exist",Toast.LENGTH_SHORT).show();
         }
         return null;
     }
 
-    public Location beginLocatioon() {
+    public Location beginLocation() {
         Log.d(TAG, "beginLocatioon:used ");
-        //获得位置服务
-        //locationManager = activity.getLocationManager();
-        //provider =
-        //有位置提供器的情况
+        //access lication service
+        //if we have location provider
         if (judgeProvider(locationManager)!= null) {
-            //为了压制getLastKnownLocation方法的警告
+            //to avoid getLastKnownLocation  warning
             if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -308,8 +278,7 @@ public class ChatActivity extends BaseActivity implements MessageClientListener{
             }
             return locationManager.getLastKnownLocation(judgeProvider(locationManager));
         }else{
-            //不存在位置提供器的情况
-            Toast.makeText(getApplicationContext(),"不存在位置提供器的情况",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Location provider does not exist",Toast.LENGTH_SHORT).show();
         }
         return null;
     }
