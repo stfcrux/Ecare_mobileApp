@@ -1,3 +1,12 @@
+/* Code developed by Team Morgaint
+* for Subject IT Project COMP30022
+* Team member:
+* Chengyao Xu
+* Jin Wei Loh
+* Philip Cervenjak
+* Qianqian Zheng
+* Sicong Hu
+*/
 package com.example.ecare_client;
 
 import com.example.ecare_client.mainpageview.*;
@@ -345,6 +354,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
                 break;
             case "thunder storm":
                 image.setImageResource(R.drawable.icon_thunderstorm);
+                break;
+            case "shower rain":
+                image.setImageResource(R.drawable.icon_showerrain);
                 break;
             default:
                 image.setImageResource(R.drawable.icon_clearsky);

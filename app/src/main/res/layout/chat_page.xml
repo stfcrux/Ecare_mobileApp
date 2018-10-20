@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/input_text"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="27dp"
+            android:layout_marginEnd="0dp"
             android:background="#f3da75"
             android:contentDescription="more"
             android:text="More" />
