@@ -48,10 +48,6 @@ public class MainActivity extends Activity {
 
     private boolean cameraPreviewState;
 
-    /**
-     * stores the brightness level of the screen to restore it after the
-     * app gets paused or destroyed.
-     */
     public uk.co.senab.photoview.PhotoView mPhotoView;
 
 

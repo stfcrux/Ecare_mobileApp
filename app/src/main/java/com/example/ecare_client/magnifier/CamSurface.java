@@ -22,8 +22,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.media.MediaActionSound;
-import android.os.Build;
-import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -41,15 +39,9 @@ import com.example.ecare_client.magnifier.threads.BitmapCreateThread;
 import static android.hardware.Camera.Parameters.FOCUS_MODE_AUTO;
 
 /**
- * Created by Christian Illies on 29.07.15.
+ * Used visor-android as reference for autofocus and zooming in
  */
 public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
-
-    /**
-     * The debug Tag identifier for the whole class.
-     */
-    private static final String TAG = "VisorSurface";
-
     /**
      * The maximum of steps until we will reach the maximum zoom level.
      */
@@ -107,8 +99,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
      */
     private void keepCameraAspectRatioInView(View child, int left, int top, int right, int bottom) {
 
-        Log.d(TAG.concat(":keepCameraAspectRatioInView:before"), String.valueOf(left).concat(" ").concat(String.valueOf(right)).concat(" ").concat(String.valueOf(top)).concat(" ").concat(String.valueOf(bottom)));
-
         final int width = right - left;
         final int height = bottom - top;
 
@@ -158,16 +148,10 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
             scaleY = tmpScaleY;
             if(scaleMatrix == null) scaleMatrix = new Matrix();
             scaleMatrix.setScale(scaleX, scaleY, 0, 0);
+            }
 
-            Log.d(TAG.concat(":keepCameraAspectRatioInView:scalingMatrix"), String.valueOf(scaleX).concat(" ").concat(String.valueOf(scaleY)));
-        }
-
-        Log.d(TAG.concat(":keepCameraAspectRatioInView:after"), String.valueOf(left).concat(" ").concat(String.valueOf(right)).concat(" ").concat(String.valueOf(top)).concat(" ").concat(String.valueOf(bottom)));
     }
 
-    /**
-     *
-     */
     private SurfaceHolder mHolder;
 
     /**
@@ -222,15 +206,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
      * i.e. open, closed or preview.
      */
     public int mState;
-
-
-    /**
-     * The current filter for the camera.
-     * The filter is an interface which takes some bytes as the param and
-     * converts the bits to make several different color effects.
-     */
-    private int mCurrentColorFilterIndex;
-
 
     /**
      * stores the YUV image (format NV21) when onPreviewFrame was called
@@ -299,8 +274,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
     public CamSurface(Context context) {
         super(context);
 
-        Log.d(TAG, "VisorSurface instantiated");
-
         mCameraCurrentZoomLevel = 0;
         mCameraMaxZoomLevel = 0;
 
@@ -317,10 +290,8 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
         Point sizePoint = new Point();
 
         mDisplay.getSize(sizePoint);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            // getting a preciser value of the screen size to be more accurate.
-            mDisplay.getRealSize(sizePoint);
-        }
+        mDisplay.getRealSize(sizePoint);
+
 
         width = sizePoint.x;
         height = sizePoint.y;
@@ -347,23 +318,23 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
         Camera c = null;
 
         final int numOfCameras = Camera.getNumberOfCameras();
-        Log.d(TAG, "There're " + Integer.toString(numOfCameras) + " cameras on your device. You want camera " + Integer.toString(cameraId));
 
         if (!(cameraId < numOfCameras)) {
-            Log.e(TAG, "The requested cameraId is too high.");
             return null;
+        }else{
+            try {
+                c = Camera.open(cameraId); // attempt to get a Camera instance
+                // stores the used camera id in the static var.
+            } catch (Exception e) {
+                // Camera is not available (in use or does not exist)
+                // try another one.
+                c = getCameraInstance(++cameraId);
+            }
+
+            CamSurface.mCameraId = cameraId;
         }
 
-        try {
-            c = Camera.open(cameraId); // attempt to get a Camera instance
-            // stores the used camera id in the static var.
-        } catch (Exception e) {
-            // Camera is not available (in use or does not exist)
-            // try another one.
-            c = getCameraInstance(++cameraId);
-        }
 
-        CamSurface.mCameraId = cameraId;
         return c; // returns null if camera is unavailable
     }
 
@@ -378,13 +349,11 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.d(TAG, "called surfaceCreated");
         enableCamera();
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d(TAG, "called surfaceDestroyed. Storing settings");
 
         String currentFocusMode = FOCUS_MODE_AUTO;
 
@@ -431,8 +400,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
         if (size.size() <= 0) return null;
 
         for (int i = (size.size() - 1); i >= 0; i--) {
-            Log.d(TAG, "Size: " + Integer.toString(size.get(i).width) + " * " + Integer.toString(size.get(i).height));
-
             final int currentWidth = size.get(i).width;
             if (currentWidth <= MAX_CAMERA_PREVIEW_RESOLUTION_WIDTH) {
                 result = size.get(i);
@@ -442,8 +409,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
 
         // just use the last one, if there are only a few supported sizes.
         if (result == null) return size.get(size.size() - 1);
-
-        Log.d(TAG, "got maximum preview size of " + Integer.toString(result.width) + "*" + Integer.toString(result.height));
         return result;
     }
 
@@ -484,9 +449,7 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
         int cameraPreviewFormat = parameters.getPreviewFormat();
         if (cameraPreviewFormat != ImageFormat.NV21) parameters.setPreviewFormat(ImageFormat.NV21);
 
-        // no sizes found? something went wrong
-        // if(size == null) throw new NoCameraSizesFoundException();
-        if (size == null) return;
+        if (size == null)return;
 
         mCameraPreviewWidth = size.width;
         mCameraPreviewHeight = size.height;
@@ -504,7 +467,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
         if(scaleMatrix == null) {
             scaleX = width / (float) mCameraPreviewWidth;
             scaleY = height / (float) mCameraPreviewHeight;
-            Log.w(TAG, "Matrix scaled created before onLayout was called");
             scaleMatrix = new Matrix();
             scaleMatrix.setScale(scaleX, scaleY, 0, 0);
         }
@@ -559,9 +521,7 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         autoFocusCamera();
-
-        Log.d(TAG, "Thread done. Camera successfully started");
-    }
+        }
 
     public void setCameraDisplayOrientation(Activity activity) {
         Camera.CameraInfo info = new Camera.CameraInfo();
@@ -597,8 +557,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
      *
      */
     public void releaseCamera() {
-        Log.d(TAG, "releasing the camera.");
-
         try {
             if (mCamera != null) {
                 mCamera.stopPreview();
@@ -609,21 +567,18 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
                 // stopBackgroundThread();
                 mState = STATE_CLOSED;
 
-                Log.d(TAG, "camera released. Threads closed.");
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
         }
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-        Log.d(TAG, "called surfaceChanged");
         enableCamera();
     }
 
     public MediaActionSound getMediaActionSound() {
-        if (mSound == null && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (mSound == null) {
             mSound = new MediaActionSound();
             mSound.load(MediaActionSound.START_VIDEO_RECORDING);
             mSound.load(MediaActionSound.STOP_VIDEO_RECORDING);
@@ -635,14 +590,12 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
     public void playActionSoundAutofocusComplete() {
         MediaActionSound player = getMediaActionSound();
         if (player == null) return;
-        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return;
         player.play(MediaActionSound.FOCUS_COMPLETE);
     }
 
     public void playActionSoundShutter() {
         MediaActionSound player = getMediaActionSound();
         if (player == null) return;
-        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return;
         player.play(MediaActionSound.SHUTTER_CLICK);
     }
 
@@ -656,10 +609,7 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
         try {
             mCamera.cancelAutoFocus();
         } catch (RuntimeException ex) {
-            Log.w(TAG, "autofocus cancellation failed");
         }
-
-        final long startAutoFocusing = System.currentTimeMillis();
         try {
             mCamera.autoFocus(new Camera.AutoFocusCallback() {
                                   @Override
@@ -667,12 +617,10 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
                                       if (success) {
                                           playActionSoundAutofocusComplete();
                                       }
-                                      Log.d(TAG, "autofocus done with " + (success ? "" : "no ") + "success in " + Long.toString(System.currentTimeMillis() - startAutoFocusing) + "ms");
                                   }
                               }
             );
         } catch (RuntimeException ex) {
-            Log.w(TAG, "autofocus failed");
         }
     }
 
@@ -694,12 +642,9 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
             // FIX: 20160508 On some devices it occured, that the callback handler wasn't called anymore.
             mCamera.setPreviewCallback(mCameraPreviewCallbackHandler);
             mCamera.startPreview();
-
-            // if(mCameraFlashMode == true) turnFlashlightOn();
             return;
         }
 
-        // turnFlashlightOff();
         mCamera.stopPreview();
 
         // run create thread otherwise we could see an old image.
