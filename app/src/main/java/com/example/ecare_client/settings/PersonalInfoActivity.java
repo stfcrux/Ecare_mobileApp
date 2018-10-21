@@ -46,6 +46,9 @@ import com.subinkrishna.widget.CircularImageView;
 import java.io.IOException;
 import java.util.UUID;
 
+/**
+ * display, save and update user information
+ */
 
 public class PersonalInfoActivity extends AppCompatActivity {
 
@@ -63,6 +66,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
     private String picPath;
 
     private final int PICK_IMAGE_REQUEST = 71;
+    //grab input from user_info page
     private  UserInfo getUserForm(String pic){
         String isCarer = "false";
         if(inputIsCarer.isChecked())
@@ -85,6 +89,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
     @Override
+    // get image and load into imageview
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
@@ -101,6 +106,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
             }
         }
     }
+    // upload image into firebase storage
     private String uploadImage() {
         String path = picPath;
         if(filePath != null) {
@@ -142,7 +148,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.form);
+        setContentView(R.layout.user_info);
         TitleLayout titleLayout = (TitleLayout) findViewById(R.id.personalinfo_title);
         titleLayout.setTitleText("Personal Info");
         ActionBar actionBar = getSupportActionBar();
@@ -173,6 +179,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
         // Attach a listener to read the data at our posts reference
         infoRef.addValueEventListener(new ValueEventListener() {
             @Override
+            //load info from firebase node into user_info page
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
 
@@ -200,6 +207,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
                             carerPhone = child.getValue(String.class);
                             inputCarerPhone.setText(carerPhone);
                         }else if (child.getKey().equals("picPath")) {
+                            // load image with url
                             picPath = child.getValue(String.class);
                             GlideApp.with(getApplicationContext())
                                     .load(storageReference.child(picPath))

@@ -43,7 +43,7 @@ import static android.hardware.Camera.Parameters.FOCUS_MODE_AUTO;
 /**
  * Created by Christian Illies on 29.07.15.
  */
-public class CamSurface extends SurfaceView implements SurfaceHolder.Callback, BitmapRenderer {
+public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * The debug Tag identifier for the whole class.
@@ -849,11 +849,8 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback, B
                 mCameraPreviewBufferData,
                 CamSurface.this,
                 mCameraPreviewWidth,
-                mCameraPreviewHeight,
-                width,
-                height,
-                JPEG_QUALITY,
-                rgb
+                mCameraPreviewHeight
+
         );
         if (bitmapCreateThread == null) return;
         new Thread(bitmapCreateThread).start();
@@ -901,8 +898,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback, B
         canvas.setMatrix(scaleMatrix);
         canvas.drawBitmap(mCameraPreviewBitmapBuffer, 0, 0, mColorFilterPaint);
 
-        // I don't think we need this here:
-        // ((MainActivity) getContext()).mPhotoView.setImageBitmap(getBitmap());
     }
 
 
@@ -916,8 +911,9 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback, B
     private void setCameraZoomLevel(int zoomLevel) {
         Camera.Parameters parameters = mCamera.getParameters();
 
-        if (!parameters.isZoomSupported()) {
-            Log.w(TAG, "Zoom is not supported on this device.");
+        if (parameters.isZoomSupported()) {
+
+        }else{
             return;
         }
 
@@ -925,8 +921,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback, B
             zoomLevel = mCameraMaxZoomLevel;
         }
         mCameraCurrentZoomLevel = zoomLevel;
-
-        Log.d(TAG, "Current zoom level is " + Integer.toString(zoomLevel));
 
         parameters.setZoom(mCameraCurrentZoomLevel);
         mCamera.setParameters(parameters);
@@ -949,22 +943,16 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback, B
     }
 
     public Bitmap getBitmap() {
-        /* */
         Bitmap previewCopy = Bitmap.createBitmap(mCameraPreviewBitmapBuffer);
         Canvas canvas = new Canvas();
         canvas.setBitmap(previewCopy);
         canvas.drawBitmap(previewCopy, 0, 0, mColorFilterPaint);
 
         return previewCopy;
-        /* */
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
-    public void pausePreviewIfReady() {
-        mPauseOnReady = true;
     }
 }

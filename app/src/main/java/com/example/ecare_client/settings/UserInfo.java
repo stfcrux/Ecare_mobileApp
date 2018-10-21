@@ -10,7 +10,8 @@
 package com.example.ecare_client.settings;
 
 import com.google.firebase.database.IgnoreExtraProperties;
-
+/*
+* user information object scheme for storing in firebase*/
 @IgnoreExtraProperties
 public class UserInfo {
 

@@ -16,10 +16,6 @@ import android.widget.TextView;
 import com.example.ecare_client.R;
 
 public class SimpleDialog extends Dialog {
-    protected static int default_width = WindowManager.LayoutParams.WRAP_CONTENT; // 默认宽度
-    protected static int default_height = WindowManager.LayoutParams.WRAP_CONTENT;// 默认高度
-    public static int TYPE_TWO_BT = 2;
-    public static int TYPE_NO_BT = 0;
     public TextView dialog_title;
     public EditText dialog_message;
     public Button bt_cancel, bt_confirm;

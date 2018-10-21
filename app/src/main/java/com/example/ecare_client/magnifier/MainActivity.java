@@ -38,28 +38,11 @@ import java.util.Date;
 /**
  */
 public class MainActivity extends Activity {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 1000;
-
-    /**
-     * If set, will toggle the system UI visibility upon interaction. Otherwise,
-     * will show the system UI visibility upon interaction.
-     */
-    private static final boolean TOGGLE_ON_CLICK = false;
 
     /**
      * Tag name for the Log message.
      */
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "MagnifierActivity";
 
     /**
      * our surface view containing the camera preview image.
@@ -156,40 +139,6 @@ public class MainActivity extends Activity {
     private Animation animScaleLongPress;
 
     /**
-     * sends a {@link Toast} message to the user and quits the app immediately.
-     *
-     * @param text
-     */
-    protected void abortAppWithMessage(CharSequence text) {
-        Context context = getApplicationContext();
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toasty = Toast.makeText(context, text, duration);
-        toasty.show();
-
-        finish();
-    }
-
-    /**
-     * sets the brightness value of the screen to 1F
-     */
-    protected void setBrightnessToMaximum() {
-        WindowManager.LayoutParams layout = getWindow().getAttributes();
-        prevScreenBrightnewss = layout.screenBrightness;
-        layout.screenBrightness = 1F;
-        getWindow().setAttributes(layout);
-    }
-
-    /**
-     * resets the brightness value to the previous screen value.
-     */
-    protected void resetBrightnessToPreviousValue() {
-        WindowManager.LayoutParams layout = getWindow().getAttributes();
-        layout.screenBrightness = prevScreenBrightnewss;
-        getWindow().setAttributes(layout);
-    }
-
-    /**
      * When you use the SYSTEM_UI_FLAG_IMMERSIVE_STICKY flag, an inward swipe in the system bars
      * areas causes the bars to temporarily appear in a semi-transparent state, but no flags are
      * cleared, and your system UI visibility change listeners are not triggered. The bars
@@ -212,15 +161,13 @@ public class MainActivity extends Activity {
             // Api level 1
             int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
 
-            // Jelly Bean to Kitkat-1
-            if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 uiOptions = uiOptions
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            }
+
 
             // Kitkat to Oreo
             if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -287,14 +234,7 @@ public class MainActivity extends Activity {
         mFlashButton = flashButton;
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // 2015-10-19 ChangeRequest: Some users have problems with the high brightness value.
-        //                           So the user now has to activly adjust the brightness.
-        // resetBrightnessToPreviousValue();
-        Log.d(TAG, "onPause called!");
-    }
+
 
     @Override
     protected void onDestroy() {
@@ -306,11 +246,9 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        if (cameraPreviewState != true) {
+        if (!cameraPreviewState) {
             cameraPreviewState = true;
         }
-
-        Log.d(TAG, "onResume called!");
     }
 
     /**
