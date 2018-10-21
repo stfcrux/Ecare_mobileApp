@@ -18,7 +18,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.media.MediaActionSound;
@@ -33,8 +32,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import com.example.ecare_client.magnifier.threads.BitmapCreateThread;
 
 import static android.hardware.Camera.Parameters.FOCUS_MODE_AUTO;
 
@@ -56,7 +53,7 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * Camera state: Device is closed.
      */
-    public static final int STATE_CLOSED = 0;
+    public static final int STATE_CLOSED = -1;
 
     /**
      * Camera state: Device is opened, but is not capturing.
@@ -73,8 +70,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
      * TODO should be configurable by a settings-activity! (feature)
      */
     private static final int MAX_CAMERA_PREVIEW_RESOLUTION_WIDTH = 1024;
-
-    private MediaActionSound mSound = null;
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -196,12 +191,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
     private int mCameraPreviewHeight;
 
     /**
-     * the paint object which has the colorFilter assigned. We will use it
-     * to apply the different color modes to the rendered preview bitmap.
-     */
-    private Paint mColorFilterPaint;
-
-    /**
      * the current state of the camera device.
      * i.e. open, closed or preview.
      */
@@ -214,7 +203,7 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * stores the `mCameraPreviewBufferData` as rgb.
      *
-     * @see BitmapCreateThread
+     * @see BitmapThread
      */
     private int[] mCameraPreviewRgb;
 
@@ -418,14 +407,8 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
      * If a camera is already open we won't open it again and just use it instead.
      * If it wasn't possible to open the camera we will throw CameraCouldNotOpenedException.
      */
-    // public void enableCamera() throws NoCameraSizesFoundException, CameraCouldNotOpenedException {
     public void enableCamera() {
         if (mState != STATE_CLOSED) return;
-        // startBackgroundThread();
-
-        // mBackgroundHandler.post(new Runnable() {
-        //     @Override
-        //     public void run() {
         if (mCamera == null) {
             mCamera = getCameraInstance();
             mState = STATE_OPENED;
@@ -475,7 +458,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
         // impact on frame rate.
         parameters.setRecordingHint(true);
 
-        //mCamera.setDisplayOrientation(0);
         setCameraDisplayOrientation((Activity) getContext());
 
         mCamera.setParameters(parameters);
@@ -486,7 +468,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
 
         // The Surface has been created, now tell the
         // camera where to draw the preview.
-        /**/
         try {
             mCamera.setPreviewDisplay(mHolder);
         } catch (IOException e) {
@@ -577,28 +558,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
         enableCamera();
     }
 
-    public MediaActionSound getMediaActionSound() {
-        if (mSound == null) {
-            mSound = new MediaActionSound();
-            mSound.load(MediaActionSound.START_VIDEO_RECORDING);
-            mSound.load(MediaActionSound.STOP_VIDEO_RECORDING);
-            mSound.load(MediaActionSound.FOCUS_COMPLETE);
-        }
-        return mSound;
-    }
-
-    public void playActionSoundAutofocusComplete() {
-        MediaActionSound player = getMediaActionSound();
-        if (player == null) return;
-        player.play(MediaActionSound.FOCUS_COMPLETE);
-    }
-
-    public void playActionSoundShutter() {
-        MediaActionSound player = getMediaActionSound();
-        if (player == null) return;
-        player.play(MediaActionSound.SHUTTER_CLICK);
-    }
-
     /**
      * enables autofocus for the preview.
      * It will autofocus just a single time.
@@ -614,9 +573,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
             mCamera.autoFocus(new Camera.AutoFocusCallback() {
                                   @Override
                                   public void onAutoFocus(boolean success, Camera camera) {
-                                      if (success) {
-                                          playActionSoundAutofocusComplete();
-                                      }
                                   }
                               }
             );
@@ -789,7 +745,7 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
      * If finished, the thread calls `renderBitmap` with the final bitmap as the result.
      */
     protected void runBitmapCreateThread(boolean rgb) {
-        final BitmapCreateThread bitmapCreateThread = BitmapCreateThread.getInstance(
+        final BitmapThread bitmapCreateThread = BitmapThread.getInstance(
                 mCameraPreviewRgb,
                 mCameraPreviewBufferData,
                 CamSurface.this,
@@ -841,7 +797,7 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
          */
 
         canvas.setMatrix(scaleMatrix);
-        canvas.drawBitmap(mCameraPreviewBitmapBuffer, 0, 0, mColorFilterPaint);
+        canvas.drawBitmap(mCameraPreviewBitmapBuffer, 0, 0, null);
 
     }
 
@@ -850,7 +806,6 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
      * sets the camera level to the specified {zoomLevel}.
      * It dependes on a valid {mCamera} object to receive
      * the parameters and set it as well.
-     *
      * @param zoomLevel the integer of the new zoomLevel you want to set. All integers above the maximum possible value will be set to maximum.
      */
     private void setCameraZoomLevel(int zoomLevel) {
@@ -891,7 +846,7 @@ public class CamSurface extends SurfaceView implements SurfaceHolder.Callback {
         Bitmap previewCopy = Bitmap.createBitmap(mCameraPreviewBitmapBuffer);
         Canvas canvas = new Canvas();
         canvas.setBitmap(previewCopy);
-        canvas.drawBitmap(previewCopy, 0, 0, mColorFilterPaint);
+        canvas.drawBitmap(previewCopy, 0, 0, null);
 
         return previewCopy;
     }

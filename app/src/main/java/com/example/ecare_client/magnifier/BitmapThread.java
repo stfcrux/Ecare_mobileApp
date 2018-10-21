@@ -7,14 +7,11 @@
  * Qianqian Zheng
  * Sicong Hu
  */
-package com.example.ecare_client.magnifier.threads;
+package com.example.ecare_client.magnifier;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
-import com.example.ecare_client.magnifier.CamSurface;
-
-public class BitmapCreateThread implements Runnable {
+public class BitmapThread implements Runnable {
 
     private static final int MAX_INSTANCES = 3; //so that it does not crash on most phones
 
@@ -38,14 +35,14 @@ public class BitmapCreateThread implements Runnable {
      * @param renderer
      * @return
      */
-    public static BitmapCreateThread getInstance(int[] rgb, byte[] yuvDataArray, CamSurface renderer, int previewWidth, int previewHeight) {
+    public static BitmapThread getInstance(int[] rgb, byte[] yuvDataArray, CamSurface renderer, int previewWidth, int previewHeight) {
 
         if (instanceCounter >= MAX_INSTANCES) {
             return null;
         }
 
 
-        BitmapCreateThread instance = new BitmapCreateThread();
+        BitmapThread instance = new BitmapThread();
         instanceCounter++;
         instance.setYuvDataArray(yuvDataArray);
 
