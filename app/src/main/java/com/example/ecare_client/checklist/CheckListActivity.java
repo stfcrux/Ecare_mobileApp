@@ -25,8 +25,12 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.ecare_client.R;
-import com.example.ecare_client.checklist.data.TaskContract;
+import com.example.ecare_client.checklist.Tasks.TaskContract;
 
+
+
+// followed tutorial from https://www.youtube.com/watch?v=Mg3Gsn0wmDQ&t=732s
+// credit to delaroy studios
 
 public class CheckListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -34,10 +38,10 @@ public class CheckListActivity extends AppCompatActivity implements
 
     // Constants for logging and referring to a unique loader
     private static final String TAG = CheckListActivity.class.getSimpleName();
-    private static final int TASK_LOADER_ID = 0;
+    private static final int TASK_LOADER_ID = 10;
 
     // Member variables for the adapter and RecyclerView
-    private CustomCursorAdapter mAdapter;
+    private CursorAdapter cursorAdapter;
     RecyclerView mRecyclerView;
 
 
@@ -46,21 +50,18 @@ public class CheckListActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checklist);
 
-        // Set the RecyclerView to its corresponding view
+        // Seting the RecyclerView to the corresponding view
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewTasks);
 
-        // Set the layout for the RecyclerView to be a linear layout, which measures and
-        // positions items within a RecyclerView into a linear list
+        // Seting the layout for the RecyclerView
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize the adapter and attach it to the RecyclerView
-        mAdapter = new CustomCursorAdapter(this);
-        mRecyclerView.setAdapter(mAdapter);
+        cursorAdapter = new CursorAdapter(this);
+        mRecyclerView.setAdapter(cursorAdapter);
 
         /*
-         Add a touch helper to the RecyclerView to recognize when a user swipes to delete an item.
-         An ItemTouchHelper enables touch behavior (like swipe and move) on each ViewHolder,
-         and uses callbacks to signal when a user is performing these actions.
+            Enabling swipe behaviour, wipe left or right to delete
          */
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -68,42 +69,35 @@ public class CheckListActivity extends AppCompatActivity implements
                 return false;
             }
 
-            // Called when a user swipes left or right on a ViewHolder
+            // Called when a user swipes left or right on a task
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                // Here is where you'll implement swipe to delete
 
-                // COMPLETED (1) Construct the URI for the item to delete
-                //[Hint] Use getTag (from the adapter code) to get the id of the swiped item
-                // Retrieve the id of the task to delete
                 int id = (int) viewHolder.itemView.getTag();
 
-                // Build appropriate uri with String row id appended
+                // Build  uri
                 String stringId = Integer.toString(id);
                 Uri uri = TaskContract.TaskEntry.CONTENT_URI;
                 uri = uri.buildUpon().appendPath(stringId).build();
 
-                // COMPLETED (2) Delete a single row of data using a ContentResolver
+                // Delete the selected swiped row
                 getContentResolver().delete(uri, null, null);
 
-                // COMPLETED (3) Restart the loader to re-query for all tasks after a deletion
+                //  re-query for all tasks after a deletion after restart
                 getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, CheckListActivity.this);
 
             }
         }).attachToRecyclerView(mRecyclerView);
 
         /*
-         Set the Floating Action Button (FAB) to its corresponding View.
-         Attach an OnClickListener to it, so that when it's clicked, a new intent will be created
-         to launch the AddTaskActivity.
+             launch the AddTaskActivity if the floating action button is clicked
          */
         FloatingActionButton fabButton = (FloatingActionButton) findViewById(R.id.fab);
 
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Create a new intent to start an AddTaskActivity
-                Intent addTaskIntent = new Intent(CheckListActivity.this, AddTaskActivity.class);
+                Intent addTaskIntent = new Intent(CheckListActivity.this, ConfigureTaskActivity.class);
                 startActivity(addTaskIntent);
             }
         });
@@ -116,40 +110,26 @@ public class CheckListActivity extends AppCompatActivity implements
     }
 
 
-    /**
-     * This method is called after this activity has been paused or restarted.
-     * Often, this is after new data has been inserted through an AddTaskActivity,
-     * so this restarts the loader to re-query the underlying data for any changes.
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // re-queries for all tasks
-        getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
-    }
 
 
     /**
-     * Instantiates and returns a new AsyncTaskLoader with the given ID.
-     * This loader will return task data as a Cursor or null if an error occurs.
-     *
-     * Implements the required callbacks to take care of loading data at all stages of loading.
+
+     *  take care of loading data at all stages
      */
     @Override
     public Loader<Cursor> onCreateLoader(int id, final Bundle loaderArgs) {
 
         return new AsyncTaskLoader<Cursor>(this) {
 
-            // Initialize a Cursor, this will hold all the task data
-            Cursor mTaskData = null;
+            // Initialize a Cursor
+            Cursor myCursorTaskData = null;
 
-            // onStartLoading() is called when a loader first starts loading data
+            // when the loader first starts loading data
             @Override
             protected void onStartLoading() {
-                if (mTaskData != null) {
+                if (myCursorTaskData != null) {
                     // Delivers any previously loaded data immediately
-                    deliverResult(mTaskData);
+                    deliverResult(myCursorTaskData);
                 } else {
                     // Force a new load
                     forceLoad();
@@ -159,10 +139,6 @@ public class CheckListActivity extends AppCompatActivity implements
             // loadInBackground() performs asynchronous loading of data
             @Override
             public Cursor loadInBackground() {
-                // Will implement to load data
-
-                // Query and load all task data in the background; sort by priority
-                // [Hint] use a try/catch block to catch any errors in loading data
 
                 try {
                     return getContentResolver().query(TaskContract.TaskEntry.CONTENT_URI,
@@ -172,7 +148,7 @@ public class CheckListActivity extends AppCompatActivity implements
                             TaskContract.TaskEntry.COLUMN_PRIORITY);
 
                 } catch (Exception e) {
-                    Log.e(TAG, "Failed to asynchronously load data.");
+                    Log.e(TAG, "Failure to asynchronously load data.");
                     e.printStackTrace();
                     return null;
                 }
@@ -180,7 +156,7 @@ public class CheckListActivity extends AppCompatActivity implements
 
             // deliverResult sends the result of the load, a Cursor, to the registered listener
             public void deliverResult(Cursor data) {
-                mTaskData = data;
+                myCursorTaskData = data;
                 super.deliverResult(data);
             }
         };
@@ -189,29 +165,30 @@ public class CheckListActivity extends AppCompatActivity implements
 
 
     /**
-     * Called when a previously created loader has finished its load.
-     *
-     * @param loader The Loader that has finished.
-     * @param data The data generated by the Loader.
-     */
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        // Update the data that the adapter uses to create ViewHolders
-        mAdapter.swapCursor(data);
-    }
 
+     *  removes any references this activity had to the loader's data.
 
-    /**
-     * Called when a previously created loader is being reset, and thus
-     * making its data unavailable.
-     * onLoaderReset removes any references this activity had to the loader's data.
-     *
-     * @param loader The Loader that is being reset.
      */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-            mAdapter.swapCursor(null);
+            cursorAdapter.swapCursor(null);
         }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // re-queries all tasks
+        getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
+    }
+
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // Update the data
+        cursorAdapter.swapCursor(data);
+    }
 
 }
 

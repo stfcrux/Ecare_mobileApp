@@ -244,7 +244,7 @@ public class MainActivity extends Activity {
             Bitmap bitmap = mVisorView.getBitmap();
             File imageFile = new File(mPath);
 
-            mVisorView.playActionSoundShutter();
+            //mVisorView.playActionSoundShutter();
 
             FileOutputStream outputStream = new FileOutputStream(imageFile);
             final int quality = CamSurface.JPEG_QUALITY;
