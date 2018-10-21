@@ -23,13 +23,12 @@ import com.example.ecare_client.R;
 import com.example.ecare_client.checklist.data.TaskContract;
 
 
-/**
- * This CustomCursorAdapter creates and binds ViewHolders, that hold the description and priority of a task,
- * to a RecyclerView to efficiently display data.
- */
+// followed tutorial from https://www.youtube.com/watch?v=Mg3Gsn0wmDQ&t=732s
+// credit to delaroy studios
+
 public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapter.TaskViewHolder> {
 
-    // Class variables for the Cursor that holds task data and the Context
+
     private Cursor mCursor;
     private Context mContext;
 
@@ -98,8 +97,7 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
 
 
     /*
-    Helper method for selecting the correct priority circle color.
-    P1 = red, P2 = orange, P3 = yellow
+      Setting the colours based on thier priorities
     */
     private int getPriorityColor(int priority) {
         int priorityColor = 0;
