@@ -106,6 +106,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         Bundle extra = getIntent().getExtras();
         if(extra!=null) {
             lat = extra.getString("lat");
@@ -115,7 +116,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
+        // Obtaining the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -128,6 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addApi(LocationServices.API)
                 .build();
 
+        // checking location permissions
         checkLocationPermission();
 
         btnFindPath = (Button) findViewById(R.id.btnFindPath);
@@ -139,11 +142,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (lat!=null && lon!=null){
             useChatLocation(lat,lon);
         }
-        // once clicked find route from start location to end location
+        // find route from start to end location
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendRequest();
+            }
+        });
+
+
+        usePlacePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadPlacePicker();
+            }
+        });
+        useCurrent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                useCurrentLocation();
             }
         });
 
@@ -158,19 +175,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 findPlace2();
-            }
-        });
-
-        usePlacePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadPlacePicker();
-            }
-        });
-        useCurrent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                useCurrentLocation();
             }
         });
 
@@ -195,20 +199,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-    // sending request to get routing directions
+    // requesting for routing information
     private void sendRequest() {
         String origin = etOrigin.getText().toString();
         String destination = etDestination.getText().toString();
         if (origin.isEmpty()) {
-            Toast.makeText(this, "Please enter origin address!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid origin address!", Toast.LENGTH_SHORT).show();
             return;
         }
         if (destination.isEmpty()) {
-            Toast.makeText(this, "Please enter destination address!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid destination address!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // given that the two fields are valid, find the route details
+        // if the origin and destination address are both valid, find the route details
         try {
             new DirectionFinder(this, start, end).execute();
         } catch (UnsupportedEncodingException e) {
@@ -221,10 +225,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         LatLng hcmus = new LatLng(-37.7964, 144.9612);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmus, 11));
-        /*originMarkers.add(mMap.addMarker(new MarkerOptions()
-                .title("Melbourne University")
-                .position(hcmus)));
-        */
+
 
         if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
@@ -244,10 +245,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    // if a new route is requested, remove all previous markers/polylines
     @Override
     public void onDirectionFinderStart() {
-        progressDialog = ProgressDialog.show(this, "Please wait.",
-                "Finding direction..!", true);
+        progressDialog = ProgressDialog.show(this, "Please wait...",
+                "Finding direction...!", true);
+
+
+        if (polylinePaths != null) {
+            for (Polyline polyline:polylinePaths ) {
+                polyline.remove();
+            }
+        }
 
         if (originMarkers != null) {
             for (Marker marker : originMarkers) {
@@ -261,13 +270,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
-        if (polylinePaths != null) {
-            for (Polyline polyline:polylinePaths ) {
-                polyline.remove();
-            }
-        }
     }
 
+    // once route is found, draw the route out and the origin and destination markers
     @Override
     public void onDirectionFinderSuccess(List<Route> routes) {
         progressDialog.dismiss();
@@ -313,31 +318,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private String getAddress( LatLng latLng ) {
-        Geocoder geocoder = new Geocoder( this );
-        String addressText = "";
-        List<Address> addresses = null;
-        Address address = null;
-        try {
-            addresses = geocoder.getFromLocation( latLng.latitude, latLng.longitude, 1 );
-            if (null != addresses && !addresses.isEmpty()) {
-                address = addresses.get(0);
-                for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                    addressText += (i == 0)?address.getAddressLine(i):("\n" + address.getAddressLine(i));
-                }
-            }
-        } catch (IOException e ) {
-        }
-        return addressText;
-    }
-
-    /*protected void placeMarkerOnMap(LatLng location) {
-        MarkerOptions markerOptions = new MarkerOptions().position(location);
-        String titleStr = getAddress(location);
-        markerOptions.title(titleStr);
-
-        mMap.addMarker(markerOptions);
-    }*/
 
     private void findPlace2() {
         try {
@@ -432,16 +412,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
-                //String addressText = place.getName().toString();
-                //addressText += "\n" + place.getAddress().toString();
                 ((EditText) findViewById(R.id.etDestination))
                         .setText(place.getName()+ "," +place.getAddress());
 
                 end = place.getLatLng();
 
-
-
-                //placeMarkerOnMap(place.getLatLng());
             }
         }
 
@@ -564,10 +539,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
-
-        //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        
 
 
     }
