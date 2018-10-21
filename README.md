@@ -50,16 +50,20 @@ Explain what these tests test and why
 ```sh
 - 1st Time users have to register an account in order to use the app
   (mandatory to be logged in to use the app)
-  
-- User can press the help button (middle button) and it will send an SMS containing 
-  the user's current coordinates to a carer
-  
+   
 - To access the contacts list, click the top right button, User can add a contact if they provide 
   the email of another user. User can engage with video chat/Text chat with an user they added
   by clicking the user of choice from the contact list
   
+- User can send thier current location to any1 in thier contact list(it will be a clickable link which
+  opens the map and places the coordinates into the destination text box)
+  
 - The top left button is our user settings button, where the user can choose to change thier contact
-  information. (Still debugging, errors with photo storing)
+  information
+  
+- User can press the help button (middle button) and it will send an SMS containing 
+  the user's current coordinates to the number you set as your emergency contact number at the user
+  settings
   
 - To access the mapping functionalies, click the bottom left button. The user has to provide the start 
   and end location to view the route between them, User can either click use current location and
@@ -68,8 +72,8 @@ Explain what these tests test and why
   Likewise, to select thier destination location, they can use place picker where it will
   list all notable points of interest to the user and they can simply slect where they want to go.
   
-- Nearby Places feature, at the bottom of the map screen, the user can choose to find near schools,
-  restaurents and hospitals, once found, the user can click on the given markers and can choose to
+- Nearby Places feature, at the bottom of the map screen, the user can choose to find near parks,
+  hospitals, etc, once found, the user can click on the given markers and can choose to
   route to them from wherever they please to start from.
   
 - To access our other tools, user can click the bottom right button, where it has a 
@@ -96,7 +100,7 @@ Explain what these tests test and why
 . Implemented getting user's location
 . Implemented tracking of user's location
 . Setted up FireBase Server
-. Implemented User sign in and sign up (need to allow storage of user settings upon registration)
+. Implemented User sign in and sign up 
 . Implemented contact List and ability to add contacts
 . Implemented the ability to change the nicknames of your contacts
 . Implemented Location routing from one point to another
@@ -104,7 +108,9 @@ Explain what these tests test and why
 . Implemented Weather Feature 
 . Implemented Setting a alarmclock Feature
 . Implemented Help button Feature
-. Implemented Magnifier feature (need to refactor and change)
+. Implemented Magnifier feature 
+. Implemented Nearby Locations feature
+. Implemented ability to send current location through text chat
 ```
 
 
