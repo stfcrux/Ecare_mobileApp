@@ -50,9 +50,7 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
     private EditText inputContact;
     private Button btnAddContact;
-    private ProgressBar progressBar;
     private Button btnDeleteContacts;
-    private ProgressDialog mSpinner;
 
     private FirebaseAuth auth;
     private FirebaseDatabase database;
@@ -91,53 +89,11 @@ public class ContactListActivity extends BaseActivity implements Serializable {
 
         // contactIDs is just used to pass the contacts onto another method.
         final ArrayList<String> contactIDs = new ArrayList<>();
-        final ArrayList<String> contactNicknames = new ArrayList<>();
-
-        //-----------------------------------------------------------------------------
         final FirebaseUser currentUser = auth.getCurrentUser();
 
-        userRef = database.getReference().child("Users").child(currentUser.getUid());
-
-        Query queryContacts = userRef.child("Contacts").orderByKey();
-
-        // Make a load contacts method!!!!
-        queryContacts.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-
-                    // dataSnapshot is the "Users" node with all children with contactEmail.
-                    for (DataSnapshot matchingContact : dataSnapshot.getChildren()) {
-
-                        // Very bad way of doing this perhaps.
-                        if ( !(matchingContact.getKey().equals("Null")) ) {
-
-                            contactIDs.add(matchingContact.getKey());
-                            contactNicknames.add(matchingContact.getValue(String.class));
-
-
-                        }
-
-                    }
-
-                    setContactListeners(contactIDs,
-                            contacts,
-                            adapter);
-
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Do nothing.
-            }
-        });
-
-
         //-----------------------------------------------------------------------------
 
-
+        loadContacts(currentUser, contactIDs);
 
 
         // Initialize contacts
@@ -150,92 +106,14 @@ public class ContactListActivity extends BaseActivity implements Serializable {
         // Refresh list after doing the query, even before pressing AddContact.
 
 
-        // MAKE A createNewContact METHOD!!!!!!
+        // MAKE A addNewContact METHOD!!!!!!
         btnAddContact.setOnClickListener(
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     final String contactEmail = inputContact.getText().toString().trim();
-
-                    if (contactEmail.equals(auth.getCurrentUser().getEmail())) {
-                        Toast.makeText(getApplicationContext(),
-                                "You cannot add yourself as a contact.",
-                                Toast.LENGTH_SHORT).show();
-                        return;
-
-                    }
-
-
-                    DatabaseReference queryRef =
-                            database.getReference().child("Users");
-
-                    // Check if contactEmail is in the database!!!
-                    Query queryNew = queryRef.orderByChild("Email").equalTo(contactEmail);
-
-
-                    queryNew.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                // dataSnapshot is the "Users" node with all children with contactEmail.
-                                for (DataSnapshot matchingContact : dataSnapshot.getChildren()) {
-                                    // do something with the individual "contact"
-                                    // since we're in this loop, we know the contact email exists.
-
-
-                                    // NEED TO CHECK IF THE CONTACT IS ALREADY RECORDED.
-                                    // SEARCH BY THE USER KEY!!!
-                                    String contactUid = matchingContact.getKey();
-
-                                    Contact searchObject = new Contact("Null", contactUid, false);
-                                    boolean isAlreadyContact = contacts.contains(searchObject);
-
-                                    if (isAlreadyContact) {
-                                        Toast.makeText(getApplicationContext(),
-                                                contactEmail + " is already a contact.",
-                                                Toast.LENGTH_SHORT).show();
-                                        return;
-                                    }
-
-                                    String contactNickname = contactEmail;
-                                    userRef.child("Contacts").child(contactUid).setValue(contactNickname);
-
-                                    // Need to update the other user's contact list.
-                                    DatabaseReference contactRef =
-                                            database.getReference().
-                                                    child("Users").child(contactUid);
-
-                                    // May need to worry about refreshing the other user's page!!
-
-
-                                    contactRef.child("Contacts").
-                                            child(currentUser.getUid()).setValue(currentUser.getEmail());
-
-
-                                    setContactListener(contactUid,
-                                            contacts,
-                                            adapter);
-
-
-                                }
-                                // NEED TO REFRESH THE LIST VIEW!!!!
-
-                            }
-
-                            else {
-                                Toast.makeText(getApplicationContext(),
-                                        "User " + contactEmail+ " does not exist.",
-                                        Toast.LENGTH_SHORT).show();
-                                return;
-
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            // Do nothing.
-                        }
-                    });
+                    addContact(currentUser, contactEmail);
 
 
                 }
@@ -263,11 +141,131 @@ public class ContactListActivity extends BaseActivity implements Serializable {
     }
 
 
-    protected void loadContacts() {
+    protected void loadContacts(FirebaseUser currentUser, ArrayList<String> contactIDs) {
+
+
+
+        userRef = database.getReference().child("Users").child(currentUser.getUid());
+
+        Query queryContacts = userRef.child("Contacts").orderByKey();
+
+        // Make a load contacts method!!!!
+        queryContacts.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    // dataSnapshot is the "Users" node with all children with contactEmail.
+                    for (DataSnapshot matchingContact : dataSnapshot.getChildren()) {
+
+                        // Very bad way of doing this perhaps.
+                        if ( !(matchingContact.getKey().equals("Null")) ) {
+
+                            contactIDs.add(matchingContact.getKey());
+
+                        }
+
+                    }
+
+                    setContactListeners(contactIDs,
+                            contacts,
+                            adapter);
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Do nothing.
+            }
+        });
 
     }
 
-    protected void addContact(String inputContactEmail) {
+
+
+    protected void addContact(FirebaseUser currentUser, String contactEmail) {
+
+        if (contactEmail.equals(auth.getCurrentUser().getEmail())) {
+            Toast.makeText(getApplicationContext(),
+                    "You cannot add yourself as a contact.",
+                    Toast.LENGTH_SHORT).show();
+            return;
+
+        }
+
+
+        DatabaseReference queryRef =
+                database.getReference().child("Users");
+
+        // Check if contactEmail is in the database!!!
+        Query queryNew = queryRef.orderByChild("Email").equalTo(contactEmail);
+
+
+        queryNew.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "Users" node with all children with contactEmail.
+                    for (DataSnapshot matchingContact : dataSnapshot.getChildren()) {
+                        // do something with the individual "contact"
+                        // since we're in this loop, we know the contact email exists.
+
+
+                        // NEED TO CHECK IF THE CONTACT IS ALREADY RECORDED.
+                        // SEARCH BY THE USER KEY!!!
+                        String contactUid = matchingContact.getKey();
+
+                        Contact searchObject = new Contact("Null", contactUid, false);
+                        boolean isAlreadyContact = contacts.contains(searchObject);
+
+                        if (isAlreadyContact) {
+                            Toast.makeText(getApplicationContext(),
+                                    contactEmail + " is already a contact.",
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        String contactNickname = contactEmail;
+                        userRef.child("Contacts").child(contactUid).setValue(contactNickname);
+
+                        // Need to update the other user's contact list.
+                        DatabaseReference contactRef =
+                                database.getReference().
+                                        child("Users").child(contactUid);
+
+                        // May need to worry about refreshing the other user's page!!
+
+
+                        contactRef.child("Contacts").
+                                child(currentUser.getUid()).setValue(currentUser.getEmail());
+
+
+                        setContactListener(contactUid,
+                                contacts,
+                                adapter);
+
+
+                    }
+                    // NEED TO REFRESH THE LIST VIEW!!!!
+
+                }
+
+                else {
+                    Toast.makeText(getApplicationContext(),
+                            "User " + contactEmail+ " does not exist.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Do nothing.
+            }
+        });
 
     }
 
