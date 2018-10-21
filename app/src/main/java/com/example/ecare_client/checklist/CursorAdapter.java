@@ -20,13 +20,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.ecare_client.R;
-import com.example.ecare_client.checklist.data.TaskContract;
+import com.example.ecare_client.checklist.Tasks.TaskContract;
 
 
 // followed tutorial from https://www.youtube.com/watch?v=Mg3Gsn0wmDQ&t=732s
 // credit to delaroy studios
 
-public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapter.TaskViewHolder> {
+public class CursorAdapter extends RecyclerView.Adapter<CursorAdapter.TaskViewHolder> {
 
 
     private Cursor mCursor;
@@ -38,7 +38,7 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
      *
      * @param mContext the current Context
      */
-    public CustomCursorAdapter(Context mContext) {
+    public CursorAdapter(Context mContext) {
         this.mContext = mContext;
     }
 
@@ -128,19 +128,19 @@ public class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapte
 
 
     /**
-     * When data changes and a re-query occurs, this function swaps the old Cursor
-     * with a newly updated Cursor (Cursor c) that is passed in.
+     * swaps to the newly updated Cursor
      */
-    public Cursor swapCursor(Cursor c) {
-        // check if this cursor is the same as the previous cursor (mCursor)
-        if (mCursor == c) {
-            return null; // bc nothing has changed
+    public Cursor swapCursor(Cursor cursor) {
+
+        // check if this cursor is same as before
+        if (mCursor == cursor) {
+            return null;
         }
         Cursor temp = mCursor;
-        this.mCursor = c; // new cursor value assigned
+        this.mCursor = cursor; // new cursor value assigned
 
         //check if this is a valid cursor, then update the cursor
-        if (c != null) {
+        if (cursor != null) {
             this.notifyDataSetChanged();
         }
         return temp;

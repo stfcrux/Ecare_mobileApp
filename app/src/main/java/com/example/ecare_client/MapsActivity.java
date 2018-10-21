@@ -490,7 +490,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Toast.makeText(this,"connection failed", Toast.LENGTH_SHORT).show();
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 69;
     public boolean checkLocationPermission(){
         if (ContextCompat.checkSelfPermission(this,
                 ACCESS_FINE_LOCATION)

@@ -83,7 +83,7 @@
 
         <activity android:name=".registration.ResetPasswordActivity" />
         <activity android:name=".checklist.CheckListActivity" />
-        <activity android:name=".checklist.AddTaskActivity" />
+        <activity android:name=".checklist.ConfigureTaskActivity" />
         <activity android:name=".alarmclock.AlarmClockActivity" />
         <receiver android:name=".alarmclock.clock.LoongggAlarmReceiver">
             <intent-filter>
@@ -109,7 +109,7 @@
         <!-- Set name, authorities, and exported attributes -->
         <!-- exported = false limits access to this ContentProvider to only this app -->
         <provider
-            android:name=".checklist.data.TaskContentProvider"
+            android:name=".checklist.Tasks.TaskContentProvider"
             android:authorities="com.example.android.checklist"
             android:exported="false" />
 
