@@ -82,7 +82,7 @@ public class SexangleImageView extends View {
                         + (event.getY() - getHeight() / 2)
                         * (event.getY() - getHeight() / 2);
 
-                if (dist <= radiusSquare) {// 点中六边形区域
+                if (dist <= radiusSquare) {
                     paint.setColor(Color.parseColor("#A8A8A8"));
                     paint.setStyle(Style.FILL);
                     paint.setAlpha(100);
