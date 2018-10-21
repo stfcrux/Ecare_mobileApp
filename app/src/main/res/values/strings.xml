@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ecare_Client</string>
+    <string name="app_name">E-Care</string>
 
     <string name="action_sign_in_short">Register</string>
     <string name="email">Email</string>
