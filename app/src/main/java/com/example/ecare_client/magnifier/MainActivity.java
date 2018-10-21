@@ -39,13 +39,9 @@ import java.util.Date;
  */
 public class MainActivity extends Activity {
 
-    /**
-     * Tag name for the Log message.
-     */
-    private static final String TAG = "MagnifierActivity";
 
     /**
-     * our surface view containing the camera preview image.
+     * contains the camera preview image.
      */
     private CamSurface mVisorView;
 
@@ -56,14 +52,8 @@ public class MainActivity extends Activity {
      * stores the brightness level of the screen to restore it after the
      * app gets paused or destroyed.
      */
-    private float prevScreenBrightnewss;
     public uk.co.senab.photoview.PhotoView mPhotoView;
 
-    public void playClickSound(View view) {
-        // TODO the user can disable this; if click-sounds are enable I hear a double click effect...
-        // if(view == null) return;
-        // view.playSoundEffect(android.view.SoundEffectConstants.CLICK);
-    }
 
     private View.OnClickListener autoFocusClickHandler = new View.OnClickListener() {
         @Override
@@ -91,8 +81,6 @@ public class MainActivity extends Activity {
         @Override
         public void onClick(View v) {
             v.startAnimation(animScale);
-            playClickSound(v);
-
             mVisorView.nextFlashlightMode(getApplicationContext());
         }
     };
@@ -100,7 +88,6 @@ public class MainActivity extends Activity {
         @Override
         public void onClick(View v) {
             v.startAnimation(animScale);
-            playClickSound(v);
 
             if (cameraPreviewState) {
                 mVisorView.nextZoomLevel();
@@ -214,9 +201,6 @@ public class MainActivity extends Activity {
         return (FrameLayout) findViewById(R.id.camera_preview);
     }
 
-    /**
-     *
-     */
     private void setButtonListeners() {
         // Add a listener to the Zoom button
         ImageButton zoomButton = (ImageButton) findViewById(R.id.button_zoom);
@@ -239,7 +223,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy called!");
     }
 
     @Override
