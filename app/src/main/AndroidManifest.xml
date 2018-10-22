@@ -81,7 +81,6 @@
         <activity android:name=".settings.PersonalInfoActivity" />
         <activity android:name=".settings.ContactProfileActivity" />
 
-        <activity android:name=".registration.ResetPasswordActivity" />
         <activity android:name=".checklist.CheckListActivity" />
         <activity android:name=".checklist.AddTaskActivity" />
         <activity android:name=".alarmclock.AlarmClockActivity" />
