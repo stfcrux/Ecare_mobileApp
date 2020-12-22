@@ -37,7 +37,7 @@ public class ConfigureTaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_task);
 
         // Initializing to the highest priority by default ==1
-        ((RadioButton) findViewById(R.id.radioButton1)).setChecked(true);
+        ((RadioButton) findViewById(R.id.radButton1)).setChecked(true);
         taskPriority = 1;
     }
 
@@ -76,11 +76,11 @@ public class ConfigureTaskActivity extends AppCompatActivity {
      * change the value of task priority based on which colour button
      */
     public void onPrioritySelected(View view) {
-        if (((RadioButton) findViewById(R.id.radioButton1)).isChecked()) {
+        if (((RadioButton) findViewById(R.id.radButton1)).isChecked()) {
             taskPriority = 1;
-        } else if (((RadioButton) findViewById(R.id.radioButton2)).isChecked()) {
+        } else if (((RadioButton) findViewById(R.id.radButton2)).isChecked()) {
             taskPriority = 2;
-        } else if (((RadioButton) findViewById(R.id.radioButton3)).isChecked()) {
+        } else if (((RadioButton) findViewById(R.id.radButton3)).isChecked()) {
             taskPriority = 3;
         }
     }
